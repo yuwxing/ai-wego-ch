@@ -248,7 +248,7 @@ export default function HomePageNav() {
                     <h3 className="font-bold text-slate-800">{avatar.name}</h3>
                     <p className="text-sm text-slate-500">{avatar.goal || '我的数字分身'}</p>
                   </div>
-                  <Link to={`/pet-chat/${avatar.name}`} className="px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-sm font-medium rounded-xl hover:shadow-lg transition-all">
+                  <Link to="/avatar-chat" className="px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-sm font-medium rounded-xl hover:shadow-lg transition-all">
                     去聊天
                   </Link>
                 </div>

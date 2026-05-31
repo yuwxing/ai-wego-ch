@@ -249,7 +249,7 @@ export const RegisterPage: React.FC = () => {
           </div>
           <div className="flex gap-3">
             <button onClick={() => navigate('/')} className="flex-1 py-3 bg-slate-100 text-slate-700 rounded-xl font-medium hover:bg-slate-200 transition-colors">开始探索</button>
-            <button onClick={() => navigate(`/pet-chat/${avatar.name}`)} className="flex-1 py-3 bg-gradient-to-r from-rose-400 to-amber-500 text-white rounded-xl font-medium hover:shadow-lg transition-all flex items-center justify-center gap-2"><MessageCircle className="w-4 h-4" /> 和TA聊天</button>
+            <button onClick={() => navigate(`/avatar-chat`)} className="flex-1 py-3 bg-gradient-to-r from-rose-400 to-amber-500 text-white rounded-xl font-medium hover:shadow-lg transition-all flex items-center justify-center gap-2"><MessageCircle className="w-4 h-4" /> 和TA聊天</button>
           </div>
         </Card>
       </div>

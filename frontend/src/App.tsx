@@ -31,6 +31,7 @@ import NotesPage from './pages/NotesPage'
 import RegisterPage from './pages/RegisterPage'
 import AdoptPage from './pages/AdoptPage'
 import { PetChatPage } from './pages/PetChatPage'
+import AvatarChatPage from './pages/AvatarChatPage'
 
 import PetWidget from './components/PetWidget'
 import AdminApplications from './pages/admin/Applications'
@@ -132,6 +133,7 @@ export default function App() {
       <Route path="/aigc-templates" element={<Navigate to="/" replace />} />
       <Route path="/adopt" element={<AdoptPage />} />
       <Route path="/pet-chat/:petId" element={<PetChatPage />} />
+      <Route path="/avatar-chat" element={<AvatarChatPage />} />
 
       {/* 404 */}
       <Route path="*" element={<NotFound />} />
