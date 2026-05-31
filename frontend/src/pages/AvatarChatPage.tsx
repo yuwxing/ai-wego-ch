@@ -1,10 +1,11 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ArrowLeft, Send, User, Loader2 } from 'lucide-react'
+import { ArrowLeft, Send, User, Loader2, Copy, Trash2, Check } from 'lucide-react'
 import { getApiKey } from '../utils/deepseek'
 
 const DEEPSEEK_BASE_URL = 'https://api.deepseek.com'
 const DEEPSEEK_MODEL = 'deepseek-chat'
+const CHAT_HISTORY_KEY = 'avatarChatHistory'
 
 interface Message {
   id: string
@@ -19,6 +20,7 @@ export default function AvatarChatPage() {
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
+  const [copied, setCopied] = useState(false)
   const endRef = useRef<HTMLDivElement>(null)
 
   const avatar = (() => {
@@ -29,17 +31,35 @@ export default function AvatarChatPage() {
     } catch { return null }
   })()
 
+  const saveHistory = useCallback((msgs: Message[]) => {
+    try { localStorage.setItem(CHAT_HISTORY_KEY, JSON.stringify(msgs)) } catch {}
+  }, [])
+
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
   useEffect(() => {
     if (!avatar) { navigate('/register'); return }
-    if (messages.length === 0) {
-      const greeting = `你好！我是你的${avatar.companionTitle || 'AI助手'}${avatar.name ? ` ${avatar.name}` : ''}。${avatar.goal ? `\n\n${avatar.goal}` : ''}\n\n有什么我可以帮你的吗？`
-      setMessages([{ id: generateId(), role: 'assistant', content: greeting }])
-    }
+    try {
+      const saved = localStorage.getItem(CHAT_HISTORY_KEY)
+      if (saved) {
+        const parsed = JSON.parse(saved)
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setMessages(parsed)
+          return
+        }
+      }
+    } catch {}
+    const greeting = `你好！我是你的${avatar.companionTitle || 'AI助手'}${avatar.name ? ` ${avatar.name}` : ''}。${avatar.goal ? `\n\n${avatar.goal}` : ''}\n\n有什么我可以帮你的吗？`
+    const initial = [{ id: generateId(), role: 'assistant' as const, content: greeting }]
+    setMessages(initial)
+    saveHistory(initial)
   }, [])
+
+  useEffect(() => {
+    if (messages.length > 0) saveHistory(messages)
+  }, [messages, saveHistory])
 
   const callApi = async (userMsg: string, history: Message[]) => {
     const recent = history.slice(-10).map(m => ({ role: m.role, content: m.content }))
@@ -67,22 +87,41 @@ export default function AvatarChatPage() {
     if (!text || loading) return
     setInput('')
     const userMsg: Message = { id: generateId(), role: 'user', content: text }
-    setMessages(prev => [...prev, userMsg])
+    const updated = [...messages, userMsg]
+    setMessages(updated)
     setLoading(true)
     try {
-      const reply = await callApi(text, [...messages, userMsg])
-      setMessages(prev => [...prev, { id: generateId(), role: 'assistant', content: reply }])
+      const reply = await callApi(text, updated)
+      const withReply = [...updated, { id: generateId(), role: 'assistant' as const, content: reply }]
+      setMessages(withReply)
     } catch (e: any) {
-      setMessages(prev => [...prev, { id: generateId(), role: 'assistant', content: `出错了：${e.message}` }])
+      setMessages([...updated, { id: generateId(), role: 'assistant' as const, content: `出错了：${e.message}` }])
     }
     setLoading(false)
+  }
+
+  const handleExport = async () => {
+    const text = messages.map(m =>
+      `${m.role === 'user' ? '我' : (avatar.name || 'AI')}:\n${m.content}`
+    ).join('\n\n---\n\n')
+    try {
+      await navigator.clipboard.writeText(text)
+      setCopied(true)
+      setTimeout(() => setCopied(false), 2000)
+    } catch {}
+  }
+
+  const handleClear = () => {
+    if (!confirm('确定清空所有对话记录？')) return
+    localStorage.removeItem(CHAT_HISTORY_KEY)
+    const greeting = `你好！我是你的${avatar.companionTitle || 'AI助手'}${avatar.name ? ` ${avatar.name}` : ''}。${avatar.goal ? `\n\n${avatar.goal}` : ''}\n\n有什么我可以帮你的吗？`
+    setMessages([{ id: generateId(), role: 'assistant', content: greeting }])
   }
 
   if (!avatar) return null
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
-      {/* 头部 */}
       <div className="sticky top-0 z-50 bg-white border-b border-slate-100">
         <div className="max-w-3xl mx-auto px-4 h-14 flex items-center gap-3">
           <button onClick={() => navigate(-1)} className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-500">
@@ -91,14 +130,21 @@ export default function AvatarChatPage() {
           <div className="w-8 h-8 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-white text-sm font-bold">
             {avatar.name?.[0] || 'A'}
           </div>
-          <div>
+          <div className="flex-1">
             <div className="text-sm font-semibold text-slate-800">{avatar.name || 'AI助手'}</div>
             <div className="text-xs text-slate-400">{avatar.companionTitle || ''}</div>
+          </div>
+          <div className="flex items-center gap-1">
+            <button onClick={handleExport} title="导出对话" className="p-2 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-all">
+              {copied ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
+            </button>
+            <button onClick={handleClear} title="清空对话" className="p-2 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-red-500 transition-all">
+              <Trash2 className="w-4 h-4" />
+            </button>
           </div>
         </div>
       </div>
 
-      {/* 消息区 */}
       <div className="flex-1 overflow-y-auto">
         <div className="max-w-3xl mx-auto px-4 py-6 space-y-4">
           {messages.map(msg => (
@@ -131,7 +177,6 @@ export default function AvatarChatPage() {
         </div>
       </div>
 
-      {/* 输入区 */}
       <div className="sticky bottom-0 bg-white border-t border-slate-100">
         <div className="max-w-3xl mx-auto px-4 py-3">
           <div className="flex items-end gap-2">
