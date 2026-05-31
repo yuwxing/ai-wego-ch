@@ -75,7 +75,15 @@ export default function HomePageNav() {
   useEffect(() => {
     if (user?.id && user.id > 0) {
       digitalAvatarAPI.load(user.id).then(data => {
-        if (data) setServerAvatar(data);
+        if (data) {
+          setServerAvatar(data);
+        } else {
+          // 本地有分身但服务器没有 -> 上传同步
+          try {
+            const local = localStorage.getItem('digitalAvatar');
+            if (local) digitalAvatarAPI.save(user.id, JSON.parse(local));
+          } catch {}
+        }
       });
     }
   }, [user?.id]);
