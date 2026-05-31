@@ -98,6 +98,25 @@ export const PetChatPage: React.FC = () => {
   const petData = petId ? petSpriteMap[petId] : null;
   const personalityData = petId ? petPersonalityMap[petId] : null;
   
+  // 数字分身回退（当petId不是预设宠物时，从localStorage查找数字分身）
+  const digitalAvatar = (!personalityData && petId) ? (() => {
+    try {
+      const raw = localStorage.getItem('digitalAvatar');
+      if (!raw) return null;
+      const a = JSON.parse(raw);
+      return a.name === petId ? a : null;
+    } catch { return null; }
+  })() : null;
+  
+  const effectivePersonality = personalityData || (digitalAvatar ? {
+    name: digitalAvatar.name,
+    personality: digitalAvatar.prompt || '你是一个友善的AI助手，用中文回答。',
+    greeting: `你好！我是${digitalAvatar.name}。${digitalAvatar.goal || '让我们一起成长吧！'}`,
+    voice: 'zh-CN',
+  } : null);
+
+  const effectiveColor = petData?.color ?? '#8B5CF6';
+  
   // 状态
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputText, setInputText] = useState('');
@@ -128,16 +147,16 @@ export const PetChatPage: React.FC = () => {
   
   // 初始化欢迎消息
   useEffect(() => {
-    if (personalityData && messages.length === 0) {
+    if (effectivePersonality && messages.length === 0) {
       const welcomeMessage: Message = {
         id: generateId(),
         role: 'assistant',
-        content: personalityData.greeting,
+        content: effectivePersonality.greeting,
         timestamp: Date.now(),
       };
       setMessages([welcomeMessage]);
     }
-  }, [personalityData]);
+  }, [effectivePersonality]);
   
   // 语音预加载 + Chrome bug workaround
   useEffect(() => {
@@ -166,7 +185,7 @@ export const PetChatPage: React.FC = () => {
   
   // 调用 DeepSeek API
   const callDeepSeekAPI = async (userMessage: string, conversationHistory: Message[]): Promise<string> => {
-    const systemPrompt = personalityData?.personality || '你是一只萌萌的小宠物，像3-4岁小朋友那样说话：多用叠词（吃饭饭、睡觉觉）、语气词（呀、啦、嘛、呢、哟）、拟声词（嘿嘿、喵呜~、汪汪！），句子短，爱撒娇，活泼俏皮，充满童趣。不要用任何标点符号之外的格式符号。';
+    const systemPrompt = effectivePersonality?.personality || '你是一只萌萌的小宠物，像3-4岁小朋友那样说话：多用叠词（吃饭饭、睡觉觉）、语气词（呀、啦、嘛、呢、哟）、拟声词（嘿嘿、喵呜~、汪汪！），句子短，爱撒娇，活泼俏皮，充满童趣。不要用任何标点符号之外的格式符号。';
     
     // 构建消息历史（最近5条）
     const recentMessages = conversationHistory.slice(-5).map(msg => ({
@@ -406,8 +425,8 @@ export const PetChatPage: React.FC = () => {
     });
   };
   
-  // 如果宠物不存在
-  if (!petData || !personalityData) {
+  // 如果宠物不存在（且没有数字分身回退）
+  if (!petData && !digitalAvatar) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
@@ -438,12 +457,16 @@ export const PetChatPage: React.FC = () => {
                 <ArrowLeft className="w-5 h-5" />
               </button>
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl overflow-hidden shadow-md" style={{ background: `${petData.color}20` }}>
-                  <SpritePet petId={petId!} size={40} animate="idle" />
+                <div className="w-10 h-10 rounded-xl overflow-hidden shadow-md flex items-center justify-center" style={{ background: digitalAvatar ? 'linear-gradient(135deg, #818CF8, #A78BFA)' : `${effectiveColor}20` }}>
+                  {digitalAvatar ? (
+                    <span className="text-white text-sm font-bold">{digitalAvatar.name?.[0] || '?'}</span>
+                  ) : (
+                    <SpritePet petId={petId!} size={40} animate="idle" />
+                  )}
                 </div>
                 <div>
-                  <h1 className="font-bold text-slate-800">{personalityData.name}</h1>
-                  <p className="text-xs text-slate-500">{petData.personality}</p>
+                  <h1 className="font-bold text-slate-800">{effectivePersonality!.name}</h1>
+                  <p className="text-xs text-slate-500">{digitalAvatar ? (digitalAvatar.goal || '数字分身') : petData!.personality}</p>
                 </div>
               </div>
             </div>
@@ -495,8 +518,8 @@ export const PetChatPage: React.FC = () => {
                     setIsSpeaking(false);
                   } else {
                     setVoiceEnabled(true);
-                    if (personalityData?.greeting) {
-                      speakMessage(personalityData.greeting, true);
+                    if (effectivePersonality?.greeting) {
+                      speakMessage(effectivePersonality.greeting, true);
                     }
                   }
                 }}
@@ -537,10 +560,14 @@ export const PetChatPage: React.FC = () => {
               {/* 头像 */}
               {msg.role === 'assistant' ? (
                 <div 
-                  className="w-8 h-8 rounded-full overflow-hidden flex-shrink-0 shadow-md"
-                  style={{ background: `${petData.color}20` }}
+                  className="w-8 h-8 rounded-full overflow-hidden flex-shrink-0 shadow-md flex items-center justify-center"
+                  style={{ background: digitalAvatar ? 'linear-gradient(135deg, #818CF8, #A78BFA)' : `${effectiveColor}20` }}
                 >
-                  <SpritePet petId={petId!} size={32} animate="idle" />
+                  {digitalAvatar ? (
+                    <span className="text-white text-xs font-bold">{digitalAvatar.name?.[0] || '?'}</span>
+                  ) : (
+                    <SpritePet petId={petId!} size={32} animate="idle" />
+                  )}
                 </div>
               ) : (
                 <div className="w-8 h-8 rounded-full bg-gradient-to-r from-purple-500 to-pink-500 flex items-center justify-center text-white text-sm font-bold flex-shrink-0 shadow-md">
@@ -570,15 +597,19 @@ export const PetChatPage: React.FC = () => {
           {isLoading && (
             <div className="flex items-end gap-2 animate-fade-in-up">
               <div 
-                className="w-8 h-8 rounded-full overflow-hidden flex-shrink-0 shadow-md"
-                style={{ background: `${petData.color}20` }}
+                className="w-8 h-8 rounded-full overflow-hidden flex-shrink-0 shadow-md flex items-center justify-center"
+                style={{ background: digitalAvatar ? 'linear-gradient(135deg, #818CF8, #A78BFA)' : `${effectiveColor}20` }}
               >
-                <SpritePet petId={petId!} size={32} animate="idle" />
+                {digitalAvatar ? (
+                  <span className="text-white text-xs font-bold">{digitalAvatar.name?.[0] || '?'}</span>
+                ) : (
+                  <SpritePet petId={petId!} size={32} animate="idle" />
+                )}
               </div>
               <div className="bg-white/90 backdrop-blur-sm border border-purple-100 px-4 py-3 rounded-2xl rounded-bl-md shadow-sm">
                 <div className="flex items-center gap-2">
                   <Loader2 className="w-4 h-4 text-purple-500 animate-spin" />
-                  <span className="text-sm text-slate-500">{personalityData.name}正在思考...</span>
+                  <span className="text-sm text-slate-500">{effectivePersonality!.name}正在思考...</span>
                 </div>
               </div>
             </div>
@@ -613,7 +644,7 @@ export const PetChatPage: React.FC = () => {
                 value={inputText}
                 onChange={(e) => setInputText(e.target.value)}
                 onKeyPress={handleKeyPress}
-                placeholder={`和${personalityData.name}说点什么...`}
+                placeholder={`和${effectivePersonality!.name}说点什么...`}
                 rows={1}
                 className="w-full px-4 py-3 pr-12 rounded-2xl bg-purple-50/50 border border-purple-200 text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-purple-300 focus:border-transparent resize-none text-sm"
                 style={{ minHeight: '48px', maxHeight: '120px' }}

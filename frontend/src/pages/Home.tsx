@@ -232,6 +232,31 @@ export default function HomePageNav() {
           </div>
         </div>
 
+        {/* 数字分身卡片 */}
+        {(() => {
+          try {
+            const raw = localStorage.getItem('digitalAvatar');
+            if (!raw) return null;
+            const avatar = JSON.parse(raw);
+            return (
+              <div className="mb-6 p-5 bg-gradient-to-br from-indigo-50 via-white to-purple-50 rounded-2xl border border-indigo-100 shadow-sm">
+                <div className="flex items-center gap-4">
+                  <div className="w-14 h-14 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-white text-xl font-bold shadow-md">
+                    {avatar.name?.[0] || '?'}
+                  </div>
+                  <div className="flex-1">
+                    <h3 className="font-bold text-slate-800">{avatar.name}</h3>
+                    <p className="text-sm text-slate-500">{avatar.goal || '我的数字分身'}</p>
+                  </div>
+                  <Link to={`/pet-chat/${avatar.name}`} className="px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-sm font-medium rounded-xl hover:shadow-lg transition-all">
+                    去聊天
+                  </Link>
+                </div>
+              </div>
+            );
+          } catch { return null; }
+        })()}
+
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {sections.map(s => (
             <div key={s.title} className="group glass-card rounded-2xl p-5 hover:shadow-lg transition-all">

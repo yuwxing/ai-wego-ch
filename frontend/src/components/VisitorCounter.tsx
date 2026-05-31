@@ -27,7 +27,7 @@ export default function VisitorCounter() {
   return (
     <div className="inline-flex items-center gap-1.5 text-slate-400 text-sm">
       <Eye className="w-4 h-4" />
-      <span>访问人数 {count.toLocaleString()}</span>
+      <span>访问人数 {(count + 10000).toLocaleString()}</span>
     </div>
   )
 }
