@@ -41,8 +41,14 @@ const sections = [
     links: [
       { to: '/jinghua', label: '菁华首页' },
       { to: '/jinghua/projects', label: '科研' },
-      { to: '/jinghua/classroom', label: '求职课堂' },
-      { to: '/jinghua/job-square', label: '求职广场' },
+    ]
+  },
+  {
+    title: '求职就业', icon: GraduationCap, desc: '求职广场 & 求职课堂',
+    color: 'from-emerald-400 to-green-500',
+    links: [
+      { to: '/job-square', label: '求职广场' },
+      { to: '/job-classroom', label: '求职课堂' },
     ]
   },
   {

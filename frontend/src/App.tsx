@@ -113,7 +113,8 @@ export default function App() {
       <Route path="/classroom" element={<Navigate to="/learn/classroom" replace />} />
 
       <Route path="/balance" element={<Navigate to="/weg/balance" replace />} />
-      <Route path="/job-square" element={<Navigate to="/jinghua/job-square" replace />} />
+      <Route path="/job-square" element={<JobSquarePage />} />
+      <Route path="/job-classroom" element={<JobClassroomPage />} />
       <Route path="/benefits" element={<Navigate to="/weg/rewards" replace />} />
       <Route path="/submit-result/:taskId" element={<ParamRedirect to="/competitions/:taskId/submit" />} />
 
