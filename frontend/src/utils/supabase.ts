@@ -811,8 +811,29 @@ export const digitalAvatarAPI = {
         localStorage.setItem('digitalAvatar', JSON.stringify(data[0].digital_avatar));
         return data[0].digital_avatar;
       }
-    } catch {} // column missing or no data
+    } catch {}
     return null;
+  },
+
+  saveChatHistory: async (userId: number, messages: any[]) => {
+    if (!userId || userId < 0) return;
+    try {
+      const data = await supabaseFetch(`users?id=eq.${userId}&select=digital_avatar`);
+      const avatar = data?.[0]?.digital_avatar || {};
+      avatar.chatHistory = messages.slice(-100);
+      await supabaseFetch(`users?id=eq.${userId}`, {
+        method: 'PATCH',
+        body: JSON.stringify({ digital_avatar: avatar }),
+      });
+    } catch {} // silently fail if column missing
+  },
+
+  loadChatHistory: async (userId: number) => {
+    if (!userId || userId < 0) return null;
+    try {
+      const data = await supabaseFetch(`users?id=eq.${userId}&select=digital_avatar`);
+      return data?.[0]?.digital_avatar?.chatHistory || null;
+    } catch { return null; }
   },
 
   remove: () => localStorage.removeItem('digitalAvatar'),

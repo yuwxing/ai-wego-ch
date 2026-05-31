@@ -2,6 +2,8 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ArrowLeft, Send, User, Loader2, Copy, Trash2, Check } from 'lucide-react'
 import { getApiKey } from '../utils/deepseek'
+import { digitalAvatarAPI } from '../utils/supabase'
+import { useUser } from '../contexts/UserContext'
 
 const DEEPSEEK_BASE_URL = 'https://api.deepseek.com'
 const DEEPSEEK_MODEL = 'deepseek-chat'
@@ -17,6 +19,7 @@ const generateId = () => Math.random().toString(36).substring(2, 15)
 
 export default function AvatarChatPage() {
   const navigate = useNavigate()
+  const { user } = useUser()
   const [messages, setMessages] = useState<Message[]>([])
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
@@ -35,31 +38,52 @@ export default function AvatarChatPage() {
     try { localStorage.setItem(CHAT_HISTORY_KEY, JSON.stringify(msgs)) } catch {}
   }, [])
 
+  const syncHistoryToServer = useCallback((msgs: Message[]) => {
+    if (user?.id && user.id > 0) {
+      digitalAvatarAPI.saveChatHistory(user.id, msgs)
+    }
+  }, [user?.id])
+
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
   useEffect(() => {
     if (!avatar) { navigate('/register'); return }
-    try {
-      const saved = localStorage.getItem(CHAT_HISTORY_KEY)
-      if (saved) {
-        const parsed = JSON.parse(saved)
-        if (Array.isArray(parsed) && parsed.length > 0) {
-          setMessages(parsed)
+    const load = async () => {
+      try {
+        const saved = localStorage.getItem(CHAT_HISTORY_KEY)
+        if (saved) {
+          const parsed = JSON.parse(saved)
+          if (Array.isArray(parsed) && parsed.length > 0) {
+            setMessages(parsed)
+            return
+          }
+        }
+      } catch {}
+      // 本地没有，从服务器拉
+      if (user?.id && user.id > 0) {
+        const serverHistory = await digitalAvatarAPI.loadChatHistory(user.id)
+        if (serverHistory && Array.isArray(serverHistory) && serverHistory.length > 0) {
+          setMessages(serverHistory)
+          saveHistory(serverHistory)
           return
         }
       }
-    } catch {}
-    const greeting = `你好！我是你的${avatar.companionTitle || 'AI助手'}${avatar.name ? ` ${avatar.name}` : ''}。${avatar.goal ? `\n\n${avatar.goal}` : ''}\n\n有什么我可以帮你的吗？`
-    const initial = [{ id: generateId(), role: 'assistant' as const, content: greeting }]
-    setMessages(initial)
-    saveHistory(initial)
+      const greeting = `你好！我是你的${avatar.companionTitle || 'AI助手'}${avatar.name ? ` ${avatar.name}` : ''}。${avatar.goal ? `\n\n${avatar.goal}` : ''}\n\n有什么我可以帮你的吗？`
+      const initial = [{ id: generateId(), role: 'assistant' as const, content: greeting }]
+      setMessages(initial)
+      saveHistory(initial)
+    }
+    load()
   }, [])
 
   useEffect(() => {
-    if (messages.length > 0) saveHistory(messages)
-  }, [messages, saveHistory])
+    if (messages.length > 0) {
+      saveHistory(messages)
+      syncHistoryToServer(messages)
+    }
+  }, [messages, saveHistory, syncHistoryToServer])
 
   const callApi = async (userMsg: string, history: Message[]) => {
     const recent = history.slice(-10).map(m => ({ role: m.role, content: m.content }))

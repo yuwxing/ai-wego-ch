@@ -1,9 +1,17 @@
 import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { BookOpen, Award, Trophy, Sparkles, GraduationCap, Shield, Sun, User, LogIn, UserPlus, Monitor } from 'lucide-react'
+import { BookOpen, Award, Trophy, Sparkles, GraduationCap, Shield, Sun, User, LogIn, UserPlus, Monitor, Wand2, Loader2 } from 'lucide-react'
 import { useUser } from '../contexts/UserContext'
 import VisitorCounter from '../components/VisitorCounter'
 import { digitalAvatarAPI } from '../utils/supabase'
+
+const ROLES = [
+  { id: 'student', label: '学生', title: '学习教练', knows: ['学习情况', '薄弱环节'], does: ['制定学习计划', '答疑解惑', '整理错题'] },
+  { id: 'teacher', label: '教师', title: '教研助理', knows: ['教学计划', '学生情况'], does: ['备课', '出题', '分析学情'] },
+  { id: 'principal', label: '校长', title: 'AI副校长', knows: ['学校管理', '教务数据'], does: ['管理决策', '分析报告', '优化流程'] },
+  { id: 'parent', label: '家长', title: '家庭教育助手', knows: ['孩子特点', '家庭情况'], does: ['教育建议', '亲子沟通', '成长规划'] },
+  { id: 'professional', label: '职场人士', title: '成长伙伴', knows: ['职业领域', '发展方向'], does: ['职业规划', '技能提升', '效率工具'] },
+]
 
 const sections = [
   {
@@ -73,6 +81,11 @@ export default function HomePageNav() {
   const [displayAvatar, setDisplayAvatar] = useState<any>(null);
   const [syncing, setSyncing] = useState(false);
   const [syncMsg, setSyncMsg] = useState('');
+  // 重建分身表单
+  const [restoreRole, setRestoreRole] = useState('student');
+  const [restoreName, setRestoreName] = useState('');
+  const [restoreGoal, setRestoreGoal] = useState('');
+  const [restoring, setRestoring] = useState(false);
 
   const syncToServer = async () => {
     if (!user?.id || user.id < 0) return;
@@ -112,6 +125,26 @@ export default function HomePageNav() {
       });
     }
   }, [user?.id]);
+
+  const handleRestore = async () => {
+    if (!restoreName.trim() || !user?.id) return;
+    setRestoring(true);
+    const role = ROLES.find(r => r.id === restoreRole)!;
+    const avatarData = {
+      role: restoreRole,
+      name: restoreName.trim(),
+      goal: restoreGoal.trim() || `我是${role.label}，请帮助我`,
+      companionTitle: role.title,
+      skills: role.does,
+      prompt: `你是${restoreName.trim()}，我的${role.title}。你了解我的${role.knows.join('、')}。每天帮我${role.does.join('、')}。目标是${restoreGoal.trim() || `我是${role.label}，请帮助我`}。用温暖鼓励的语气陪伴我。`,
+    };
+    localStorage.setItem('digitalAvatar', JSON.stringify(avatarData));
+    setDisplayAvatar(avatarData);
+    try {
+      await digitalAvatarAPI.save(user.id, avatarData);
+    } catch {}
+    setRestoring(false);
+  };
 
   return (
     <div className="page-wrapper" data-version={version}>
@@ -297,6 +330,34 @@ export default function HomePageNav() {
                 </Link>
               </div>
             </div>
+          </div>
+        )}
+
+        {/* 创建/重建分身（当没有分身时显示） */}
+        {!displayAvatar && user && !isGuest && (
+          <div className="mb-6 p-5 bg-white rounded-2xl border border-slate-200 shadow-sm">
+            <h3 className="font-bold text-slate-800 mb-3">创建你的数字分身</h3>
+            <div className="grid grid-cols-5 gap-2 mb-4">
+              {ROLES.map(r => (
+                <button key={r.id} onClick={() => setRestoreRole(r.id)}
+                  className={`py-2 px-1 rounded-xl text-xs font-medium transition-all ${restoreRole === r.id ? 'bg-indigo-500 text-white shadow' : 'bg-slate-50 text-slate-600 hover:bg-slate-100'}`}
+                >{r.label}</button>
+              ))}
+            </div>
+            <input type="text" value={restoreName} onChange={e => setRestoreName(e.target.value)}
+              placeholder="给分身取个名字" maxLength={20}
+              className="w-full mb-2 px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
+            />
+            <input type="text" value={restoreGoal} onChange={e => setRestoreGoal(e.target.value)}
+              placeholder="你的目标（可选）" maxLength={100}
+              className="w-full mb-3 px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
+            />
+            <button onClick={handleRestore} disabled={restoring || !restoreName.trim()}
+              className="w-full py-2.5 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-sm font-medium hover:shadow-lg transition-all disabled:opacity-40 flex items-center justify-center gap-2"
+            >
+              {restoring ? <Loader2 className="w-4 h-4 animate-spin" /> : <Wand2 className="w-4 h-4" />}
+              创建分身
+            </button>
           </div>
         )}
 
