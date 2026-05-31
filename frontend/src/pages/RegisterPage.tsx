@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Heart, Sparkles, ArrowLeft, LogIn, User, CheckCircle, AlertCircle, MessageCircle, Sun, BookOpen, Target, Gift, Wand2, Loader2, GraduationCap, School, Building2 } from 'lucide-react';
+import { Heart, Sparkles, ArrowLeft, LogIn, User, CheckCircle, AlertCircle, MessageCircle, Sun, BookOpen, Target, Gift, Wand2, Loader2, GraduationCap, School, Building2, HeartHandshake, Briefcase } from 'lucide-react';
 import { Card } from '../components/ui';
 import { usersAPI } from '../utils/supabase';
 import { useUser } from '../contexts/UserContext';
@@ -35,9 +35,9 @@ interface RoleConfig {
 const roles: RoleConfig[] = [
   {
     id: 'student', label: '学生', icon: GraduationCap, desc: '我需要一个学习教练',
-    companionTitle: '我的英语教练',
-    companionDesc: '永远陪伴我学习英语',
-    knows: ['词汇水平', '错题记录', '学习兴趣', '成长轨迹'],
+    companionTitle: '我的学习教练',
+    companionDesc: '永远陪伴我学习进步',
+    knows: ['学习水平', '错题记录', '学习兴趣', '成长轨迹'],
     does: ['定制学习计划', '智能出题练习', '批改分析错题', '追踪进步曲线'],
     color: 'text-emerald-600', gradient: 'from-emerald-400 to-teal-400', lightBg: 'bg-emerald-50',
   },
@@ -56,6 +56,22 @@ const roles: RoleConfig[] = [
     knows: ['全校数据', '各科成绩', '师资情况', '教学动态'],
     does: ['数据分析报告', '巡课总结', '教学质量分析', '工作计划起草'],
     color: 'text-purple-600', gradient: 'from-purple-400 to-pink-400', lightBg: 'bg-purple-50',
+  },
+  {
+    id: 'parent', label: '家长', icon: HeartHandshake, desc: '我需要一个家庭教育伙伴',
+    companionTitle: '家庭教育助手',
+    companionDesc: '陪我一起培养孩子成长',
+    knows: ['孩子年龄', '学习阶段', '兴趣爱好', '成长目标'],
+    does: ['推荐学习资源', '规划课外活动', '亲子沟通建议', '跟踪成长记录'],
+    color: 'text-rose-600', gradient: 'from-rose-400 to-pink-400', lightBg: 'bg-rose-50',
+  },
+  {
+    id: 'professional', label: '职场人士', icon: Briefcase, desc: '我需要一个成长伙伴',
+    companionTitle: '我的成长伙伴',
+    companionDesc: '陪我一起职业成长',
+    knows: ['行业领域', '职业技能', '工作经验', '发展方向'],
+    does: ['行业资讯整理', '技能提升建议', '工作复盘分析', '职业规划讨论'],
+    color: 'text-sky-600', gradient: 'from-sky-400 to-cyan-400', lightBg: 'bg-sky-50',
   },
 ];
 
@@ -378,7 +394,13 @@ export const RegisterPage: React.FC = () => {
                   <label className="block text-sm font-medium text-slate-700 mb-2">你的目标是什么？</label>
                   <textarea value={avatar.goal} onChange={(e) => setAvatar(p => ({ ...p, goal: e.target.value }))}
                     className="w-full px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:ring-2 focus:ring-rose-400 focus:border-transparent outline-none transition-all resize-none"
-                    rows={2} placeholder={roleConfig.id === 'student' ? '如：英语提高30分' : roleConfig.id === 'teacher' ? '如：减少备课时间' : '如：提升全校平均分'} />
+                    rows={2} placeholder={{
+    student: '如：英语提高30分',
+    teacher: '如：减少备课时间',
+    principal: '如：提升全校平均分',
+    parent: '如：培养孩子的阅读习惯',
+    professional: '如：三年内成为技术 leader',
+  }[roleConfig.id] || '说说你的目标'} />
                 </div>
               </div>
 
