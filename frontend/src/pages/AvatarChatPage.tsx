@@ -189,19 +189,19 @@ export default function AvatarChatPage() {
                   <User className="w-4 h-4" />
                 </div>
               )}
-              <div className={`max-w-[80%] ${msg.role === 'user' ? 'bg-indigo-500 text-white rounded-2xl rounded-tr-md px-4 py-2.5' : 'text-slate-700 relative'}`}>
+              <div className={`max-w-[80%] ${msg.role === 'user' ? 'bg-indigo-500 text-white rounded-2xl rounded-tr-md px-4 py-2.5' : 'text-slate-700'}`}>
                 <p className="text-sm leading-relaxed whitespace-pre-wrap">{msg.content}</p>
-                {msg.role === 'assistant' && user?.id && user.id > 0 && (
-                  <button onClick={() => toggleSave(msg)}
-                    className={`absolute -top-1.5 -right-1.5 p-1 rounded-full transition-all ${
-                      savedIds.has(msg.id) ? 'bg-amber-100 text-amber-500 shadow-sm' : 'bg-white/80 text-slate-300 hover:text-amber-400 shadow-sm'
-                    } border`}
-                    title={savedIds.has(msg.id) ? '取消收藏' : '收藏此条'}
-                  >
-                    <Star className="w-3.5 h-3.5" fill={savedIds.has(msg.id) ? 'currentColor' : 'none'} />
-                  </button>
-                )}
               </div>
+              {msg.role === 'assistant' && (
+                <button onClick={() => toggleSave(msg)}
+                  className={`self-start mt-1.5 p-1 rounded-lg transition-all flex-shrink-0 ${
+                    savedIds.has(msg.id) ? 'text-amber-500' : 'text-slate-200 hover:text-amber-400'
+                  }`}
+                  title={savedIds.has(msg.id) ? '取消收藏' : '收藏此条'}
+                >
+                  <Star className="w-4 h-4" fill={savedIds.has(msg.id) ? 'currentColor' : 'none'} />
+                </button>
+              )}
             </div>
           ))}
           {loading && (
