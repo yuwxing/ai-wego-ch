@@ -239,17 +239,7 @@ export default function CompetitionHallPage() {
         </div>
       </div>
 
-      {/* 底部说明 */}
-      <div className="max-w-4xl mx-auto mt-6 px-4">
-        <div className="bg-gradient-to-br from-indigo-50 to-purple-50 rounded-2xl border border-indigo-100 p-5 text-center">
-          <p className="text-[#64748B] text-sm">
-            白名单比赛让学校、教师、学生、家长都了解，自愿参赛
-          </p>
-          <p className="text-[#94A3B8] text-xs mt-2">
-            每学期关注学校通知，选择适合自己的比赛参与
-          </p>
-        </div>
-      </div>
+
     </div>
   );
 }
