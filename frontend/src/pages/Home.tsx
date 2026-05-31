@@ -5,6 +5,7 @@ import { useUser } from '../contexts/UserContext'
 import VisitorCounter from '../components/VisitorCounter'
 import { digitalAvatarAPI } from '../utils/supabase'
 import html2canvas from 'html2canvas'
+import QRCode from 'qrcode'
 
 const ROLES = [
   { id: 'student', label: '学生', title: '学习教练', knows: ['学习情况', '薄弱环节'], does: ['制定学习计划', '答疑解惑', '整理错题'] },
@@ -91,13 +92,18 @@ export default function HomePageNav() {
   const [showShare, setShowShare] = useState(false);
   const [shareImg, setShareImg] = useState('');
   const [shareLoading, setShareLoading] = useState(false);
+  const [qrDataUrl, setQrDataUrl] = useState('');
   const shareRef = useRef<HTMLDivElement>(null);
 
   const generateShareImage = async () => {
     setShareLoading(true);
     setShareImg('');
-    // wait for render
-    await new Promise(r => setTimeout(r, 100));
+    // ensure QR code is ready
+    const origin = window.location.origin;
+    const qr = await QRCode.toDataURL(origin, { width: 200, margin: 1, color: { dark: '#4A148C', light: '#FFFFFF' } });
+    setQrDataUrl(qr);
+    // wait for react to render the qr image in the hidden card
+    await new Promise(r => setTimeout(r, 300));
     const el = shareRef.current;
     if (!el) { setShareLoading(false); return; }
     try {
@@ -413,7 +419,7 @@ export default function HomePageNav() {
         </div>
 
         <div className="mt-6 text-center pb-4">
-          <button onClick={() => { setShowShare(true); setTimeout(generateShareImage, 200); }} className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 text-white text-sm font-medium hover:from-purple-600 hover:to-pink-600 active:scale-95 transition-all shadow-lg shadow-purple-200">
+          <button onClick={() => { setShowShare(true); setQrDataUrl(''); setShareImg(''); setTimeout(generateShareImage, 100); }} className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 text-white text-sm font-medium hover:from-purple-600 hover:to-pink-600 active:scale-95 transition-all shadow-lg shadow-purple-200">
             <Share2 className="w-4 h-4" /> 分享到朋友圈
           </button>
         </div>
@@ -490,10 +496,10 @@ export default function HomePageNav() {
         </div>
 
         <div className="border-t border-slate-100 pt-4 text-center">
-          <div className="flex items-center justify-center gap-4 text-xs text-slate-400">
-            <span>扫码加入</span>
-            <span>一起学习</span>
-          </div>
+          {qrDataUrl && (
+            <img src={qrDataUrl} alt="QR Code" className="w-24 h-24 mx-auto mb-2" />
+          )}
+          <p className="text-xs text-slate-400 font-medium">长按识别二维码 · 立即体验</p>
         </div>
       </div>
     </div>
