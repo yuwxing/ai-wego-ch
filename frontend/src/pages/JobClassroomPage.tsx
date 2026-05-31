@@ -95,7 +95,7 @@ export const JobClassroomPage: React.FC = () => {
             <Sparkles className="w-4 h-4 text-sky-500" />
             <span className="text-sm text-sky-700 font-medium">AI多智能体陪你练 · DeepSeek驱动</span>
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold text-slate-800 mb-4">
+          <h1 className="text-2xl md:text-3xl font-bold text-slate-800 mb-2">
             <span className="gradient-text-primary">求职课堂</span>
           </h1>
           <p className="text-lg text-slate-500 max-w-2xl mx-auto">AI面试官 + AI同学 + AI导师，三方协作帮你拿下offer</p>
@@ -108,9 +108,9 @@ export const JobClassroomPage: React.FC = () => {
                 <div className={`w-20 h-20 rounded-2xl ${scenario.lightBg} flex items-center justify-center mb-6 ${scenario.lightIcon} group-hover:scale-110 transition-transform duration-300`}>
                   {scenario.icon}
                 </div>
-                <h3 className="text-2xl font-bold text-slate-800 mb-2">{scenario.title}</h3>
-                <p className="text-slate-500 mb-4 font-medium">{scenario.subtitle}</p>
-                <p className="text-slate-400 text-sm leading-relaxed mb-6">{scenario.description}</p>
+                <h3 className="text-base font-bold text-slate-800 mb-1">{scenario.title}</h3>
+                <p className="text-slate-500 mb-3 text-sm">{scenario.subtitle}</p>
+                <p className="text-slate-400 text-sm leading-relaxed mb-4">{scenario.description}</p>
                 <div className="flex flex-wrap gap-2 mb-6">
                   {scenario.features.map((feature) => (
                     <span key={feature} className="px-3 py-1 bg-sky-50 rounded-full text-xs text-sky-600 border border-sky-100 font-medium">{feature}</span>
@@ -125,28 +125,28 @@ export const JobClassroomPage: React.FC = () => {
           ))}
         </div>
 
-        <div className="mt-20 text-center">
-          <h3 className="text-2xl font-bold text-slate-800 mb-8">AI团队阵容</h3>
+        <div className="mt-16 text-center">
+          <h3 className="text-lg font-bold text-slate-800 mb-6">AI团队阵容</h3>
           <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
             <div className="p-6 rounded-2xl bg-white border border-sky-100 shadow-sm">
               <div className="w-12 h-12 mx-auto mb-4 bg-rose-50 rounded-xl flex items-center justify-center">
                 <Mic className="w-6 h-6 text-rose-400" />
               </div>
-              <h4 className="text-lg font-semibold text-slate-800 mb-2">AI面试官（李总）</h4>
+              <h4 className="text-sm font-semibold text-slate-800 mb-1">AI面试官（李总）</h4>
               <p className="text-sm text-slate-500">15年招聘经验，模拟真实面试场景，智能提问与追问</p>
             </div>
             <div className="p-6 rounded-2xl bg-white border border-sky-100 shadow-sm">
               <div className="w-12 h-12 mx-auto mb-4 bg-blue-50 rounded-xl flex items-center justify-center">
                 <span className="text-lg">👨‍🎓</span>
               </div>
-              <h4 className="text-lg font-semibold text-slate-800 mb-2">AI同学（小陈）</h4>
+              <h4 className="text-sm font-semibold text-slate-800 mb-1">AI同学（小陈）</h4>
               <p className="text-sm text-slate-500">提供参考回答，给予不同视角，面试技巧分享</p>
             </div>
             <div className="p-6 rounded-2xl bg-white border border-sky-100 shadow-sm">
               <div className="w-12 h-12 mx-auto mb-4 bg-emerald-50 rounded-xl flex items-center justify-center">
                 <Lightbulb className="w-6 h-6 text-emerald-400" />
               </div>
-              <h4 className="text-lg font-semibold text-slate-800 mb-2">AI导师（张老师）</h4>
+              <h4 className="text-sm font-semibold text-slate-800 mb-1">AI导师（张老师）</h4>
               <p className="text-sm text-slate-500">10年职业辅导经验，实时点评指导，面试后评估报告</p>
             </div>
           </div>

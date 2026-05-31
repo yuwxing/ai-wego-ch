@@ -493,7 +493,7 @@ ${evaluationReport.suggestions.map((s, i) => `${i + 1}. ${s}`).join('\n')}
   const renderJobSelector = () => (
     <div className="space-y-4">
       <div className="text-center mb-8">
-        <h3 className="text-2xl font-bold text-slate-800 mb-2">选择目标岗位</h3>
+        <h3 className="text-lg font-bold text-slate-800 mb-2">选择目标岗位</h3>
         <p className="text-slate-500">选择一个你想要面试的岗位</p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -507,7 +507,7 @@ ${evaluationReport.suggestions.map((s, i) => `${i + 1}. ${s}`).join('\n')}
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-red-500/20 to-orange-500/20 flex items-center justify-center">
                 <Mic className="w-5 h-5 text-red-400" />
               </div>
-              <span className="text-lg font-semibold text-slate-800">{job.name}</span>
+              <span className="text-base font-semibold text-slate-800">{job.name}</span>
             </div>
             <p className="text-sm text-slate-400">{job.description}</p>
           </button>
@@ -520,7 +520,7 @@ ${evaluationReport.suggestions.map((s, i) => `${i + 1}. ${s}`).join('\n')}
   const renderResumeInput = () => (
     <div className="space-y-4">
       <div className="text-center mb-6">
-        <h3 className="text-2xl font-bold text-slate-800 mb-2">📄 简历优化</h3>
+        <h3 className="text-lg font-bold text-slate-800 mb-2">📄 简历优化</h3>
         <p className="text-slate-500">粘贴你的简历内容，AI简历师帮你分析优化</p>
       </div>
       <textarea
@@ -544,7 +544,7 @@ ${evaluationReport.suggestions.map((s, i) => `${i + 1}. ${s}`).join('\n')}
   const renderCareerInput = () => (
     <div className="space-y-4">
       <div className="text-center mb-6">
-        <h3 className="text-2xl font-bold text-slate-800 mb-2">🗺️ 职业规划</h3>
+        <h3 className="text-lg font-bold text-slate-800 mb-2">🗺️ 职业规划</h3>
         <p className="text-slate-500">告诉AI导师你的职业目标，获取专属求职路线图</p>
       </div>
       <textarea
@@ -613,7 +613,7 @@ ${evaluationReport.suggestions.map((s, i) => `${i + 1}. ${s}`).join('\n')}
                     {scene === 'resume' && <FileText className="w-8 h-8 text-sky-500" />}
                     {scene === 'career' && <Map className="w-8 h-8 text-sky-500" />}
                   </div>
-                  <h3 className="text-xl font-bold text-slate-800 mb-2">
+                  <h3 className="text-lg font-bold text-slate-800 mb-2">
                     {scene === 'interview' && `准备开始${selectedJob?.name}面试`}
                     {scene === 'resume' && '开始简历优化'}
                     {scene === 'career' && '开始职业规划'}
