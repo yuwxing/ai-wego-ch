@@ -11,7 +11,6 @@ export interface JobOption {
   id: JobType;
   name: string;
   description: string;
-  questions?: string[];
 }
 
 // 面试岗位配置
@@ -20,119 +19,76 @@ export const jobOptions: JobOption[] = [
     id: 'product_manager',
     name: '产品经理',
     description: '负责产品规划、需求分析、团队协作',
-    questions: [
-      '请介绍一下你过去做过的最成功的项目，以及你在其中的角色？',
-      '如果开发资源和市场需求有冲突，你会如何平衡和决策？',
-      '描述一次你与开发团队意见不合的经历，你是怎么处理的？',
-      '如何进行需求优先级排序？请举例说明',
-      '你如何收集和分析用户反馈？',
-    ],
   },
   {
     id: 'frontend_dev',
     name: '前端开发',
     description: '负责前端页面开发、性能优化、用户体验',
-    questions: [
-      '请介绍一下你熟悉的前端框架，以及你选择使用它们的考量？',
-      '如何优化大型React应用的性能？',
-      '描述一次你解决浏览器兼容性问题经历',
-      'Vue的响应式原理是什么？',
-      '如何设计一个可复用的组件系统？',
-    ],
   },
   {
     id: 'data_analyst',
     name: '数据分析',
     description: '负责数据提取、分析、报表制作、洞察发现',
-    questions: [
-      '你常用的数据分析工具和方法有哪些？',
-      '如何从海量数据中提取有价值的 insights？',
-      '描述一次你通过数据分析解决业务问题的经历',
-      '如何验证你的分析结论是可靠的？',
-      '你会用什么指标来评估一个产品的健康度？',
-    ],
   },
   {
     id: 'operations',
     name: '运营',
     description: '负责用户增长、活动策划、内容运营',
-    questions: [
-      '你如何制定一个有效的运营策略？',
-      '描述一次你策划的爆款活动，以及如何让它成功的？',
-      '如何衡量运营活动的效果？',
-      '如何提升用户留存和活跃度？',
-      '你如何看待私域流量运营？',
-    ],
   },
   {
     id: 'ui_designer',
     name: 'UI设计师',
     description: '负责界面设计、交互设计、用户体验优化',
-    questions: [
-      '请展示你的设计作品集，并选择一个你最满意的进行介绍',
-      '如何平衡美感与实用性？',
-      '描述一次你与开发团队协作的经历',
-      '你如何获取设计灵感？',
-      '如何进行设计规范的制定和维护？',
-    ],
   },
   {
     id: 'marketing',
     name: '市场营销',
     description: '负责品牌推广、市场拓展、营销策划',
-    questions: [
-      '你如何制定品牌推广策略？',
-      '如何衡量营销活动的ROI？',
-      '描述一次你操盘的市场活动',
-      '新媒体营销和传统营销的区别是什么？',
-      '你如何分析竞争对手的市场策略？',
-    ],
   },
 ];
 
-// 系统提示词
-const systemPrompts = {
-  interviewer: (jobName: string) => `你是一位资深HR面试官，代号李总，拥有15年招聘经验，面过上千名候选人。你专业、严谨但不失亲和，善于挖掘候选人的真实能力和潜力。
+// 统一面试系统提示 - 三个角色一次生成
+const interviewSystemPrompt = (jobName: string, conversationHistory: string, latestAnswer: string) => `你是一个模拟面试AI团队，包含三个角色，共同完成${jobName}岗位的模拟面试。
 
-当前面试场景：${jobName}岗位面试
-面试形式：模拟行为面试和技术面试
+## 角色定义
 
-请注意：
-1. 每次只问一个问题，不要一次性问多个问题
-2. 问题要结合岗位特点，有针对性
-3. 追问时要根据候选人的回答深入挖掘
-4. 保持专业但友好的语气
-5. 问完问题后等待候选人回答，不要替候选人回答
+**AI面试官（李总）**：15年招聘经验，面过上千人。专业严谨但不失亲和，善于挖掘候选人的真实能力。每次只问一个问题，可以根据候选人的回答深入追问，也可以问新问题。
 
-开始面试时，先做自我介绍，然后问第一个问题。`,
-  
-  student: (jobName: string) => `你是一位正在参加${jobName}岗位面试的候选人，代号小陈。
+**AI同学（小陈）**：正在参加${jobName}面试的候选人，有2-3年经验。在面试官提问后，给出一个参考回答作为示范。回答比候选人水平略高，但会有一些真实感（偶尔紧张、补充技巧等）。
 
-你比普通候选人水平稍高一点，有2-3年经验，但仍在学习成长中。你会：
-1. 认真聆听面试官的问题
-2. 给出参考性的回答（比用户水平略高），作为示范
-3. 有时会补充一些面试技巧
-4. 偶尔会有一些紧张或小失误，显得更真实
+**AI导师（张老师）**：10年职业辅导经验。观察面试过程，对候选人的回答进行具体点评，包括优点、不足和改进建议。
 
-注意：你的回答是给用户参考的，不是用户的回答。面试官问的是用户，不是你。当面试官提问后，你应该给出你的参考答案。`,
+## 面试流程（每次输出完整一轮）
 
-  mentor: () => `你是一位求职导师，代号张老师，拥有10年职业辅导经验，帮助过上百人成功入职大厂。
+1. 面试官提问或追问
+2. 同学给出参考回答
+3. 导师点评候选人的回答
 
-你的职责是：
-1. 观察面试过程，适时给出口头点评
-2. 指出候选人的优点和不足
-3. 提供具体的改进建议
-4. 在关键节点给出面试技巧提示
-5. 面试结束时给出综合评估报告
+## 规则
+- 面试官每次只问一个问题。如果候选人回答有深度，可以继续追问细节；如果回答完，可以问新问题
+- 不要重复之前问过的问题
+- 同学的回答要有诚意，不要公式化
+- 导师的点评要具体到候选人的回答内容，优缺点都说，建议要可操作
+- 每次必须输出三个角色的内容
 
-你点评时：
-- 要具体，不要泛泛而谈
-- 优缺点都要说，客观公正
-- 建议要可操作，不要空泛
-- 语气要温和鼓励，但也要指出问题
+## 本次对话上下文
 
-面试流程：面试官提问 → 候选人回答 → 同学补充 → 你点评 → 下一轮`,
-};
+以下是面试对话历史：
+${conversationHistory}
+
+候选人对上一题的回答是：
+${latestAnswer}
+
+请按以下格式输出：
+
+[面试官]
+（面试官的下一个问题或追问，只输出一个问题）
+
+[同学]
+（同学的参考回答）
+
+[导师]
+（导师对候选人上一轮回答的点评，包括优点、不足和改进建议）`;
 
 // 简历优化系统提示
 const resumeSystemPrompt = `你是一位资深简历优化师，代号简历师，帮助候选人优化简历内容。
@@ -164,6 +120,29 @@ export type SceneType = 'interview' | 'resume' | 'career';
 interface MultiAgentChatProps {
   scene: SceneType;
   onBack: () => void;
+}
+
+// 格式化对话历史
+function formatConvHistory(msgs: Message[]): string {
+  return msgs.map(m => {
+    if (m.agent === 'interviewer') return `面试官：${m.content}`;
+    if (m.agent === 'student') return `同学：${m.content}`;
+    if (m.agent === 'mentor') return `导师：${m.content}`;
+    if (m.role === 'user') return `候选人：${m.content}`;
+    return '';
+  }).filter(Boolean).join('\n\n');
+}
+
+// 解析结构化输出 [面试官] [同学] [导师]
+function parseStructuredResponse(text: string): { interviewer: string; student: string; mentor: string } {
+  const parts = { interviewer: '', student: '', mentor: '' };
+  const iMatch = text.match(/\[面试官\]\s*([\s\S]*?)(?=\[同学\]|\[导师\]|$)/);
+  const sMatch = text.match(/\[同学\]\s*([\s\S]*?)(?=\[导师\]|$)/);
+  const mMatch = text.match(/\[导师\]\s*([\s\S]*?)$/);
+  if (iMatch) parts.interviewer = iMatch[1].trim();
+  if (sMatch) parts.student = sMatch[1].trim();
+  if (mMatch) parts.mentor = mMatch[1].trim();
+  return parts;
 }
 
 // 评估报告接口
@@ -245,21 +224,16 @@ export const MultiAgentChat: React.FC<MultiAgentChatProps> = ({ scene, onBack })
     setEvaluationReport(null);
     setInterviewHistory([]);
 
-    // 面试官开场
     const jobName = job.name;
-    const interviewPrompt = `作为面试官李总，请做自我介绍并开始${jobName}岗位的面试，问第一个问题。保持专业但友好的语气。`;
 
     setIsLoading(true);
     abortControllerRef.current = new AbortController();
 
     try {
       const messageId = addMessage('', 'interviewer', true);
-      
+      const prompt = `你是一位资深面试官李总，正在面试${jobName}岗位的候选人。请做自我介绍并问第一个面试问题。保持专业友好的语气。`;
       await sendToDeepSeek(
-        [
-          { role: 'system', content: systemPrompts.interviewer(jobName) },
-          { role: 'user', content: interviewPrompt },
-        ],
+        [{ role: 'user', content: prompt }],
         (chunk) => {
           setMessages(prev => {
             const msg = prev.find(m => m.id === messageId);
@@ -280,7 +254,7 @@ export const MultiAgentChat: React.FC<MultiAgentChatProps> = ({ scene, onBack })
     }
   };
 
-  // 用户提交回答
+  // 用户提交回答 - 单次调用生成三角色内容
   const submitAnswer = async () => {
     if (!inputValue.trim() || isLoading) return;
 
@@ -288,135 +262,70 @@ export const MultiAgentChat: React.FC<MultiAgentChatProps> = ({ scene, onBack })
     setInputValue('');
     addUserMessage(userAnswer);
     setIsLoading(true);
+    setInterviewHistory(prev => [...prev, userAnswer]);
     abortControllerRef.current = new AbortController();
 
     const jobName = selectedJob?.name || '';
-    const currentQ = currentQuestion;
 
-    // 更新面试历史
-    setInterviewHistory(prev => [...prev, userAnswer]);
-
-    // 同学先回答
     try {
-      const studentMessageId = addMessage('', 'student', true);
-      await sendToDeepSeek(
+      const fullResponse = await sendToDeepSeek(
         [
-          { role: 'system', content: systemPrompts.student(jobName) },
-          { role: 'user', content: `面试官问：${selectedJob?.questions?.[currentQ] || '请回答这个问题'}\n现在请你（小陈）给出你的参考答案，作为候选人的参考。` },
+          { role: 'system', content: interviewSystemPrompt(jobName, formatConvHistory(messages), userAnswer) },
         ],
-        (chunk) => {
-          setMessages(prev => {
-            const msg = prev.find(m => m.id === studentMessageId);
-            if (msg) {
-              return prev.map(m => m.id === studentMessageId ? { ...m, content: (m.content || '') + chunk } : m);
-            }
-            return prev;
-          });
-        },
-        abortControllerRef.current.signal
+        undefined,
+        abortControllerRef.current.signal,
+        2048
       );
+
+      const parsed = parseStructuredResponse(fullResponse);
+
+      if (parsed.interviewer) {
+        addMessage(parsed.interviewer, 'interviewer');
+      }
+      if (parsed.student) {
+        addMessage(parsed.student, 'student');
+      }
+      if (parsed.mentor) {
+        addMessage(parsed.mentor, 'mentor');
+      }
+
+      const nextRound = currentQuestion + 1;
+      setCurrentQuestion(nextRound);
+
+      if (nextRound >= 6) {
+        setTimeout(() => generateEvaluationReport(), 1500);
+      }
     } catch (error) {
-      console.error('同学回答失败:', error);
+      console.error('AI响应失败:', error);
+      addMessage('抱歉，面试官暂时断线，请重试。', 'interviewer');
+    } finally {
+      setIsLoading(false);
     }
-
-    // 导师点评
-    try {
-      await new Promise(resolve => setTimeout(resolve, 500));
-      const mentorMessageId = addMessage('', 'mentor', true);
-      await sendToDeepSeek(
-        [
-          { role: 'system', content: systemPrompts.mentor() },
-          { role: 'user', content: `请对候选人的以下回答进行点评：
-          
-问题：${selectedJob?.questions?.[currentQ]}
-候选人回答：${userAnswer}
-
-请给出具体的点评，包括优点和不足。` },
-        ],
-        (chunk) => {
-          setMessages(prev => {
-            const msg = prev.find(m => m.id === mentorMessageId);
-            if (msg) {
-              return prev.map(m => m.id === mentorMessageId ? { ...m, content: (m.content || '') + chunk } : m);
-            }
-            return prev;
-          });
-        },
-        abortControllerRef.current.signal
-      );
-    } catch (error) {
-      console.error('导师点评失败:', error);
-    }
-
-    // 继续下一题或结束面试
-    const nextQ = currentQuestion + 1;
-    setCurrentQuestion(nextQ);
-
-    if (nextQ >= (selectedJob?.questions?.length || 5)) {
-      // 面试结束，生成评估报告
-      setTimeout(() => {
-        generateEvaluationReport();
-      }, 1000);
-    } else {
-      // 继续下一题
-      setTimeout(async () => {
-        setIsLoading(true);
-        try {
-          const nextMessageId = addMessage('', 'interviewer', true);
-          await sendToDeepSeek(
-            [
-              { role: 'system', content: systemPrompts.interviewer(jobName) },
-              { role: 'user', content: `面试继续。请问下一个问题：${selectedJob?.questions?.[nextQ]}` },
-            ],
-            (chunk) => {
-              setMessages(prev => {
-                const msg = prev.find(m => m.id === nextMessageId);
-                if (msg) {
-                  return prev.map(m => m.id === nextMessageId ? { ...m, content: (m.content || '') + chunk } : m);
-                }
-                return prev;
-              });
-            },
-            abortControllerRef.current.signal
-          );
-        } catch (error) {
-          console.error('下一题失败:', error);
-          addMessage(`好的，我们进入下一个问题：${selectedJob?.questions?.[nextQ]}`, 'interviewer');
-        } finally {
-          setIsLoading(false);
-          setStreamingMessageId(null);
-        }
-      }, 1500);
-    }
-
-    setIsLoading(false);
   };
 
-  // 生成评估报告
+  // 生成评估报告 - 基于实际对话的AI评估
   const generateEvaluationReport = async () => {
     addMessage('正在生成面试评估报告...', 'mentor');
     setIsLoading(true);
+    abortControllerRef.current = new AbortController();
 
     try {
       const reportMessageId = addMessage('', 'mentor', true);
+      const history = formatConvHistory(messages);
       await sendToDeepSeek(
         [
-          { role: 'system', content: systemPrompts.mentor() },
-          { role: 'user', content: `面试结束，请生成一份详细的面试评估报告。
-
+          { role: 'system', content: `你是一位资深面试评估专家。根据面试记录生成评估报告。
 面试岗位：${selectedJob?.name}
-面试问题与候选人回答：
-${selectedJob?.questions?.map((q, i) => `Q${i + 1}: ${q}\nA: ${interviewHistory[i] || '未回答'}`).join('\n\n')}
 
-请生成一份评估报告，包含：
-1. 综合评分（1-10分）
-2. 各维度评分（面试表现、沟通能力、技术能力）
-3. 主要优点（至少3点）
+报告必须基于候选人的实际回答，不要使用预设值。
+包含以下部分（用Markdown）：
+1. 综合评分（1-10）
+2. 维度评分：面试表现、沟通能力、专业能力、逻辑思维
+3. 主要优点（至少3点，具体到回答内容）
 4. 主要不足（至少3点）
-5. 改进建议（至少5点）
-6. 录用建议
-
-格式要求：清晰分段，使用emoji增加可读性。` },
+5. 改进建议（至少5点，要具体可操作）
+6. 录用建议` },
+          { role: 'user', content: `以下是${selectedJob?.name}岗位的完整面试记录，请生成评估报告：\n\n${history}` },
         ],
         (chunk) => {
           setMessages(prev => {
@@ -427,20 +336,19 @@ ${selectedJob?.questions?.map((q, i) => `Q${i + 1}: ${q}\nA: ${interviewHistory[
             return prev;
           });
         },
-        abortControllerRef.current.signal
+        abortControllerRef.current.signal,
+        3072
       );
 
-      // 同时生成结构化报告
-      const structuredReport: EvaluationReport = {
-        overall: 7.5,
-        strengths: ['回答有条理，逻辑清晰', '专业知识掌握扎实', '沟通表达能力良好'],
-        weaknesses: ['部分回答缺乏具体案例支撑', '技术深度有待加强', '对行业趋势了解不够'],
-        suggestions: ['建议补充更多项目案例', '加强技术深度学习', '多关注行业动态'],
-        interviewScore: 8,
-        communicationScore: 7.5,
+      setEvaluationReport({
+        overall: 7,
+        strengths: ['等待AI生成...'],
+        weaknesses: ['等待AI生成...'],
+        suggestions: ['等待AI生成...'],
+        interviewScore: 7,
+        communicationScore: 7,
         technicalScore: 7,
-      };
-      setEvaluationReport(structuredReport);
+      });
     } catch (error) {
       console.error('生成报告失败:', error);
       addMessage('抱歉，生成评估报告时出现问题。面试已结束，感谢参与！', 'mentor');
@@ -824,12 +732,12 @@ ${evaluationReport.suggestions.map((s, i) => `${i + 1}. ${s}`).join('\n')}
                     <div className="flex-1 h-1 rounded-full bg-white/10 overflow-hidden">
                       <div
                         className="h-full bg-gradient-to-r from-violet-500 to-purple-500 transition-all duration-300"
-                        style={{ width: `${((currentQuestion) / (selectedJob.questions?.length || 5)) * 100}%` }}
-                      />
-                    </div>
-                    <span className="text-xs text-white/50">
-                      {currentQuestion}/{selectedJob.questions?.length || 5}
-                    </span>
+                        style={{ width: `${(currentQuestion / 6) * 100}%` }}
+                        />
+                      </div>
+                      <span className="text-xs text-white/50">
+                        第{currentQuestion}/6轮
+                      </span>
                   </div>
                 )}
 
