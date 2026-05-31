@@ -129,10 +129,12 @@ export const RegisterPage: React.FC = () => {
   const handleGenerate = async () => {
     if (!validateAvatar()) return;
     setLoading(true);
-    await new Promise(r => setTimeout(r, 2000));
     const skills = roleConfig?.does || [];
     setGenerated({
-      prompt: `你是${avatar.name}，我的${roleConfig?.companionTitle}。你了解我的${roleConfig?.knows?.join('、')}。每天帮我${roleConfig?.does?.join('、')}。目标是${avatar.goal}`,
+      prompt: `你是${avatar.name}，我的${roleConfig?.companionTitle}。` +
+        `你了解我的${roleConfig?.knows?.join('、')}。` +
+        `每天帮我${roleConfig?.does?.join('、')}。` +
+        `目标是${avatar.goal}。用温暖鼓励的语气陪伴我。`,
       skills,
     });
     localStorage.setItem('digitalAvatar', JSON.stringify({
@@ -144,7 +146,7 @@ export const RegisterPage: React.FC = () => {
         `目标是${avatar.goal}。用温暖鼓励的语气陪伴我。`,
     }));
     setLoading(false);
-    setStep(3);
+    setStep(4);
   };
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -183,7 +185,7 @@ export const RegisterPage: React.FC = () => {
     } catch { setError('登录失败'); } finally { setLoading(false); }
   };
 
-  const progressSteps = ['基本信息', '选择身份', '创建分身', '生成中', '完成'];
+  const progressSteps = ['基本信息', '选择身份', '创建分身', '完成'];
 
   const renderProgress = () => {
     if (activeTab !== 'human') return null;
@@ -414,22 +416,7 @@ export const RegisterPage: React.FC = () => {
             </Card>
           )}
 
-          {step === 3 && roleConfig && (
-            <Card className="!p-8 text-center">
-              <div className={`w-20 h-20 mx-auto mb-6 rounded-full bg-gradient-to-br ${roleConfig.gradient} flex items-center justify-center`}>
-                <Loader2 className="w-10 h-10 text-white animate-spin" />
-              </div>
-              <h2 className="text-xl font-bold text-slate-800 mb-2">正在生成{avatar.name}...</h2>
-              <div className="space-y-2 text-sm text-slate-400">
-                <p>🧠 分析你的角色和需求</p>
-                <p>📖 构建{roleConfig.companionTitle}的知识体系</p>
-                <p>🌳 生成技能树和每日任务</p>
-                <p>💾 初始化长期记忆系统</p>
-              </div>
-            </Card>
-          )}
-
-          {step === 4 && roleConfig && generated && (
+          {step === 3 && roleConfig && generated && (
             <Card className="!p-6">
               <h2 className="text-lg font-bold text-slate-800 mb-1">{avatar.name} 创建完成！</h2>
               <p className="text-sm text-slate-400 mb-5">你的{roleConfig.companionTitle}已准备好</p>
