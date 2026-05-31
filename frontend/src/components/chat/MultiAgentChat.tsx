@@ -513,15 +513,18 @@ ${evaluationReport.suggestions.map((s, i) => `${i + 1}. ${s}`).join('\n')}
           <button
             key={job.id}
             onClick={() => startInterview(job)}
-            className="p-5 rounded-2xl bg-white border-2 border-sky-100 hover:border-sky-300 hover:bg-sky-50 transition-all text-left group"
+            className="group relative text-left"
           >
-            <div className="flex items-center gap-3 mb-2">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-red-500/20 to-orange-500/20 flex items-center justify-center">
-                <Mic className="w-5 h-5 text-red-400" />
+            <div className="absolute -inset-0.5 bg-gradient-to-r from-sky-400 to-emerald-400 rounded-2xl opacity-0 group-hover:opacity-30 blur-md transition-opacity duration-500" />
+            <div className="relative p-5 rounded-2xl bg-white shadow-lg shadow-sky-200/30 border border-sky-100/80 transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:border-sky-200">
+              <div className="flex items-center gap-3 mb-2">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-sky-400 to-emerald-400 flex items-center justify-center text-white shadow-md group-hover:scale-110 transition-transform">
+                  <Mic className="w-5 h-5" />
+                </div>
+                <span className="text-base font-semibold text-slate-800">{job.name}</span>
               </div>
-              <span className="text-base font-semibold text-slate-800">{job.name}</span>
+              <p className="text-sm text-slate-400">{job.description}</p>
             </div>
-            <p className="text-sm text-slate-400">{job.description}</p>
           </button>
         ))}
       </div>
@@ -530,49 +533,55 @@ ${evaluationReport.suggestions.map((s, i) => `${i + 1}. ${s}`).join('\n')}
 
   // 渲染简历输入
   const renderResumeInput = () => (
-    <div className="space-y-4">
-      <div className="text-center mb-6">
-        <h3 className="text-lg font-bold text-slate-800 mb-2">📄 简历优化</h3>
-        <p className="text-slate-500">粘贴你的简历内容，AI简历师帮你分析优化</p>
+    <div className="max-w-xl mx-auto">
+      <div className="relative p-6 rounded-2xl bg-white shadow-lg shadow-violet-200/30 border border-violet-100/80">
+        <div className="text-center mb-6">
+          <h3 className="text-lg font-bold text-slate-800 mb-2">📄 简历优化</h3>
+          <p className="text-slate-500">粘贴你的简历内容，AI简历师帮你分析优化</p>
+        </div>
+        <textarea
+          value={resumeContent}
+          onChange={(e) => setResumeContent(e.target.value)}
+          placeholder="请粘贴简历内容..."
+          className="w-full h-64 p-4 rounded-xl bg-white border-2 border-slate-100 text-slate-700 placeholder-slate-300 resize-none focus:outline-none focus:border-violet-300 shadow-inner transition-all"
+        />
+        <button
+          onClick={handleResumeAnalysis}
+          disabled={!resumeContent.trim() || isLoading}
+          className="w-full mt-4 py-3 rounded-xl bg-gradient-to-r from-violet-600 to-purple-600 text-white font-medium hover:shadow-lg hover:shadow-violet-200/50 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 relative overflow-hidden"
+        >
+          <div className="absolute inset-0 bg-white/10 translate-x-[-100%] hover:translate-x-[100%] transition-transform duration-700" />
+          <span className="relative">{isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Sparkles className="w-5 h-5" />}</span>
+          <span className="relative">开始分析</span>
+        </button>
       </div>
-      <textarea
-        value={resumeContent}
-        onChange={(e) => setResumeContent(e.target.value)}
-        placeholder="请粘贴简历内容..."
-        className="w-full h-64 p-4 rounded-xl bg-white border-2 border-sky-100 text-slate-700 placeholder-slate-300 resize-none focus:outline-none focus:border-sky-300"
-      />
-      <button
-        onClick={handleResumeAnalysis}
-        disabled={!resumeContent.trim() || isLoading}
-        className="w-full py-3 rounded-xl bg-gradient-to-r from-violet-600 to-purple-600 text-white font-medium hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity flex items-center justify-center gap-2"
-      >
-        {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Sparkles className="w-5 h-5" />}
-        开始分析
-      </button>
     </div>
   );
 
   // 渲染职业规划输入
   const renderCareerInput = () => (
-    <div className="space-y-4">
-      <div className="text-center mb-6">
-        <h3 className="text-lg font-bold text-slate-800 mb-2">🗺️ 职业规划</h3>
-        <p className="text-slate-500">告诉AI导师你的职业目标，获取专属求职路线图</p>
+    <div className="max-w-xl mx-auto">
+      <div className="relative p-6 rounded-2xl bg-white shadow-lg shadow-cyan-200/30 border border-cyan-100/80">
+        <div className="text-center mb-6">
+          <h3 className="text-lg font-bold text-slate-800 mb-2">🗺️ 职业规划</h3>
+          <p className="text-slate-500">告诉AI导师你的职业目标，获取专属求职路线图</p>
+        </div>
+        <textarea
+          value={careerGoal}
+          onChange={(e) => setCareerGoal(e.target.value)}
+          placeholder="请描述你的情况，例如：\n- 你的专业和工作经验\n- 你的职业目标\n- 感兴趣的岗位\n- 遇到的困惑..."
+          className="w-full h-48 p-4 rounded-xl bg-white border-2 border-slate-100 text-slate-700 placeholder-slate-300 resize-none focus:outline-none focus:border-cyan-300 shadow-inner transition-all"
+        />
+        <button
+          onClick={handleCareerChat}
+          disabled={!careerGoal.trim() || isLoading}
+          className="w-full mt-4 py-3 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-medium hover:shadow-lg hover:shadow-cyan-200/50 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 relative overflow-hidden"
+        >
+          <div className="absolute inset-0 bg-white/10 translate-x-[-100%] hover:translate-x-[100%] transition-transform duration-700" />
+          <span className="relative">{isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Sparkles className="w-5 h-5" />}</span>
+          <span className="relative">开始规划</span>
+        </button>
       </div>
-      <textarea
-        value={careerGoal}
-        onChange={(e) => setCareerGoal(e.target.value)}
-        placeholder="请描述你的情况，例如：\n- 你的专业和工作经验\n- 你的职业目标\n- 感兴趣的岗位\n- 遇到的困惑..."
-        className="w-full h-48 p-4 rounded-xl bg-white border-2 border-sky-100 text-slate-700 placeholder-slate-300 resize-none focus:outline-none focus:border-sky-300"
-      />
-      <button
-        onClick={handleCareerChat}
-        disabled={!careerGoal.trim() || isLoading}
-        className="w-full py-3 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 text-white font-medium hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity flex items-center justify-center gap-2"
-      >
-        {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Sparkles className="w-5 h-5" />}
-        开始规划
-      </button>
     </div>
   );
 
@@ -619,11 +628,14 @@ ${evaluationReport.suggestions.map((s, i) => `${i + 1}. ${s}`).join('\n')}
             <div className="flex-1 overflow-y-auto p-4 space-y-4">
               {/* 欢迎消息 */}
               {messages.length === 0 && (
-                <div className="text-center py-12">
-                  <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-sky-100 to-emerald-100 flex items-center justify-center">
-                    {scene === 'interview' && <Mic className="w-8 h-8 text-sky-500" />}
-                    {scene === 'resume' && <FileText className="w-8 h-8 text-sky-500" />}
-                    {scene === 'career' && <Map className="w-8 h-8 text-sky-500" />}
+                <div className="text-center py-16">
+                  <div className="relative inline-block mb-6">
+                    <div className="w-20 h-20 mx-auto rounded-2xl bg-gradient-to-br from-sky-400 to-emerald-400 flex items-center justify-center text-white shadow-lg shadow-sky-200/40">
+                      {scene === 'interview' && <Mic className="w-9 h-9" />}
+                      {scene === 'resume' && <FileText className="w-9 h-9" />}
+                      {scene === 'career' && <Map className="w-9 h-9" />}
+                    </div>
+                    <div className="absolute -bottom-1 -right-1 w-20 h-20 rounded-2xl bg-gradient-to-br from-sky-400 to-emerald-400 opacity-20 blur-sm -z-10" />
                   </div>
                   <h3 className="text-lg font-bold text-slate-800 mb-2">
                     {scene === 'interview' && `准备开始${selectedJob?.name}面试`}
@@ -666,14 +678,20 @@ ${evaluationReport.suggestions.map((s, i) => `${i + 1}. ${s}`).join('\n')}
                     </div>
                   )}
                   {message.agent === 'interviewer' && auxMap[message.id]?.showStudent && (
-                    <div className="ml-14 mt-1.5 p-3 rounded-xl bg-blue-50 border border-blue-100">
-                      <div className="text-xs font-semibold text-blue-600 mb-1">💡 同学参考答案</div>
+                    <div className="ml-14 mt-1.5 p-3 rounded-xl bg-gradient-to-br from-blue-50 to-cyan-50 border border-blue-100 shadow-md shadow-blue-200/20">
+                      <div className="flex items-center gap-1.5 text-xs font-semibold text-blue-600 mb-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-blue-400" />
+                        💡 同学参考答案
+                      </div>
                       <div className="text-sm text-slate-700 whitespace-pre-wrap">{auxMap[message.id].student}</div>
                     </div>
                   )}
                   {message.agent === 'interviewer' && auxMap[message.id]?.showMentor && (
-                    <div className="ml-14 mt-1.5 p-3 rounded-xl bg-emerald-50 border border-emerald-100">
-                      <div className="text-xs font-semibold text-emerald-600 mb-1">📝 导师点评</div>
+                    <div className="ml-14 mt-1.5 p-3 rounded-xl bg-gradient-to-br from-emerald-50 to-teal-50 border border-emerald-100 shadow-md shadow-emerald-200/20">
+                      <div className="flex items-center gap-1.5 text-xs font-semibold text-emerald-600 mb-1.5">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-400" />
+                        📝 导师点评
+                      </div>
                       <div className="text-sm text-slate-700 whitespace-pre-wrap">{auxMap[message.id].mentor}</div>
                     </div>
                   )}
@@ -681,28 +699,29 @@ ${evaluationReport.suggestions.map((s, i) => `${i + 1}. ${s}`).join('\n')}
               ))}
 
               {evaluationReport && (
-                <div className="mt-6 p-6 rounded-2xl bg-gradient-to-br from-emerald-50 to-teal-50 border-2 border-emerald-200">
+                <div className="relative mt-6 p-6 rounded-2xl bg-gradient-to-br from-emerald-50 to-teal-50 border-2 border-emerald-200 shadow-lg shadow-emerald-200/30">
+                  <div className="absolute top-0 left-8 right-8 h-1 bg-gradient-to-r from-emerald-400 to-teal-400 rounded-full opacity-60" />
                   <div className="flex items-center gap-2 mb-4">
                     <CheckCircle className="w-6 h-6 text-emerald-500" />
                     <h4 className="text-lg font-bold text-emerald-700">面试完成！</h4>
                   </div>
                   <div className="grid grid-cols-3 gap-4 mb-4">
-                    <div className="text-center p-3 rounded-xl bg-white shadow-sm">
+                    <div className="text-center p-4 rounded-xl bg-white shadow-md shadow-emerald-200/20 border border-emerald-100/60">
                       <div className="text-2xl font-bold text-slate-800">{evaluationReport.overall}</div>
-                      <div className="text-xs text-slate-400">综合评分</div>
+                      <div className="text-xs text-slate-400 mt-0.5">综合评分</div>
                     </div>
-                    <div className="text-center p-3 rounded-xl bg-white shadow-sm">
+                    <div className="text-center p-4 rounded-xl bg-white shadow-md shadow-blue-200/20 border border-blue-100/60">
                       <div className="text-2xl font-bold text-blue-500">{evaluationReport.interviewScore}</div>
-                      <div className="text-xs text-slate-400">面试表现</div>
+                      <div className="text-xs text-slate-400 mt-0.5">面试表现</div>
                     </div>
-                    <div className="text-center p-3 rounded-xl bg-white shadow-sm">
+                    <div className="text-center p-4 rounded-xl bg-white shadow-md shadow-purple-200/20 border border-purple-100/60">
                       <div className="text-2xl font-bold text-purple-500">{evaluationReport.technicalScore}</div>
-                      <div className="text-xs text-slate-400">技术能力</div>
+                      <div className="text-xs text-slate-400 mt-0.5">技术能力</div>
                     </div>
                   </div>
                   <button
                     onClick={exportReport}
-                    className="w-full py-2 rounded-xl bg-emerald-100 border border-emerald-200 text-emerald-600 hover:bg-emerald-200 transition-colors flex items-center justify-center gap-2 font-medium"
+                    className="w-full py-2.5 rounded-xl bg-white border-2 border-emerald-200 text-emerald-600 hover:bg-emerald-50 hover:shadow-md transition-all flex items-center justify-center gap-2 font-medium shadow-sm"
                   >
                     <Download className="w-4 h-4" />
                     导出评估报告
@@ -715,26 +734,28 @@ ${evaluationReport.suggestions.map((s, i) => `${i + 1}. ${s}`).join('\n')}
 
             {/* 输入区域 */}
             {scene === 'resume' && (
-              <div className="p-4 border-t border-sky-100 bg-white">
-                <div className="flex gap-3">
-                  <textarea
-                    ref={inputRef}
-                    value={resumeContent}
-                    onChange={(e) => setResumeContent(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' && !e.shiftKey) {
-                        e.preventDefault();
-                        handleResumeAnalysis();
-                      }
-                    }}
-                    placeholder="继续输入或粘贴更多简历内容..."
-                    className="flex-1 p-3 rounded-xl bg-sky-50 border-2 border-sky-100 text-slate-700 placeholder-slate-300 resize-none focus:outline-none focus:border-sky-300"
-                    rows={2}
-                  />
+              <div className="p-4 border-t border-slate-100 bg-white/80 backdrop-blur-sm shadow-[0_-4px_20px_rgba(0,0,0,0.04)]">
+                <div className="max-w-3xl mx-auto flex gap-3">
+                  <div className="flex-1 relative">
+                    <textarea
+                      ref={inputRef}
+                      value={resumeContent}
+                      onChange={(e) => setResumeContent(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                          e.preventDefault();
+                          handleResumeAnalysis();
+                        }
+                      }}
+                      placeholder="继续输入或粘贴更多简历内容..."
+                      className="w-full p-3 rounded-xl bg-white border-2 border-slate-200 text-slate-700 placeholder-slate-300 resize-none focus:outline-none focus:border-violet-300 shadow-sm transition-all"
+                      rows={2}
+                    />
+                  </div>
                   <button
                     onClick={handleResumeAnalysis}
                     disabled={!resumeContent.trim() || isLoading}
-                    className="px-4 rounded-xl bg-gradient-to-r from-violet-600 to-purple-600 text-white hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity"
+                    className="px-4 rounded-xl bg-gradient-to-r from-violet-600 to-purple-600 text-white hover:shadow-lg hover:shadow-violet-200/50 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center"
                   >
                     {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
                   </button>
@@ -743,26 +764,28 @@ ${evaluationReport.suggestions.map((s, i) => `${i + 1}. ${s}`).join('\n')}
             )}
 
             {scene === 'career' && (
-              <div className="p-4 border-t border-sky-100 bg-white">
-                <div className="flex gap-3">
-                  <textarea
-                    ref={inputRef}
-                    value={careerGoal}
-                    onChange={(e) => setCareerGoal(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' && !e.shiftKey) {
-                        e.preventDefault();
-                        handleCareerChat();
-                      }
-                    }}
-                    placeholder="继续描述你的情况..."
-                    className="flex-1 p-3 rounded-xl bg-sky-50 border-2 border-sky-100 text-slate-700 placeholder-slate-300 resize-none focus:outline-none focus:border-sky-300"
-                    rows={2}
-                  />
+              <div className="p-4 border-t border-slate-100 bg-white/80 backdrop-blur-sm shadow-[0_-4px_20px_rgba(0,0,0,0.04)]">
+                <div className="max-w-3xl mx-auto flex gap-3">
+                  <div className="flex-1 relative">
+                    <textarea
+                      ref={inputRef}
+                      value={careerGoal}
+                      onChange={(e) => setCareerGoal(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                          e.preventDefault();
+                          handleCareerChat();
+                        }
+                      }}
+                      placeholder="继续描述你的情况..."
+                      className="w-full p-3 rounded-xl bg-white border-2 border-slate-200 text-slate-700 placeholder-slate-300 resize-none focus:outline-none focus:border-cyan-300 shadow-sm transition-all"
+                      rows={2}
+                    />
+                  </div>
                   <button
                     onClick={handleCareerChat}
                     disabled={!careerGoal.trim() || isLoading}
-                    className="px-4 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 text-white hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity"
+                    className="px-4 rounded-xl bg-gradient-to-r from-cyan-600 to-blue-600 text-white hover:shadow-lg hover:shadow-cyan-200/50 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center"
                   >
                     {isLoading ? <Loader2 className="w-5 h-5 animate-spin" /> : <Send className="w-5 h-5" />}
                   </button>
@@ -771,41 +794,44 @@ ${evaluationReport.suggestions.map((s, i) => `${i + 1}. ${s}`).join('\n')}
             )}
 
             {scene === 'interview' && !evaluationReport && (
-              <div className="p-4 border-t border-sky-100 bg-white">
+              <div className="p-4 border-t border-slate-100 bg-white/80 backdrop-blur-sm shadow-[0_-4px_20px_rgba(0,0,0,0.04)]">
+                <div className="max-w-3xl mx-auto">
                 {isInterviewStarted && selectedJob && (
                   <div className="flex items-center gap-2 mb-3">
-                    <div className="flex-1 h-1 rounded-full bg-sky-100 overflow-hidden">
+                    <div className="flex-1 h-1.5 rounded-full bg-slate-100 overflow-hidden">
                       <div
-                        className="h-full bg-gradient-to-r from-sky-400 to-emerald-400 transition-all duration-300"
+                        className="h-full bg-gradient-to-r from-sky-400 to-emerald-400 transition-all duration-300 rounded-full"
                         style={{ width: `${(currentQuestion / 6) * 100}%` }}
                         />
                       </div>
-                      <span className="text-xs text-slate-400">
+                      <span className="text-xs text-slate-400 font-medium">
                         第{currentQuestion}/6轮
                       </span>
                   </div>
                 )}
 
                 <div className="flex gap-3">
-                  <textarea
-                    ref={inputRef}
-                    value={inputValue}
-                    onChange={(e) => setInputValue(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === 'Enter' && !e.shiftKey) {
-                        e.preventDefault();
-                        submitAnswer();
-                      }
-                    }}
-                    placeholder="输入你的回答..."
-                    className="flex-1 p-3 rounded-xl bg-sky-50 border-2 border-sky-100 text-slate-700 placeholder-slate-300 resize-none focus:outline-none focus:border-sky-300"
-                    rows={2}
-                    disabled={isLoading || !isInterviewStarted}
-                  />
+                  <div className="flex-1 relative">
+                    <textarea
+                      ref={inputRef}
+                      value={inputValue}
+                      onChange={(e) => setInputValue(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter' && !e.shiftKey) {
+                          e.preventDefault();
+                          submitAnswer();
+                        }
+                      }}
+                      placeholder="输入你的回答..."
+                      className="w-full p-3 rounded-xl bg-white border-2 border-slate-200 text-slate-700 placeholder-slate-300 resize-none focus:outline-none focus:border-sky-300 shadow-sm transition-all"
+                      rows={2}
+                      disabled={isLoading || !isInterviewStarted}
+                    />
+                  </div>
                   {isLoading ? (
                     <button
                       onClick={stopGeneration}
-                      className="px-4 rounded-xl bg-rose-100 border-2 border-rose-200 text-rose-500 hover:bg-rose-200 transition-colors font-medium"
+                      className="px-4 rounded-xl bg-rose-100 border-2 border-rose-200 text-rose-500 hover:bg-rose-200 transition-colors font-medium shadow-sm"
                     >
                       停止
                     </button>
@@ -813,11 +839,12 @@ ${evaluationReport.suggestions.map((s, i) => `${i + 1}. ${s}`).join('\n')}
                     <button
                       onClick={submitAnswer}
                       disabled={!inputValue.trim() || !isInterviewStarted}
-                      className="px-4 rounded-xl bg-gradient-to-r from-sky-500 to-emerald-500 text-white hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity"
+                      className="px-4 rounded-xl bg-gradient-to-r from-sky-500 to-emerald-500 text-white hover:shadow-lg hover:shadow-sky-200/50 disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center"
                     >
                       <Send className="w-5 h-5" />
                     </button>
                   )}
+                </div>
                 </div>
               </div>
             )}
@@ -827,14 +854,16 @@ ${evaluationReport.suggestions.map((s, i) => `${i + 1}. ${s}`).join('\n')}
 
       {/* 重新开始按钮 */}
       {messages.length > 0 && (
-        <div className="p-4 border-t border-sky-100 bg-white">
-          <button
-            onClick={handleRestart}
-            className="w-full py-2 rounded-xl bg-sky-50 border-2 border-sky-100 text-sky-600 hover:bg-sky-100 hover:text-sky-700 transition-colors flex items-center justify-center gap-2 font-medium"
-          >
-            <RefreshCw className="w-4 h-4" />
-            {scene === 'interview' ? '重新开始面试' : '重新开始'}
-          </button>
+        <div className="p-4 border-t border-slate-100 bg-white/80 backdrop-blur-sm">
+          <div className="max-w-3xl mx-auto">
+            <button
+              onClick={handleRestart}
+              className="w-full py-2.5 rounded-xl bg-white border-2 border-slate-200 text-slate-500 hover:bg-slate-50 hover:text-slate-700 hover:border-slate-300 hover:shadow-md transition-all flex items-center justify-center gap-2 font-medium shadow-sm"
+            >
+              <RefreshCw className="w-4 h-4" />
+              {scene === 'interview' ? '重新开始面试' : '重新开始'}
+            </button>
+          </div>
         </div>
       )}
     </div>

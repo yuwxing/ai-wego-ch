@@ -84,9 +84,9 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({ message, isStreaming }) 
         {/* 头像 */}
         <div className={`flex-shrink-0 w-10 h-10 rounded-2xl ${
           isUser 
-            ? 'bg-gradient-to-br from-violet-500 to-purple-600' 
-            : `bg-gradient-to-br ${config.bgGradient}`
-        } flex items-center justify-center border ${config.borderColor}`}>
+            ? 'bg-gradient-to-br from-violet-500 to-purple-600 shadow-md shadow-violet-200/50' 
+            : `bg-gradient-to-br ${config.bgGradient} shadow-md border ${config.borderColor}`
+        } flex items-center justify-center ${!isUser ? config.borderColor : ''}`}>
           <Icon className={`w-5 h-5 ${isUser ? 'text-white' : config.textColor}`} />
         </div>
 
@@ -95,7 +95,7 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({ message, isStreaming }) 
           {/* 名称标签 */}
           <div className={`flex items-center gap-2 ${isUser ? 'flex-row-reverse' : 'flex-row'}`}>
             <span className={`text-sm font-medium ${config.textColor}`}>{config.name}</span>
-            <span className={`text-xs px-2 py-0.5 rounded-full ${config.badgeBg} text-white`}>
+            <span className={`text-xs px-2 py-0.5 rounded-full ${config.badgeBg} text-white shadow-sm`}>
               {config.role}
             </span>
           </div>
@@ -103,8 +103,8 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({ message, isStreaming }) 
           {/* 气泡 */}
           <div className={`px-4 py-3 rounded-2xl ${
             isUser
-              ? 'bg-gradient-to-br from-violet-600/90 to-purple-600/90 text-white rounded-tr-sm'
-              : `bg-gradient-to-br ${config.bgGradient} border ${config.borderColor} ${config.textColor} rounded-tl-sm`
+              ? 'bg-gradient-to-br from-violet-600/90 to-purple-600/90 text-white rounded-tr-sm shadow-md shadow-violet-200/40'
+              : `bg-gradient-to-br ${config.bgGradient} border ${config.borderColor} ${config.textColor} rounded-tl-sm shadow-md shadow-slate-200/50`
           } ${isStreaming ? 'animate-pulse' : ''}`}>
             <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</p>
             {isStreaming && (
