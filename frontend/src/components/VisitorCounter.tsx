@@ -1,29 +1,25 @@
 import { useEffect, useState } from 'react'
 import { Eye } from 'lucide-react'
 
-const NAMESPACE = 'ai-wego.top'
-const KEY = 'visitors'
-const API_BASE = 'https://api.countapi.xyz'
-
 export default function VisitorCounter() {
   const [count, setCount] = useState<number | null>(null)
 
   useEffect(() => {
-    const counted = sessionStorage.getItem('vc_' + KEY)
+    const cb = 'bszCb_' + Date.now()
+    ;(window as any)[cb] = (data: any) => {
+      if (data && typeof data.site_pv === 'number') {
+        setCount(data.site_pv)
+      }
+      delete (window as any)[cb]
+    }
 
-    const url = counted
-      ? `${API_BASE}/get/${NAMESPACE}/${KEY}`
-      : `${API_BASE}/hit/${NAMESPACE}/${KEY}`
+    const el = document.createElement('script')
+    el.src = `https://busuanzi.ibruce.info/busuanzi?jsonpCallback=${cb}`
+    el.async = true
+    el.onerror = () => { setCount(null); delete (window as any)[cb] }
+    document.head.appendChild(el)
 
-    fetch(url)
-      .then(r => r.json())
-      .then(d => {
-        if (typeof d.value === 'number') {
-          setCount(d.value)
-          if (!counted) sessionStorage.setItem('vc_' + KEY, '1')
-        }
-      })
-      .catch(() => setCount(null))
+    return () => { delete (window as any)[cb] }
   }, [])
 
   if (count === null) return null
