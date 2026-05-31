@@ -113,6 +113,7 @@ export default function JobSquareAdmin() {
     setSaving(true);
     try {
       if (editingId) {
+        const { published_at, ...updateData } = form;
         const resp = await fetch(`${SUPABASE_URL}job_listings?id=eq.${editingId}`, {
           method: 'PATCH',
           headers: {
@@ -121,7 +122,7 @@ export default function JobSquareAdmin() {
             'Content-Type': 'application/json',
             'Prefer': 'return=representation',
           },
-          body: JSON.stringify(form),
+          body: JSON.stringify(updateData),
         });
         if (!resp.ok) throw new Error(`更新失败: HTTP ${resp.status}`);
         toast.success('已更新');
@@ -142,7 +143,9 @@ export default function JobSquareAdmin() {
       resetForm();
       loadItems();
     } catch (e: any) {
-      toast.error(e.message);
+      console.error('保存失败:', e);
+      toast.error('保存失败: ' + e.message);
+      alert('保存失败: ' + e.message);
     } finally {
       setSaving(false);
     }
