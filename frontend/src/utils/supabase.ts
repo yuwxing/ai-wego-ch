@@ -798,12 +798,10 @@ export const usageAPI = {
 export const digitalAvatarAPI = {
   save: async (userId: number, avatarData: object) => {
     localStorage.setItem('digitalAvatar', JSON.stringify(avatarData));
-    try {
-      await supabaseFetch(`users?id=eq.${userId}`, {
-        method: 'PATCH',
-        body: JSON.stringify({ digital_avatar: avatarData }),
-      });
-    } catch {} // Supabase column missing = localStorage only
+    await supabaseFetch(`users?id=eq.${userId}`, {
+      method: 'PATCH',
+      body: JSON.stringify({ digital_avatar: avatarData }),
+    });
   },
 
   load: async (userId: number) => {

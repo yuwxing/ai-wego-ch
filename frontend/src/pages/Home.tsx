@@ -70,31 +70,48 @@ export default function HomePageNav() {
   const version = 'v3-' + Date.now()
   const navigate = useNavigate();
   const { user, logout, isGuest, loginAsGuest } = useUser();
-  const [serverAvatar, setServerAvatar] = useState<any>(null);
+  const [displayAvatar, setDisplayAvatar] = useState<any>(null);
+  const [syncing, setSyncing] = useState(false);
+  const [syncMsg, setSyncMsg] = useState('');
+
+  const syncToServer = async () => {
+    if (!user?.id || user.id < 0) return;
+    const raw = localStorage.getItem('digitalAvatar');
+    if (!raw) return;
+    setSyncing(true);
+    setSyncMsg('同步中...');
+    try {
+      await digitalAvatarAPI.save(user.id, JSON.parse(raw));
+      setSyncMsg('已同步 ✓');
+      setTimeout(() => setSyncMsg(''), 3000);
+    } catch (e: any) {
+      setSyncMsg('同步失败: ' + (e.message || ''));
+    }
+    setSyncing(false);
+  };
 
   useEffect(() => {
+    // 先从本地读
+    try {
+      const raw = localStorage.getItem('digitalAvatar');
+      if (raw) {
+        setDisplayAvatar(JSON.parse(raw));
+        // 如果登录了，自动上传到服务器
+        if (user?.id && user.id > 0) syncToServer();
+        return;
+      }
+    } catch {}
+
+    // 本地没有，从服务器拉
     if (user?.id && user.id > 0) {
       digitalAvatarAPI.load(user.id).then(data => {
         if (data) {
-          setServerAvatar(data);
-        } else {
-          // 本地有分身但服务器没有 -> 上传同步
-          try {
-            const local = localStorage.getItem('digitalAvatar');
-            if (local) digitalAvatarAPI.save(user.id, JSON.parse(local));
-          } catch {}
+          setDisplayAvatar(data);
+          localStorage.setItem('digitalAvatar', JSON.stringify(data));
         }
       });
     }
   }, [user?.id]);
-
-  const avatarFromStore = (() => {
-    try {
-      const raw = localStorage.getItem('digitalAvatar');
-      if (!raw) return serverAvatar;
-      return JSON.parse(raw);
-    } catch { return serverAvatar; }
-  })();
 
   return (
     <div className="page-wrapper" data-version={version}>
@@ -261,19 +278,24 @@ export default function HomePageNav() {
         </div>
 
         {/* 数字分身卡片 */}
-        {avatarFromStore && (
+        {displayAvatar && (
           <div className="mb-6 p-5 bg-gradient-to-br from-indigo-50 via-white to-purple-50 rounded-2xl border border-indigo-100 shadow-sm">
             <div className="flex items-center gap-4">
               <div className="w-14 h-14 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-white text-xl font-bold shadow-md">
-                {avatarFromStore.name?.[0] || '?'}
+                {displayAvatar.name?.[0] || '?'}
               </div>
               <div className="flex-1">
-                <h3 className="font-bold text-slate-800">{avatarFromStore.name}</h3>
-                <p className="text-sm text-slate-500">{avatarFromStore.goal || '我的数字分身'}</p>
+                <h3 className="font-bold text-slate-800">{displayAvatar.name}</h3>
+                <p className="text-sm text-slate-500">{displayAvatar.goal || '我的数字分身'}</p>
               </div>
-              <Link to="/avatar-chat" className="px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-sm font-medium rounded-xl hover:shadow-lg transition-all">
-                去聊天
-              </Link>
+              <div className="flex items-center gap-2">
+                {syncMsg && (
+                  <span className={`text-xs ${syncMsg.includes('失败') ? 'text-red-500' : 'text-green-600'}`}>{syncMsg}</span>
+                )}
+                <Link to="/avatar-chat" className="px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-sm font-medium rounded-xl hover:shadow-lg transition-all">
+                  去聊天
+                </Link>
+              </div>
             </div>
           </div>
         )}
