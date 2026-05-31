@@ -146,7 +146,7 @@ export const RegisterPage: React.FC = () => {
         `目标是${avatar.goal}。用温暖鼓励的语气陪伴我。`,
     }));
     setLoading(false);
-    setStep(4);
+    setStep(3);
   };
 
   const handleLogin = async (e: React.FormEvent) => {
