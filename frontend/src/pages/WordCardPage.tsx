@@ -1547,6 +1547,9 @@ export default function WordCardPage() {
   const [learned, setLearned] = useState<Set<string>>(new Set());
   const [wrongWords, setWrongWords] = useState<Word[]>([]);
   const [showPhonetic, setShowPhonetic] = useState(false);
+  const [rewardedMilestones, setRewardedMilestones] = useState<Set<number>>(() => {
+    try { return new Set(JSON.parse(localStorage.getItem('vocab_rewarded_milestones') || '[]')); } catch { return new Set(); }
+  });
 
   const words = WORD_DATA[grade];
   const word = words[index % words.length];

@@ -52,6 +52,11 @@ export default function AvatarChatPage() {
       if (saved) {
         const parsed = JSON.parse(saved)
         if (Array.isArray(parsed) && parsed.length > 0) {
+          const newGreeting = `你好！我是你的${avatar.companionTitle || 'AI助手'}${avatar.name ? ` ${avatar.name}` : ''}。\n\n有什么我可以帮你的吗？`
+          if (parsed[0]?.role === 'assistant' && parsed[0]?.content !== newGreeting) {
+            parsed[0].content = newGreeting
+            localStorage.setItem(CHAT_HISTORY_KEY, JSON.stringify(parsed))
+          }
           setMessages(parsed)
           return
         }
