@@ -193,12 +193,12 @@ export default function AvatarChatPage() {
                 <p className="text-sm leading-relaxed whitespace-pre-wrap">{msg.content}</p>
                 {msg.role === 'assistant' && user?.id && user.id > 0 && (
                   <button onClick={() => toggleSave(msg)}
-                    className={`absolute -top-1 -right-1 p-1 rounded-full opacity-0 group-hover:opacity-100 transition-all ${
-                      savedIds.has(msg.id) ? 'bg-amber-100 text-amber-500 opacity-100' : 'bg-white text-slate-300 hover:text-amber-400'
-                    } shadow-sm border`}
+                    className={`absolute -top-1.5 -right-1.5 p-1 rounded-full transition-all ${
+                      savedIds.has(msg.id) ? 'bg-amber-100 text-amber-500 shadow-sm' : 'bg-white/80 text-slate-300 hover:text-amber-400 shadow-sm'
+                    } border`}
                     title={savedIds.has(msg.id) ? '取消收藏' : '收藏此条'}
                   >
-                    <Star className="w-3 h-3" fill={savedIds.has(msg.id) ? 'currentColor' : 'none'} />
+                    <Star className="w-3.5 h-3.5" fill={savedIds.has(msg.id) ? 'currentColor' : 'none'} />
                   </button>
                 )}
               </div>
