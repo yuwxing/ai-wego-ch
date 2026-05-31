@@ -195,7 +195,7 @@ export default function AvatarChatPage() {
               {msg.role === 'assistant' && (
                 <button onClick={() => toggleSave(msg)}
                   className={`self-start mt-1.5 p-1 rounded-lg transition-all flex-shrink-0 ${
-                    savedIds.has(msg.id) ? 'text-amber-500' : 'text-slate-200 hover:text-amber-400'
+                    savedIds.has(msg.id) ? 'text-amber-500' : 'text-slate-400 hover:text-amber-400'
                   }`}
                   title={savedIds.has(msg.id) ? '取消收藏' : '收藏此条'}
                 >
