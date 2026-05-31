@@ -3,7 +3,7 @@
 
   const SUPABASE_URL = 'https://mzjmfyoemcsoqzoooiej.supabase.co/rest/v1';
   const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im16am1meW9lbWNzb3F6b29vaWVqIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NzQ5MDgwMCwiZXhwIjoyMDkzMDY2ODAwfQ.BaovYmOpmOANyo6fmSPKV1FwNwLWlkVVSa7r8KsaMtM';
-  const DEEPSEEK_KEY = 'sk-7116117b00634be3a007aa602f23b09d';
+  function getDeepSeekKey() { try { return localStorage.getItem('deepseek_api_key'); } catch(e) { return null; } }
 
   let user = null;
 
@@ -214,7 +214,7 @@
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${DEEPSEEK_KEY}`
+            'Authorization': `Bearer ${getDeepSeekKey()}`
           },
           body: JSON.stringify({
             model: 'deepseek-chat',

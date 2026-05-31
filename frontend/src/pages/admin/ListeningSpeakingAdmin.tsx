@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Sparkles, Save, Trash2, Edit3, Plus, Eye, Loader2, Check, AlertCircle, ChevronLeft, ChevronRight } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { getApiKey } from '../../utils/deepseek';
 
 const SUPABASE_URL = 'https://mzjmfyoemcsoqzoooiej.supabase.co/rest/v1/';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im16am1meW9lbWNzb3F6b29vaWVqIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NzQ5MDgwMCwiZXhwIjoyMDkzMDY2ODAwfQ.BaovYmOpmOANyo6fmSPKV1FwNwLWlkVVSa7r8KsaMtM';
 
 const DEEPSEEK_URL = 'https://api.deepseek.com/v1/chat/completions';
-const DEEPSEEK_KEY = 'sk-110110ebb0984f9ea1933f6eddd4ee79';
 
 const GRADE_OPTIONS = [
   { value: '7a', label: '七年级上册（新人教2024版）' },
@@ -70,6 +70,8 @@ export default function ListeningSpeakingAdmin() {
 
   const generateContent = async () => {
     if (!unit && !topic) { toast.error('请选择单元或输入主题'); return; }
+    const apiKey = getApiKey();
+    if (!apiKey) { toast.error('请先在"系统中心 → API密钥"中配置DeepSeek API密钥'); setGenerating(false); return; }
     setGenerating(true);
     setGeneratedContent(null);
     try {
@@ -133,7 +135,7 @@ part_d 范文要完整。`;
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${DEEPSEEK_KEY}`,
+          'Authorization': `Bearer ${apiKey}`,
         },
         body: JSON.stringify({
           model: 'deepseek-chat',

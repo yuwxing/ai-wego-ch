@@ -135,7 +135,7 @@ ${userData || '暂无用户数据'}`;
 
     const userId = JSON.parse(localStorage.getItem('user') || '{}')?.id;
     const apiKey = getApiKey();
-    const usingDefaultKey = !apiKey || apiKey === 'sk-6b389e1afd534d07b9d63b8aca7320b6';
+    const usingDefaultKey = !apiKey;
 
     // Check free usage if using default key
     if (usingDefaultKey && userId) {

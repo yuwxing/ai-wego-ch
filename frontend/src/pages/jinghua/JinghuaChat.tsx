@@ -95,7 +95,7 @@ const JinghuaChat: React.FC = () => {
   const handleSend = async () => {
     if (!input.trim() || loading) return;
     const key = getApiKey();
-    if (!key || key === 'sk-17df56ac8d1b4544914816f45c3c7064') {
+    if (!key) {
       setNoKey(true);
       setTimeout(() => setNoKey(false), 3000);
       return;

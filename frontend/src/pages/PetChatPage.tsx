@@ -231,8 +231,7 @@ export const PetChatPage: React.FC = () => {
 
     const userId = JSON.parse(localStorage.getItem('user') || '{}')?.id;
     const apiKey = getApiKey();
-    const DEFAULT_KEY = 'sk-6b389e1afd534d07b9d63b8aca7320b6';
-    const usingDefaultKey = !apiKey || apiKey === DEFAULT_KEY;
+    const usingDefaultKey = !apiKey;
 
     // Check free usage if using default key
     if (usingDefaultKey && userId) {

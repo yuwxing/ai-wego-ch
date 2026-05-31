@@ -1293,8 +1293,7 @@ export const JobSquarePage: React.FC = () => {
       const dutyAgent = getDutyAgentByStation('job-square');
       const systemPrompt = dutyAgent?.personality || '你是一个专业的求职顾问，帮助用户了解招聘信息、提供求职建议和职业规划指导。请用中文回答，语气专业友善。';
       const apiKey = getApiKey();
-      const DEFAULT_KEY = 'sk-6b389e1afd534d07b9d63b8aca7320b6';
-      if (!apiKey || apiKey === DEFAULT_KEY) {
+      if (!apiKey) {
         setChatMessages(prev => [...prev, { role: 'assistant', content: '请先在"系统中心 → API密钥"中配置你自己的DeepSeek API密钥后再使用求职助手哦～ 🔑' }]);
         setChatLoading(false);
         return;

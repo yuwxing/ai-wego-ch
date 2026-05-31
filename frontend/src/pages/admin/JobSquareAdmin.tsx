@@ -2,12 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Plus, Save, Trash2, Edit3, Eye, Loader2, Check, AlertCircle, ChevronLeft, Sparkles, X } from 'lucide-react';
 import toast from 'react-hot-toast';
+import { getApiKey } from '../../utils/deepseek';
 
 const SUPABASE_URL = 'https://mzjmfyoemcsoqzoooiej.supabase.co/rest/v1/';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im16am1meW9lbWNzb3F6b29vaWVqIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NzQ5MDgwMCwiZXhwIjoyMDkzMDY2ODAwfQ.BaovYmOpmOANyo6fmSPKV1FwNwLWlkVVSa7r8KsaMtM';
 
 const DEEPSEEK_URL = 'https://api.deepseek.com/v1/chat/completions';
-const DEEPSEEK_KEY = 'sk-110110ebb0984f9ea1933f6eddd4ee79';
 
 const LOCATIONS = ['广州', '深圳', '佛山', '珠海', '东莞', '中山', '惠州', '肇庆', '江门', '湛江', '汕头', '韶关', '清远', '茂名', '梅州', '揭阳', '河源', '阳江', '潮州', '云浮', '汕尾', '全国'];
 
@@ -164,6 +164,8 @@ export default function JobSquareAdmin() {
   };
 
   const generateWithAI = async () => {
+    const apiKey = getApiKey();
+    if (!apiKey) { toast.error('请先在"系统中心 → API密钥"中配置DeepSeek API密钥'); setGenerating(false); return; }
     setGenerating(true);
     try {
       const prompt = `你是一个广东省人才引进/实习招聘信息编辑。请生成一条真实的招聘信息 JSON。
@@ -196,7 +198,7 @@ export default function JobSquareAdmin() {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${DEEPSEEK_KEY}`,
+          'Authorization': `Bearer ${apiKey}`,
         },
         body: JSON.stringify({
           model: 'deepseek-chat',

@@ -67,7 +67,7 @@ const AIClassroomPage: React.FC = () => {
     setLoading(true);
 
     const apiKey = getApiKey();
-    if (!apiKey || apiKey === 'sk-17df56ac8d1b4544914816f45c3c7064') {
+    if (!apiKey) {
       setMessages(prev => [...prev, { id: generateId(), role: 'assistant', content: '请先在"系统中心 → API密钥"中配置你的DeepSeek API密钥后再使用AI助手哦～ 🔑' }]);
       setLoading(false);
       return;

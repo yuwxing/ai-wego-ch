@@ -1,7 +1,5 @@
-const DEFAULT_KEY = 'sk-6b389e1afd534d07b9d63b8aca7320b6';
-
-export function getApiKey(): string {
-  return localStorage.getItem('deepseek_api_key') || DEFAULT_KEY;
+export function getApiKey(): string | null {
+  return localStorage.getItem('deepseek_api_key');
 }
 
 export function setApiKey(key: string): void {
@@ -13,11 +11,11 @@ export function getApiBaseUrl(): string {
 }
 
 function getKey() {
-  return getApiKey();
+  return getApiKey() || '';
 }
 
 export const DEEPSEEK_API_URL = 'https://api.deepseek.com/v1/chat/completions';
-export const DEEPSEEK_API_KEY = DEFAULT_KEY;
+export const DEEPSEEK_API_KEY = '';
 export const DEEPSEEK_MODEL = 'deepseek-chat';
 
 export interface Message {

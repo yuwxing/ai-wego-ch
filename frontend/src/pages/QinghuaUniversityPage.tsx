@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { GraduationCap, BookOpen, FlaskConical, Users, Send, X, Search, Sparkles, Brain, Cpu, Globe, Microscope, Lightbulb, MessageCircle, Bot } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { getApiKey } from '../utils/deepseek';
 
 
 // ============ 5位核心导师数字人格 ============
@@ -246,12 +247,13 @@ const LIBRARY_BOOKS: Record<string, Array<{title: string; author: string; summar
 
 // ============ DeepSeek API ============
 const DEEPSEEK_CONFIG = {
-  apiKey: 'sk-17df56ac8d1b4544914816f45c3c7064',
   baseUrl: 'https://api.deepseek.com',
   model: 'deepseek-chat'
 };
 
 async function callDeepSeek(systemPrompt: string, userMessage: string, timeout = 30000): Promise<string> {
+  const apiKey = getApiKey();
+  if (!apiKey) throw new Error('请先在"系统中心 → API密钥"中配置DeepSeek API密钥');
   const controller = new AbortController();
   const timeoutId = setTimeout(() => controller.abort(), timeout);
   
@@ -260,7 +262,7 @@ async function callDeepSeek(systemPrompt: string, userMessage: string, timeout =
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'Authorization': `Bearer ${DEEPSEEK_CONFIG.apiKey}`
+        'Authorization': `Bearer ${apiKey}`
       },
       body: JSON.stringify({
         model: DEEPSEEK_CONFIG.model,
