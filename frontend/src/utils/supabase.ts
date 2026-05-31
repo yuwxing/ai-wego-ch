@@ -792,3 +792,30 @@ export const usageAPI = {
     }).catch(() => {}); // localStorage fallback if backend fails
   },
 };
+
+// ============ 数字分身 ============
+
+export const digitalAvatarAPI = {
+  save: async (userId: number, avatarData: object) => {
+    localStorage.setItem('digitalAvatar', JSON.stringify(avatarData));
+    try {
+      await supabaseFetch(`users?id=eq.${userId}`, {
+        method: 'PATCH',
+        body: JSON.stringify({ digital_avatar: avatarData }),
+      });
+    } catch {} // Supabase column missing = localStorage only
+  },
+
+  load: async (userId: number) => {
+    try {
+      const data = await supabaseFetch(`users?id=eq.${userId}&select=digital_avatar`);
+      if (data && data[0]?.digital_avatar) {
+        localStorage.setItem('digitalAvatar', JSON.stringify(data[0].digital_avatar));
+        return data[0].digital_avatar;
+      }
+    } catch {} // column missing or no data
+    return null;
+  },
+
+  remove: () => localStorage.removeItem('digitalAvatar'),
+};

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Heart, Sparkles, ArrowLeft, LogIn, User, CheckCircle, AlertCircle, MessageCircle, Sun, BookOpen, Target, Gift, Wand2, Loader2, GraduationCap, School, Building2, HeartHandshake, Briefcase } from 'lucide-react';
 import { Card } from '../components/ui';
-import { usersAPI } from '../utils/supabase';
+import { usersAPI, digitalAvatarAPI } from '../utils/supabase';
 import { useUser } from '../contexts/UserContext';
 import type { User as UserType } from '../types';
 
@@ -77,7 +77,7 @@ const roles: RoleConfig[] = [
 
 export const RegisterPage: React.FC = () => {
   const navigate = useNavigate();
-  const { login, loginAsGuest } = useUser();
+  const { user, login, loginAsGuest } = useUser();
   const [activeTab, setActiveTab] = useState<'human' | 'login'>('human');
   const [step, setStep] = useState(0);
   const [loading, setLoading] = useState(false);
@@ -142,14 +142,16 @@ export const RegisterPage: React.FC = () => {
         `目标是${avatar.goal}。用温暖鼓励的语气陪伴我。`,
       skills,
     });
-    localStorage.setItem('digitalAvatar', JSON.stringify({
+    const avatarData = {
       role: selectedRole, name: avatar.name, goal: avatar.goal,
       companionTitle: roleConfig?.companionTitle, skills,
       prompt: `你是${avatar.name}，我的${roleConfig?.companionTitle}。` +
         `你了解我的${roleConfig?.knows?.join('、')}。` +
         `每天帮我${roleConfig?.does?.join('、')}。` +
         `目标是${avatar.goal}。用温暖鼓励的语气陪伴我。`,
-    }));
+    };
+    localStorage.setItem('digitalAvatar', JSON.stringify(avatarData));
+    if (user?.id) digitalAvatarAPI.save(user.id, avatarData);
     setLoading(false);
     setStep(3);
   };

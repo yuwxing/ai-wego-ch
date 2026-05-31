@@ -1,7 +1,9 @@
+import { useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { BookOpen, Award, Trophy, Sparkles, GraduationCap, Shield, Sun, User, LogIn, UserPlus, Monitor } from 'lucide-react'
 import { useUser } from '../contexts/UserContext'
 import VisitorCounter from '../components/VisitorCounter'
+import { digitalAvatarAPI } from '../utils/supabase'
 
 const sections = [
   {
@@ -68,6 +70,24 @@ export default function HomePageNav() {
   const version = 'v3-' + Date.now()
   const navigate = useNavigate();
   const { user, logout, isGuest, loginAsGuest } = useUser();
+  const [serverAvatar, setServerAvatar] = useState<any>(null);
+
+  useEffect(() => {
+    if (user?.id && user.id > 0) {
+      digitalAvatarAPI.load(user.id).then(data => {
+        if (data) setServerAvatar(data);
+      });
+    }
+  }, [user?.id]);
+
+  const avatarFromStore = (() => {
+    try {
+      const raw = localStorage.getItem('digitalAvatar');
+      if (!raw) return serverAvatar;
+      return JSON.parse(raw);
+    } catch { return serverAvatar; }
+  })();
+
   return (
     <div className="page-wrapper" data-version={version}>
       <div className="max-w-5xl mx-auto px-4 py-16 relative z-10">
@@ -233,29 +253,22 @@ export default function HomePageNav() {
         </div>
 
         {/* 数字分身卡片 */}
-        {(() => {
-          try {
-            const raw = localStorage.getItem('digitalAvatar');
-            if (!raw) return null;
-            const avatar = JSON.parse(raw);
-            return (
-              <div className="mb-6 p-5 bg-gradient-to-br from-indigo-50 via-white to-purple-50 rounded-2xl border border-indigo-100 shadow-sm">
-                <div className="flex items-center gap-4">
-                  <div className="w-14 h-14 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-white text-xl font-bold shadow-md">
-                    {avatar.name?.[0] || '?'}
-                  </div>
-                  <div className="flex-1">
-                    <h3 className="font-bold text-slate-800">{avatar.name}</h3>
-                    <p className="text-sm text-slate-500">{avatar.goal || '我的数字分身'}</p>
-                  </div>
-                  <Link to="/avatar-chat" className="px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-sm font-medium rounded-xl hover:shadow-lg transition-all">
-                    去聊天
-                  </Link>
-                </div>
+        {avatarFromStore && (
+          <div className="mb-6 p-5 bg-gradient-to-br from-indigo-50 via-white to-purple-50 rounded-2xl border border-indigo-100 shadow-sm">
+            <div className="flex items-center gap-4">
+              <div className="w-14 h-14 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-white text-xl font-bold shadow-md">
+                {avatarFromStore.name?.[0] || '?'}
               </div>
-            );
-          } catch { return null; }
-        })()}
+              <div className="flex-1">
+                <h3 className="font-bold text-slate-800">{avatarFromStore.name}</h3>
+                <p className="text-sm text-slate-500">{avatarFromStore.goal || '我的数字分身'}</p>
+              </div>
+              <Link to="/avatar-chat" className="px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-sm font-medium rounded-xl hover:shadow-lg transition-all">
+                去聊天
+              </Link>
+            </div>
+          </div>
+        )}
 
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {sections.map(s => (
