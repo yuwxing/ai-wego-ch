@@ -108,7 +108,7 @@ export const RegisterPage: React.FC = () => {
   const handleRegister = async () => {
     setLoading(true);
     try {
-      const email = form.email.trim() || `${form.username.trim().toLowerCase()}@guest.aiwego`;
+      const email = form.email.trim() || `${form.username.trim().toLowerCase()}-${Date.now()}@guest.aiwego`;
       const result = await usersAPI.createUser({
         username: form.username, email, password: form.password || undefined, user_type: 'human',
       });
@@ -120,9 +120,14 @@ export const RegisterPage: React.FC = () => {
     } catch (err) {
       setLoading(false);
       const msg = err instanceof Error ? err.message : '';
-      if (msg.includes('ix_users_email')) setError('该用户名已被注册，换一个吧');
-      else if (msg.includes('ix_users_username')) setError('该用户名已被占用，换一个吧');
-      else setError('注册失败，请稍后重试');
+      const isVirtualEmail = !form.email.trim();
+      if (msg.includes('ix_users_email')) {
+        setError(isVirtualEmail ? '该用户名已被注册，换一个吧' : '该邮箱已注册');
+      } else if (msg.includes('ix_users_username')) {
+        setError('该用户名已被占用，换一个吧');
+      } else {
+        setError('注册失败，请稍后重试');
+      }
     }
   };
 
