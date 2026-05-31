@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { BookOpen, Cpu, Users, Star, ChevronRight, Award, Target, Sparkles, CheckCircle, Shield, Lightbulb, TrendingUp, Heart, GraduationCap, FileText, MessageCircle, Zap, Globe, BarChart3, Clock, Trophy, User, Palette, Image, Smile, BookMarked, Gamepad2, Wand2 } from 'lucide-react';
+import { BookOpen, Cpu, Users, Star, ChevronRight, Award, Target, Sparkles, CheckCircle, Shield, Lightbulb, TrendingUp, Heart, GraduationCap, FileText, MessageCircle, Zap, Globe, BarChart3, Clock, Trophy } from 'lucide-react';
 import { getCompetitions } from '../services/competitionService';
 import type { Competition } from '../services/competitionService';
 
@@ -119,18 +119,12 @@ const BENEFITS = [
   { icon: <TrendingUp className="w-6 h-6" />, title: '提升核心能力', desc: '锻炼表达、组织、创新等综合能力' },
 ];
 
-const WORKSHOP_TYPES = [
-  { id: 'wallpaper', icon: <Image className="w-6 h-6" />, title: '屏保生成', desc: '生成手机/电脑壁纸，风景、动漫、极简风格', color: 'from-blue-500 to-cyan-500' },
-  { id: 'avatar', icon: <User className="w-6 h-6" />, title: '头像制作', desc: 'AI生成个性化头像，动漫风、写实风、Q版', color: 'from-pink-500 to-rose-500' },
-  { id: 'emoji', icon: <Smile className="w-6 h-6" />, title: '表情包生成', desc: '制作专属表情包，文字+图片，多种模板', color: 'from-yellow-500 to-orange-500' },
-  { id: 'comic', icon: <BookMarked className="w-6 h-6" />, title: '漫画故事', desc: '创建短篇漫画，分镜、对白、角色设计', color: 'from-purple-500 to-indigo-500' },
-  { id: 'pixel', icon: <Gamepad2 className="w-6 h-6" />, title: '像素游戏', desc: '设计像素风格小游戏，角色、场景、道具', color: 'from-green-500 to-emerald-500' },
-];
+
 
 export default function CompetitionHallPage() {
   const navigate = useNavigate();
   const [activeCategory, setActiveCategory] = useState<string | null>(null);
-  const [activeTab, setActiveTab] = useState<'competitions' | 'workshop'>('competitions');
+
   const [competitions] = useState<Competition[]>(() => getCompetitions());
 
   return (
@@ -143,56 +137,9 @@ export default function CompetitionHallPage() {
             <span>竞赛中心</span>
           </div>
           <h1 className="text-3xl font-bold mb-2">竞赛中心</h1>
-          <p className="text-white/80 text-lg">参加竞赛 · 创作工坊 · AI创作</p>
-          {/* Tab 切换 */}
-          <div className="flex gap-2 mt-6">
-            <button onClick={() => setActiveTab('competitions')} className={`px-5 py-2 rounded-xl font-medium text-sm transition-all ${activeTab === 'competitions' ? 'bg-white text-indigo-700 shadow-lg' : 'bg-white/15 text-white hover:bg-white/25'}`}>
-              <Trophy className="w-4 h-4 inline mr-1.5" />竞赛活动
-            </button>
-            <button onClick={() => setActiveTab('workshop')} className={`px-5 py-2 rounded-xl font-medium text-sm transition-all ${activeTab === 'workshop' ? 'bg-white text-indigo-700 shadow-lg' : 'bg-white/15 text-white hover:bg-white/25'}`}>
-              <Palette className="w-4 h-4 inline mr-1.5" />创作工坊
-            </button>
-          </div>
+          <p className="text-white/80 text-lg">参加竞赛 · AI创作</p>
         </div>
       </div>
-
-      {/* 创作工坊内容 */}
-      {activeTab === 'workshop' && (
-        <div className="max-w-4xl mx-auto mt-6 px-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {WORKSHOP_TYPES.map((item) => (
-              <Link
-                key={item.id}
-                to={`/competitions/workshop?type=${item.id}`}
-                className="block bg-white rounded-2xl border border-slate-200 p-5 hover:shadow-md hover:-translate-y-0.5 transition-all group"
-              >
-                <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${item.color} flex items-center justify-center text-white mb-3 shadow-sm group-hover:shadow-md transition-shadow`}>
-                  {item.icon}
-                </div>
-                <h3 className="font-bold text-slate-900 mb-1">{item.title}</h3>
-                <p className="text-sm text-slate-500">{item.desc}</p>
-                <div className="mt-3 flex items-center gap-1 text-xs text-indigo-500 font-medium opacity-0 group-hover:opacity-100 transition-opacity">
-                  开始创作 <ChevronRight className="w-3 h-3" />
-                </div>
-              </Link>
-            ))}
-          </div>
-          <div className="mt-6 p-5 bg-gradient-to-br from-purple-50 to-pink-50 rounded-2xl border border-purple-100">
-            <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white">
-                <Wand2 className="w-5 h-5" />
-              </div>
-              <div className="flex-1">
-                <h3 className="font-semibold text-slate-900">自由创作模式</h3>
-                <p className="text-sm text-slate-500">自由填写创作需求，AI智能体为你生成专属作品</p>
-              </div>
-              <Link to="/competitions/workshop" className="px-4 py-2 bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded-xl text-sm font-medium hover:shadow-lg transition-shadow">
-                自由创作
-              </Link>
-            </div>
-          </div>
-        </div>
-      )}
 
       {/* 竞赛活动内容 */}
       {activeTab === 'competitions' && (<>
