@@ -120,8 +120,8 @@ export const RegisterPage: React.FC = () => {
     } catch (err) {
       setLoading(false);
       const msg = err instanceof Error ? err.message : '';
-      if (msg.includes('ix_users_email')) setError('该邮箱已注册');
-      else if (msg.includes('ix_users_username')) setError('该用户名已被占用');
+      if (msg.includes('ix_users_email')) setError('该用户名已被注册，换一个吧');
+      else if (msg.includes('ix_users_username')) setError('该用户名已被占用，换一个吧');
       else setError('注册失败，请稍后重试');
     }
   };
