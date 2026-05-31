@@ -15,9 +15,9 @@ const agentConfig = {
     role: 'AI面试官',
     icon: Mic,
     color: 'red',
-    bgGradient: 'from-red-500/20 to-orange-500/20',
-    borderColor: 'border-red-500/30',
-    textColor: 'text-red-300',
+    bgGradient: 'from-red-50 to-orange-50',
+    borderColor: 'border-red-200',
+    textColor: 'text-red-700',
     badgeBg: 'bg-red-500',
   },
   student: {
@@ -25,9 +25,9 @@ const agentConfig = {
     role: 'AI同学',
     icon: User,
     color: 'blue',
-    bgGradient: 'from-blue-500/20 to-cyan-500/20',
-    borderColor: 'border-blue-500/30',
-    textColor: 'text-blue-300',
+    bgGradient: 'from-blue-50 to-cyan-50',
+    borderColor: 'border-blue-200',
+    textColor: 'text-blue-700',
     badgeBg: 'bg-blue-500',
   },
   mentor: {
@@ -35,9 +35,9 @@ const agentConfig = {
     role: 'AI导师',
     icon: GraduationCap,
     color: 'green',
-    bgGradient: 'from-emerald-500/20 to-teal-500/20',
-    borderColor: 'border-emerald-500/30',
-    textColor: 'text-emerald-300',
+    bgGradient: 'from-emerald-50 to-teal-50',
+    borderColor: 'border-emerald-200',
+    textColor: 'text-emerald-700',
     badgeBg: 'bg-emerald-500',
   },
   resume: {
@@ -45,9 +45,9 @@ const agentConfig = {
     role: 'AI简历师',
     icon: FileText,
     color: 'purple',
-    bgGradient: 'from-purple-500/20 to-pink-500/20',
-    borderColor: 'border-purple-500/30',
-    textColor: 'text-purple-300',
+    bgGradient: 'from-purple-50 to-pink-50',
+    borderColor: 'border-purple-200',
+    textColor: 'text-purple-700',
     badgeBg: 'bg-purple-500',
   },
   career: {
@@ -55,9 +55,9 @@ const agentConfig = {
     role: 'AI规划师',
     icon: Map,
     color: 'cyan',
-    bgGradient: 'from-cyan-500/20 to-blue-500/20',
-    borderColor: 'border-cyan-500/30',
-    textColor: 'text-cyan-300',
+    bgGradient: 'from-cyan-50 to-blue-50',
+    borderColor: 'border-cyan-200',
+    textColor: 'text-cyan-700',
     badgeBg: 'bg-cyan-500',
   },
   user: {
@@ -65,9 +65,9 @@ const agentConfig = {
     role: '求职者',
     icon: User,
     color: 'purple',
-    bgGradient: 'from-violet-500/20 to-purple-500/20',
-    borderColor: 'border-violet-500/30',
-    textColor: 'text-violet-300',
+    bgGradient: 'from-violet-500 to-purple-600',
+    borderColor: 'border-violet-300',
+    textColor: 'text-white',
     badgeBg: 'bg-gradient-to-r from-violet-500 to-purple-500',
   },
 };
@@ -95,7 +95,7 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({ message, isStreaming }) 
           {/* 名称标签 */}
           <div className={`flex items-center gap-2 ${isUser ? 'flex-row-reverse' : 'flex-row'}`}>
             <span className={`text-sm font-medium ${config.textColor}`}>{config.name}</span>
-            <span className={`text-xs px-2 py-0.5 rounded-full ${config.badgeBg} text-white/90`}>
+            <span className={`text-xs px-2 py-0.5 rounded-full ${config.badgeBg} text-white`}>
               {config.role}
             </span>
           </div>
@@ -104,7 +104,7 @@ export const ChatBubble: React.FC<ChatBubbleProps> = ({ message, isStreaming }) 
           <div className={`px-4 py-3 rounded-2xl ${
             isUser
               ? 'bg-gradient-to-br from-violet-600/90 to-purple-600/90 text-white rounded-tr-sm'
-              : `bg-gradient-to-br ${config.bgGradient} backdrop-blur-sm border ${config.borderColor} ${config.textColor} rounded-tl-sm`
+              : `bg-gradient-to-br ${config.bgGradient} border ${config.borderColor} ${config.textColor} rounded-tl-sm`
           } ${isStreaming ? 'animate-pulse' : ''}`}>
             <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.content}</p>
             {isStreaming && (
