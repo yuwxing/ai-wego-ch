@@ -104,21 +104,30 @@ export const JobClassroomPage: React.FC = () => {
         <div className="grid md:grid-cols-3 gap-6 lg:gap-8">
           {interviewScenarios.map((scenario) => (
             <div key={scenario.id} className="group relative" onClick={() => handleScenarioClick(scenario)}>
-              <div className="relative p-8 rounded-3xl bg-white border-2 border-sky-100 shadow-sm cursor-pointer transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:border-sky-200">
-                <div className={`w-20 h-20 rounded-2xl ${scenario.lightBg} flex items-center justify-center mb-6 ${scenario.lightIcon} group-hover:scale-110 transition-transform duration-300`}>
-                  {scenario.icon}
+              {/* 底层阴影 */}
+              <div className={`absolute -inset-1 rounded-[2rem] bg-gradient-to-r ${scenario.gradient} opacity-0 group-hover:opacity-30 blur-xl transition-opacity duration-500`} />
+              <div className="relative p-8 rounded-[2rem] bg-white shadow-lg shadow-sky-200/40 cursor-pointer transition-all duration-500 hover:shadow-2xl hover:shadow-sky-300/50 hover:-translate-y-2 hover:scale-[1.02] border border-sky-100/80">
+                {/* 顶部装饰线 */}
+                <div className={`absolute top-0 left-8 right-8 h-1 rounded-full bg-gradient-to-r ${scenario.gradient} opacity-60`} />
+                {/* 图标区 - 增加立体感 */}
+                <div className="relative mb-6">
+                  <div className={`w-20 h-20 rounded-2xl bg-gradient-to-br ${scenario.gradient} flex items-center justify-center text-white shadow-lg shadow-sky-200/50 group-hover:scale-110 group-hover:-rotate-3 transition-all duration-500`}>
+                    {scenario.icon}
+                  </div>
+                  <div className={`absolute -bottom-1 -right-1 w-20 h-20 rounded-2xl bg-gradient-to-br ${scenario.gradient} opacity-20 blur-sm -z-10`} />
                 </div>
-                <h3 className="text-base font-bold text-slate-800 mb-1">{scenario.title}</h3>
+                <h3 className="text-lg font-bold text-slate-800 mb-1">{scenario.title}</h3>
                 <p className="text-slate-500 mb-3 text-sm">{scenario.subtitle}</p>
                 <p className="text-slate-400 text-sm leading-relaxed mb-4">{scenario.description}</p>
                 <div className="flex flex-wrap gap-2 mb-6">
                   {scenario.features.map((feature) => (
-                    <span key={feature} className="px-3 py-1 bg-sky-50 rounded-full text-xs text-sky-600 border border-sky-100 font-medium">{feature}</span>
+                    <span key={feature} className="px-3 py-1.5 bg-white rounded-full text-xs text-slate-600 border border-slate-200 shadow-sm font-medium">{feature}</span>
                   ))}
                 </div>
-                <div className={`flex items-center justify-between p-4 rounded-2xl bg-gradient-to-r ${scenario.gradient} text-white shadow-sm group-hover:shadow-md transition-all duration-300`}>
-                  <span className="font-medium">开始体验</span>
-                  <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                <div className={`flex items-center justify-between p-4 rounded-2xl bg-gradient-to-r ${scenario.gradient} text-white shadow-lg group-hover:shadow-xl transition-all duration-300 relative overflow-hidden`}>
+                  <div className="absolute inset-0 bg-white/10 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-700" />
+                  <span className="font-semibold relative z-10">开始体验</span>
+                  <ChevronRight className="w-5 h-5 group-hover:translate-x-1 transition-transform relative z-10" />
                 </div>
               </div>
             </div>
@@ -128,26 +137,35 @@ export const JobClassroomPage: React.FC = () => {
         <div className="mt-16 text-center">
           <h3 className="text-lg font-bold text-slate-800 mb-6">AI团队阵容</h3>
           <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
-            <div className="p-6 rounded-2xl bg-white border border-sky-100 shadow-sm">
-              <div className="w-12 h-12 mx-auto mb-4 bg-rose-50 rounded-xl flex items-center justify-center">
-                <Mic className="w-6 h-6 text-rose-400" />
+            <div className="group relative">
+              <div className="absolute -inset-0.5 bg-gradient-to-r from-rose-400 to-pink-400 rounded-2xl opacity-0 group-hover:opacity-30 blur-md transition-opacity duration-500" />
+              <div className="relative p-6 rounded-2xl bg-white shadow-lg shadow-rose-200/30 border border-rose-100/60 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                <div className="w-14 h-14 mx-auto mb-4 rounded-xl bg-gradient-to-br from-rose-400 to-pink-400 flex items-center justify-center text-white shadow-md">
+                  <Mic className="w-6 h-6" />
+                </div>
+                <h4 className="text-sm font-semibold text-slate-800 mb-1 text-center">AI面试官（李总）</h4>
+                <p className="text-sm text-slate-500 text-center">15年招聘经验，模拟真实面试场景，智能提问与追问</p>
               </div>
-              <h4 className="text-sm font-semibold text-slate-800 mb-1">AI面试官（李总）</h4>
-              <p className="text-sm text-slate-500">15年招聘经验，模拟真实面试场景，智能提问与追问</p>
             </div>
-            <div className="p-6 rounded-2xl bg-white border border-sky-100 shadow-sm">
-              <div className="w-12 h-12 mx-auto mb-4 bg-blue-50 rounded-xl flex items-center justify-center">
-                <span className="text-lg">👨‍🎓</span>
+            <div className="group relative">
+              <div className="absolute -inset-0.5 bg-gradient-to-r from-blue-400 to-cyan-400 rounded-2xl opacity-0 group-hover:opacity-30 blur-md transition-opacity duration-500" />
+              <div className="relative p-6 rounded-2xl bg-white shadow-lg shadow-blue-200/30 border border-blue-100/60 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                <div className="w-14 h-14 mx-auto mb-4 rounded-xl bg-gradient-to-br from-blue-400 to-cyan-400 flex items-center justify-center text-white shadow-md">
+                  <span className="text-lg font-bold">陈</span>
+                </div>
+                <h4 className="text-sm font-semibold text-slate-800 mb-1 text-center">AI同学（小陈）</h4>
+                <p className="text-sm text-slate-500 text-center">提供参考回答，给予不同视角，面试技巧分享</p>
               </div>
-              <h4 className="text-sm font-semibold text-slate-800 mb-1">AI同学（小陈）</h4>
-              <p className="text-sm text-slate-500">提供参考回答，给予不同视角，面试技巧分享</p>
             </div>
-            <div className="p-6 rounded-2xl bg-white border border-sky-100 shadow-sm">
-              <div className="w-12 h-12 mx-auto mb-4 bg-emerald-50 rounded-xl flex items-center justify-center">
-                <Lightbulb className="w-6 h-6 text-emerald-400" />
+            <div className="group relative">
+              <div className="absolute -inset-0.5 bg-gradient-to-r from-emerald-400 to-teal-400 rounded-2xl opacity-0 group-hover:opacity-30 blur-md transition-opacity duration-500" />
+              <div className="relative p-6 rounded-2xl bg-white shadow-lg shadow-emerald-200/30 border border-emerald-100/60 transition-all duration-300 hover:shadow-xl hover:-translate-y-1">
+                <div className="w-14 h-14 mx-auto mb-4 rounded-xl bg-gradient-to-br from-emerald-400 to-teal-400 flex items-center justify-center text-white shadow-md">
+                  <Lightbulb className="w-6 h-6" />
+                </div>
+                <h4 className="text-sm font-semibold text-slate-800 mb-1 text-center">AI导师（张老师）</h4>
+                <p className="text-sm text-slate-500 text-center">10年职业辅导经验，实时点评指导，面试后评估报告</p>
               </div>
-              <h4 className="text-sm font-semibold text-slate-800 mb-1">AI导师（张老师）</h4>
-              <p className="text-sm text-slate-500">10年职业辅导经验，实时点评指导，面试后评估报告</p>
             </div>
           </div>
         </div>
