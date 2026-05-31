@@ -1,5 +1,5 @@
 import { Link, useNavigate } from 'react-router-dom'
-import { BookOpen, Bot, Award, Trophy, Sparkles, GraduationCap, Shield, Sun, User, LogIn, UserPlus, Monitor } from 'lucide-react'
+import { BookOpen, Award, Trophy, Sparkles, GraduationCap, Shield, Sun, User, LogIn, UserPlus, Monitor } from 'lucide-react'
 import { useUser } from '../contexts/UserContext'
 import VisitorCounter from '../components/VisitorCounter'
 
@@ -13,14 +13,6 @@ const sections = [
       { to: '/learn/english-daily', label: '每日英语' },
       { to: '/learn/online-classroom', label: '在线教室' },
       { to: '/learn/classroom', label: 'AI学习助手' },
-    ]
-  },
-  {
-    title: '数字分身', icon: Bot, desc: 'AI执行系统',
-    color: 'from-green-400 to-emerald-500',
-    links: [
-      { to: '/digital-twins', label: '分身大厅' },
-      { to: '/digital-twins/create', label: '创建分身' },
     ]
   },
   {
@@ -223,7 +215,7 @@ export default function HomePageNav() {
             </div>
             <div className="md:w-7/12 text-center md:text-left p-6 md:pr-8">
               <div className="inline-flex items-center gap-2 px-4 py-1.5 bg-green-100 text-green-700 rounded-full text-sm mb-4">
-                <Sparkles className="w-4 h-4" /> AI-Wego 智能体生态
+                <Sparkles className="w-4 h-4" /> AI-Wego 学习成长平台
               </div>
               <h1 className="text-4xl md:text-5xl font-bold text-slate-800 mb-3">
                 <span className="gradient-text-primary">你的AI团队</span>

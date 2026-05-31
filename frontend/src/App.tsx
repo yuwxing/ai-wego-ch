@@ -8,13 +8,7 @@ import EnglishDailyPage from './pages/EnglishDailyPage'
 import JobClassroomPage from './pages/JobClassroomPage'
 import AIClassroomPage from './pages/AIClassroomPage'
 import LearnCompetitions from './pages/LearnCompetitions'
-import DigitalTwinHall from './pages/DigitalTwinHall'
-import CreateAgentPage from './pages/CreateAgentPage'
-import AgentDetailPage from './pages/AgentDetailPage'
-import AgentsPage from './pages/AgentsPage'
-import MyAgentsPage from './pages/MyAgentsPage'
-import AgentWorkspacePage from './pages/AgentWorkspacePage'
-import GroupChatPage from './pages/GroupChatPage'
+
 import CompetitionHallPage from './pages/CompetitionHallPage'
 import CompetitionDetailPage from './pages/CompetitionDetailPage'
 import CreateCompetitionPage from './pages/CreateCompetitionPage'
@@ -37,7 +31,7 @@ import NotesPage from './pages/NotesPage'
 import RegisterPage from './pages/RegisterPage'
 import AdoptPage from './pages/AdoptPage'
 import { PetChatPage } from './pages/PetChatPage'
-import { AgentChatPage } from './pages/AgentChatPage'
+
 import PetWidget from './components/PetWidget'
 import AdminApplications from './pages/admin/Applications'
 import AdminFeedback from './pages/admin/Feedback'
@@ -74,14 +68,6 @@ export default function App() {
       <Route path="/learn/classroom" element={<AIClassroomPage />} />
       <Route path="/learn/competitions" element={<LearnCompetitions />} />
       <Route path="/learn/online-classroom" element={<OnlineClassroom />} />
-
-      {/* Digital Twins */}
-      <Route path="/digital-twins" element={<AgentsPage />} />
-      <Route path="/digital-twins/create" element={<CreateAgentPage />} />
-      <Route path="/digital-twins/:id" element={<AgentDetailPage />} />
-      <Route path="/digital-twins/:id/chat" element={<AgentChatPage />} />
-      <Route path="/group-chat" element={<GroupChatPage />} />
-      <Route path="/workspace/:id" element={<AgentWorkspacePage />} />
 
       {/* WEG Economy */}
       <Route path="/weg" element={<WegHub />} />
@@ -125,15 +111,12 @@ export default function App() {
       <Route path="/listening-speaking" element={<Navigate to="/learn/listening-speaking" replace />} />
       <Route path="/english-daily" element={<Navigate to="/learn/english-daily" replace />} />
       <Route path="/classroom" element={<Navigate to="/learn/classroom" replace />} />
-      <Route path="/agents" element={<Navigate to="/digital-twins" replace />} />
-      <Route path="/agents/:id" element={<ParamRedirect to="/digital-twins/:id" />} />
-      <Route path="/create-agent" element={<Navigate to="/digital-twins/create" replace />} />
-      <Route path="/my-agents" element={<Navigate to="/digital-twins" replace />} />
+
       <Route path="/balance" element={<Navigate to="/weg/balance" replace />} />
       <Route path="/job-square" element={<Navigate to="/jinghua/job-square" replace />} />
       <Route path="/benefits" element={<Navigate to="/weg/rewards" replace />} />
       <Route path="/submit-result/:taskId" element={<ParamRedirect to="/competitions/:taskId/submit" />} />
-      <Route path="/delivery/:id" element={<ParamRedirect to="/workspace/:id" />} />
+
       <Route path="/jinghua/mentors" element={<Navigate to="/jinghua" replace />} />
       <Route path="/jinghua/labs" element={<Navigate to="/jinghua/projects" replace />} />
       <Route path="/jinghua/agents" element={<Navigate to="/jinghua" replace />} />
@@ -141,8 +124,7 @@ export default function App() {
       <Route path="/jinghua/library/:bookId" element={<Navigate to="/jinghua" replace />} />
       <Route path="/create" element={<Navigate to="/" replace />} />
       <Route path="/register" element={<RegisterPage />} />
-      <Route path="/apply" element={<Navigate to="/" replace />} />
-      <Route path="/apply/:agentId" element={<Navigate to="/" replace />} />
+
       <Route path="/join" element={<Navigate to="/" replace />} />
       <Route path="/transactions" element={<Navigate to="/weg" replace />} />
       <Route path="/video-search" element={<Navigate to="/" replace />} />
