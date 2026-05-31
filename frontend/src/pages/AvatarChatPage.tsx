@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ArrowLeft, Send, User, Loader2, Copy, Trash2, Check } from 'lucide-react'
+import { ArrowLeft, Send, User, Loader2, Copy, Trash2, Check, Star, Bookmark, X } from 'lucide-react'
 import { getApiKey } from '../utils/deepseek'
 import { digitalAvatarAPI } from '../utils/supabase'
 import { useUser } from '../contexts/UserContext'
@@ -24,6 +24,9 @@ export default function AvatarChatPage() {
   const [input, setInput] = useState('')
   const [loading, setLoading] = useState(false)
   const [copied, setCopied] = useState(false)
+  const [savedIds, setSavedIds] = useState<Set<string>>(new Set())
+  const [showSaved, setShowSaved] = useState(false)
+  const [savedItems, setSavedItems] = useState<any[]>([])
   const endRef = useRef<HTMLDivElement>(null)
 
   const avatar = (() => {
@@ -38,52 +41,53 @@ export default function AvatarChatPage() {
     try { localStorage.setItem(CHAT_HISTORY_KEY, JSON.stringify(msgs)) } catch {}
   }, [])
 
-  const syncHistoryToServer = useCallback((msgs: Message[]) => {
-    if (user?.id && user.id > 0) {
-      digitalAvatarAPI.saveChatHistory(user.id, msgs)
-    }
-  }, [user?.id])
-
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: 'smooth' })
   }, [messages])
 
   useEffect(() => {
     if (!avatar) { navigate('/register'); return }
-    const load = async () => {
-      try {
-        const saved = localStorage.getItem(CHAT_HISTORY_KEY)
-        if (saved) {
-          const parsed = JSON.parse(saved)
-          if (Array.isArray(parsed) && parsed.length > 0) {
-            setMessages(parsed)
-            return
-          }
-        }
-      } catch {}
-      // 本地没有，从服务器拉
-      if (user?.id && user.id > 0) {
-        const serverHistory = await digitalAvatarAPI.loadChatHistory(user.id)
-        if (serverHistory && Array.isArray(serverHistory) && serverHistory.length > 0) {
-          setMessages(serverHistory)
-          saveHistory(serverHistory)
+    try {
+      const saved = localStorage.getItem(CHAT_HISTORY_KEY)
+      if (saved) {
+        const parsed = JSON.parse(saved)
+        if (Array.isArray(parsed) && parsed.length > 0) {
+          setMessages(parsed)
           return
         }
       }
-      const greeting = `你好！我是你的${avatar.companionTitle || 'AI助手'}${avatar.name ? ` ${avatar.name}` : ''}。${avatar.goal ? `\n\n${avatar.goal}` : ''}\n\n有什么我可以帮你的吗？`
-      const initial = [{ id: generateId(), role: 'assistant' as const, content: greeting }]
-      setMessages(initial)
-      saveHistory(initial)
-    }
-    load()
+    } catch {}
+    const greeting = `你好！我是你的${avatar.companionTitle || 'AI助手'}${avatar.name ? ` ${avatar.name}` : ''}。${avatar.goal ? `\n\n${avatar.goal}` : ''}\n\n有什么我可以帮你的吗？`
+    setMessages([{ id: generateId(), role: 'assistant', content: greeting }])
   }, [])
 
+  // Load saved items from server
   useEffect(() => {
-    if (messages.length > 0) {
-      saveHistory(messages)
-      syncHistoryToServer(messages)
+    if (user?.id && user.id > 0) {
+      digitalAvatarAPI.loadSavedItems(user.id).then(items => {
+        setSavedIds(new Set(items.map((i: any) => i.id)))
+        setSavedItems(items)
+      })
     }
-  }, [messages, saveHistory, syncHistoryToServer])
+  }, [user?.id])
+
+  useEffect(() => {
+    if (messages.length > 0) saveHistory(messages)
+  }, [messages, saveHistory])
+
+  const toggleSave = async (msg: Message) => {
+    if (!user?.id || user.id < 0) return
+    if (savedIds.has(msg.id)) {
+      setSavedIds(prev => { const s = new Set(prev); s.delete(msg.id); return s })
+      setSavedItems(prev => prev.filter(i => i.id !== msg.id))
+      await digitalAvatarAPI.removeSavedItem(user.id, msg.id)
+    } else {
+      const item = { id: msg.id, content: msg.content, timestamp: Date.now() }
+      setSavedIds(prev => { const s = new Set(prev); s.add(msg.id); return s })
+      setSavedItems(prev => [...prev, item])
+      await digitalAvatarAPI.saveSavedItem(user.id, item)
+    }
+  }
 
   const callApi = async (userMsg: string, history: Message[]) => {
     const recent = history.slice(-10).map(m => ({ role: m.role, content: m.content }))
@@ -116,10 +120,9 @@ export default function AvatarChatPage() {
     setLoading(true)
     try {
       const reply = await callApi(text, updated)
-      const withReply = [...updated, { id: generateId(), role: 'assistant' as const, content: reply }]
-      setMessages(withReply)
+      setMessages([...updated, { id: generateId(), role: 'assistant', content: reply }])
     } catch (e: any) {
-      setMessages([...updated, { id: generateId(), role: 'assistant' as const, content: `出错了：${e.message}` }])
+      setMessages([...updated, { id: generateId(), role: 'assistant', content: `出错了：${e.message}` }])
     }
     setLoading(false)
   }
@@ -159,6 +162,10 @@ export default function AvatarChatPage() {
             <div className="text-xs text-slate-400">{avatar.companionTitle || ''}</div>
           </div>
           <div className="flex items-center gap-1">
+            <button onClick={() => { setShowSaved(!showSaved) }} title="收藏夹" className={`p-2 rounded-lg transition-all ${showSaved ? 'bg-amber-100 text-amber-600' : 'hover:bg-slate-100 text-slate-400 hover:text-slate-600'}`}>
+              <Bookmark className="w-4 h-4" />
+              {savedItems.length > 0 && <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-amber-500 text-white text-[10px] rounded-full flex items-center justify-center font-bold">{savedItems.length}</span>}
+            </button>
             <button onClick={handleExport} title="导出对话" className="p-2 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-all">
               {copied ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
             </button>
@@ -172,7 +179,7 @@ export default function AvatarChatPage() {
       <div className="flex-1 overflow-y-auto">
         <div className="max-w-3xl mx-auto px-4 py-6 space-y-4">
           {messages.map(msg => (
-            <div key={msg.id} className={`flex gap-3 ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
+            <div key={msg.id} className={`flex gap-3 group ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
               {msg.role === 'assistant' ? (
                 <div className="w-7 h-7 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-white text-xs font-bold flex-shrink-0 mt-1">
                   {avatar.name?.[0] || 'A'}
@@ -182,8 +189,18 @@ export default function AvatarChatPage() {
                   <User className="w-4 h-4" />
                 </div>
               )}
-              <div className={`max-w-[80%] ${msg.role === 'user' ? 'bg-indigo-500 text-white rounded-2xl rounded-tr-md px-4 py-2.5' : 'text-slate-700'}`}>
+              <div className={`max-w-[80%] ${msg.role === 'user' ? 'bg-indigo-500 text-white rounded-2xl rounded-tr-md px-4 py-2.5' : 'text-slate-700 relative'}`}>
                 <p className="text-sm leading-relaxed whitespace-pre-wrap">{msg.content}</p>
+                {msg.role === 'assistant' && user?.id && user.id > 0 && (
+                  <button onClick={() => toggleSave(msg)}
+                    className={`absolute -top-1 -right-1 p-1 rounded-full opacity-0 group-hover:opacity-100 transition-all ${
+                      savedIds.has(msg.id) ? 'bg-amber-100 text-amber-500 opacity-100' : 'bg-white text-slate-300 hover:text-amber-400'
+                    } shadow-sm border`}
+                    title={savedIds.has(msg.id) ? '取消收藏' : '收藏此条'}
+                  >
+                    <Star className="w-3 h-3" fill={savedIds.has(msg.id) ? 'currentColor' : 'none'} />
+                  </button>
+                )}
               </div>
             </div>
           ))}
@@ -200,6 +217,38 @@ export default function AvatarChatPage() {
           <div ref={endRef} />
         </div>
       </div>
+
+      {/* 收藏夹面板 */}
+      {showSaved && (
+        <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
+          <div className="fixed inset-0 bg-black/20" onClick={() => setShowSaved(false)} />
+          <div className="relative bg-white rounded-t-2xl sm:rounded-2xl w-full sm:max-w-lg max-h-[60vh] sm:max-h-[70vh] shadow-xl flex flex-col">
+            <div className="flex items-center justify-between px-5 py-4 border-b border-slate-100">
+              <h3 className="font-semibold text-slate-800">收藏的回复</h3>
+              <button onClick={() => setShowSaved(false)} className="p-1 rounded-lg hover:bg-slate-100 text-slate-400">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+            <div className="flex-1 overflow-y-auto p-4 space-y-3">
+              {savedItems.length === 0 ? (
+                <p className="text-center text-slate-400 text-sm py-8">还没有收藏的内容<br/>在对话中点击消息旁的⭐收藏</p>
+              ) : (
+                savedItems.slice().reverse().map(item => (
+                  <div key={item.id} className="p-3 bg-slate-50 rounded-xl border border-slate-100">
+                    <p className="text-sm text-slate-700 whitespace-pre-wrap line-clamp-6">{item.content}</p>
+                    <div className="mt-2 flex items-center justify-between">
+                      <span className="text-[10px] text-slate-400">{new Date(item.timestamp).toLocaleString('zh-CN')}</span>
+                      <button onClick={async () => {
+                        try { await navigator.clipboard.writeText(item.content); alert('已复制到剪贴板') } catch {}
+                      }} className="text-xs text-indigo-500 hover:text-indigo-700 font-medium">复制</button>
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+          </div>
+        </div>
+      )}
 
       <div className="sticky bottom-0 bg-white border-t border-slate-100">
         <div className="max-w-3xl mx-auto px-4 py-3">

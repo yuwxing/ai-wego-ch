@@ -815,25 +815,42 @@ export const digitalAvatarAPI = {
     return null;
   },
 
-  saveChatHistory: async (userId: number, messages: any[]) => {
+  saveSavedItem: async (userId: number, item: { id: string; content: string; timestamp: number }) => {
     if (!userId || userId < 0) return;
     try {
       const data = await supabaseFetch(`users?id=eq.${userId}&select=digital_avatar`);
       const avatar = data?.[0]?.digital_avatar || {};
-      avatar.chatHistory = messages.slice(-100);
+      const saved = avatar.savedItems || [];
+      if (!saved.find((s: any) => s.id === item.id)) {
+        saved.push(item);
+        avatar.savedItems = saved;
+        await supabaseFetch(`users?id=eq.${userId}`, {
+          method: 'PATCH',
+          body: JSON.stringify({ digital_avatar: avatar }),
+        });
+      }
+    } catch {}
+  },
+
+  removeSavedItem: async (userId: number, itemId: string) => {
+    if (!userId || userId < 0) return;
+    try {
+      const data = await supabaseFetch(`users?id=eq.${userId}&select=digital_avatar`);
+      const avatar = data?.[0]?.digital_avatar || {};
+      avatar.savedItems = (avatar.savedItems || []).filter((s: any) => s.id !== itemId);
       await supabaseFetch(`users?id=eq.${userId}`, {
         method: 'PATCH',
         body: JSON.stringify({ digital_avatar: avatar }),
       });
-    } catch {} // silently fail if column missing
+    } catch {}
   },
 
-  loadChatHistory: async (userId: number) => {
-    if (!userId || userId < 0) return null;
+  loadSavedItems: async (userId: number) => {
+    if (!userId || userId < 0) return [];
     try {
       const data = await supabaseFetch(`users?id=eq.${userId}&select=digital_avatar`);
-      return data?.[0]?.digital_avatar?.chatHistory || null;
-    } catch { return null; }
+      return data?.[0]?.digital_avatar?.savedItems || [];
+    } catch { return []; }
   },
 
   remove: () => localStorage.removeItem('digitalAvatar'),
