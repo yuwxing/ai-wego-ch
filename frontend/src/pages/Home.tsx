@@ -23,6 +23,7 @@ const sections = [
       { to: '/learn/english-daily', label: '每日英语' },
       { to: '/learn/online-classroom', label: '在线教室' },
       { to: '/learn/classroom', label: 'AI学习助手' },
+      { to: '/learn/creative-workshop', label: '创作工坊' },
     ]
   },
   {

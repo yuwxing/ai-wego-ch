@@ -42,6 +42,7 @@ import ListeningSpeakingAdmin from './pages/admin/ListeningSpeakingAdmin'
 import DailyEnglishAdmin from './pages/admin/DailyEnglishAdmin'
 import JobSquareAdmin from './pages/admin/JobSquareAdmin'
 import OnlineClassroom from './pages/OnlineClassroom'
+import CreativeWorkshopPage from './pages/CreativeWorkshopPage'
 import NotFound from './pages/NotFound'
 
 function ParamRedirect({ to }: { to: string }) {
@@ -69,6 +70,7 @@ export default function App() {
       <Route path="/learn/classroom" element={<AIClassroomPage />} />
       <Route path="/learn/competitions" element={<LearnCompetitions />} />
       <Route path="/learn/online-classroom" element={<OnlineClassroom />} />
+      <Route path="/learn/creative-workshop" element={<CreativeWorkshopPage />} />
 
       {/* WEG Economy */}
       <Route path="/weg" element={<WegHub />} />
@@ -130,7 +132,7 @@ export default function App() {
       <Route path="/join" element={<Navigate to="/" replace />} />
       <Route path="/transactions" element={<Navigate to="/weg" replace />} />
       <Route path="/video-search" element={<Navigate to="/" replace />} />
-      <Route path="/aigc-templates" element={<Navigate to="/" replace />} />
+      <Route path="/aigc-templates" element={<Navigate to="/learn/creative-workshop" replace />} />
       <Route path="/adopt" element={<AdoptPage />} />
       <Route path="/pet-chat/:petId" element={<PetChatPage />} />
       <Route path="/avatar-chat" element={<AvatarChatPage />} />
