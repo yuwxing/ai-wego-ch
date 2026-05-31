@@ -17,8 +17,8 @@ const agentConfig = {
     color: 'red',
     bgGradient: 'from-red-50 to-orange-50',
     borderColor: 'border-red-200',
-    textColor: 'text-red-700',
-    badgeBg: 'bg-red-500',
+    textColor: 'text-slate-700',
+    badgeBg: 'bg-slate-700',
   },
   student: {
     name: '小陈',
