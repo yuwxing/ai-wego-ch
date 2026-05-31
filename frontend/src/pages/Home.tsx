@@ -32,7 +32,7 @@ const sections = [
     links: [
       { to: '/competitions', label: '竞赛列表' },
       { to: '/competitions/new', label: '创建竞赛' },
-      { to: '/competitions/workshop', label: '创作工坊' },
+
     ]
   },
   {

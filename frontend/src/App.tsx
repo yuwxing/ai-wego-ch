@@ -12,7 +12,7 @@ import LearnCompetitions from './pages/LearnCompetitions'
 import CompetitionHallPage from './pages/CompetitionHallPage'
 import CompetitionDetailPage from './pages/CompetitionDetailPage'
 import CreateCompetitionPage from './pages/CreateCompetitionPage'
-import CreateWorkshop from './pages/CreateWorkshop'
+
 import SubmitPage from './pages/SubmitPage'
 import WegHub from './pages/WegHub'
 import XpPage from './pages/XpPage'
@@ -85,7 +85,7 @@ export default function App() {
 
       {/* Competition Center */}
       <Route path="/competitions" element={<CompetitionHallPage />} />
-      <Route path="/competitions/workshop" element={<CreateWorkshop />} />
+
       <Route path="/competitions/:id" element={<CompetitionDetailPage />} />
       <Route path="/competitions/new" element={<CreateCompetitionPage />} />
       <Route path="/competitions/:id/submit" element={<SubmitPage />} />
