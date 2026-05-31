@@ -1,9 +1,10 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { BookOpen, Award, Trophy, Sparkles, GraduationCap, Shield, Sun, User, LogIn, UserPlus, Monitor, Wand2, Loader2 } from 'lucide-react'
+import { BookOpen, Award, Trophy, Sparkles, GraduationCap, Shield, Sun, User, LogIn, UserPlus, Monitor, Wand2, Loader2, Share2, X, Download } from 'lucide-react'
 import { useUser } from '../contexts/UserContext'
 import VisitorCounter from '../components/VisitorCounter'
 import { digitalAvatarAPI } from '../utils/supabase'
+import html2canvas from 'html2canvas'
 
 const ROLES = [
   { id: 'student', label: '学生', title: '学习教练', knows: ['学习情况', '薄弱环节'], does: ['制定学习计划', '答疑解惑', '整理错题'] },
@@ -87,6 +88,26 @@ export default function HomePageNav() {
   const [restoreName, setRestoreName] = useState('');
   const [restoreGoal, setRestoreGoal] = useState('');
   const [restoring, setRestoring] = useState(false);
+  const [showShare, setShowShare] = useState(false);
+  const [shareImg, setShareImg] = useState('');
+  const [shareLoading, setShareLoading] = useState(false);
+  const shareRef = useRef<HTMLDivElement>(null);
+
+  const generateShareImage = async () => {
+    setShareLoading(true);
+    setShareImg('');
+    // wait for render
+    await new Promise(r => setTimeout(r, 100));
+    const el = shareRef.current;
+    if (!el) { setShareLoading(false); return; }
+    try {
+      const canvas = await html2canvas(el, { scale: 3, useCORS: true, backgroundColor: '#ffffff' });
+      setShareImg(canvas.toDataURL('image/png'));
+    } catch (e: any) {
+      console.error(e);
+    }
+    setShareLoading(false);
+  };
 
   const syncToServer = async () => {
     if (!user?.id || user.id < 0) return;
@@ -389,6 +410,90 @@ export default function HomePageNav() {
 
         <div className="mt-4 text-center">
           <VisitorCounter />
+        </div>
+
+        <div className="mt-6 text-center pb-4">
+          <button onClick={() => { setShowShare(true); setTimeout(generateShareImage, 200); }} className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 text-white text-sm font-medium hover:from-purple-600 hover:to-pink-600 active:scale-95 transition-all shadow-lg shadow-purple-200">
+            <Share2 className="w-4 h-4" /> 分享到朋友圈
+          </button>
+        </div>
+      </div>
+
+      {showShare && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4" onClick={() => { setShowShare(false); setShareImg(''); }}>
+          <div className="bg-white rounded-2xl p-6 max-w-sm w-full shadow-2xl" onClick={e => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-4">
+              <h3 className="text-lg font-bold text-slate-800">分享到朋友圈</h3>
+              <button onClick={() => { setShowShare(false); setShareImg(''); }} className="p-1 hover:bg-slate-100 rounded-lg transition-colors">
+                <X className="w-5 h-5 text-slate-400" />
+              </button>
+            </div>
+
+            {shareLoading ? (
+              <div className="flex items-center justify-center py-16">
+                <Loader2 className="w-8 h-8 text-purple-500 animate-spin" />
+              </div>
+            ) : shareImg ? (
+              <div className="space-y-4">
+                <img src={shareImg} alt="分享卡片" className="w-full rounded-xl shadow-md" />
+                <p className="text-center text-sm text-slate-500">长按图片保存到相册，即可分享到朋友圈</p>
+                <a href={shareImg} download="share-card.png" className="flex items-center justify-center gap-2 w-full py-2.5 rounded-xl bg-purple-500 text-white text-sm font-medium hover:bg-purple-600 transition-colors">
+                  <Download className="w-4 h-4" /> 保存图片
+                </a>
+              </div>
+            ) : (
+              <div className="flex items-center justify-center py-16 text-slate-400 text-sm">
+                生成中...
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* hidden share card */}
+      <div ref={shareRef} className="fixed -left-[9999px] w-[360px] p-6 bg-white" style={{ fontFamily: 'system-ui, -apple-system, sans-serif' }}>
+        {/* header */}
+        <div className="text-center mb-5">
+          <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center mx-auto mb-3 shadow-lg">
+            <Sparkles className="w-7 h-7 text-white" />
+          </div>
+          <h1 className="text-xl font-bold text-slate-800">AI WeGo</h1>
+          <p className="text-xs text-slate-400 mt-1">用学习创造价值，让成长看得见</p>
+        </div>
+
+        {displayAvatar && (
+          <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-4 mb-4 border border-purple-100">
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center text-white text-sm font-bold">
+                {(displayAvatar.name || '我').charAt(0)}
+              </div>
+              <div>
+                <p className="text-sm font-semibold text-slate-800">{displayAvatar.name || '我的数字分身'}</p>
+                <p className="text-xs text-slate-500">{displayAvatar.role || 'student'}</p>
+              </div>
+            </div>
+          </div>
+        )}
+
+        <div className="grid grid-cols-2 gap-3 mb-5">
+          {[
+            { label: '学习系统', val: '单词/听说/创作' },
+            { label: '积分经济', val: '学习赚积分' },
+            { label: '竞赛大厅', val: '在线PK' },
+            { label: '数字分身', val: 'AI学习伙伴' },
+          ].map(item => (
+            <div key={item.label} className="bg-slate-50 rounded-xl p-3 text-center">
+              <p className="text-xs text-slate-400">{item.label}</p>
+              <p className="text-sm font-semibold text-slate-700 mt-0.5">{item.val}</p>
+            </div>
+          ))}
+        </div>
+
+        <div className="border-t border-slate-100 pt-4 text-center">
+          <div className="flex items-center justify-center gap-4 text-xs text-slate-400">
+            <span>扫码加入</span>
+            <span>一起学习</span>
+          </div>
         </div>
       </div>
     </div>
