@@ -1,6 +1,7 @@
 import { Link, useNavigate } from 'react-router-dom'
 import { BookOpen, Bot, Award, Trophy, Sparkles, GraduationCap, Shield, Sun, User, LogIn, UserPlus, Monitor } from 'lucide-react'
 import { useUser } from '../contexts/UserContext'
+import VisitorCounter from '../components/VisitorCounter'
 
 const sections = [
   {
@@ -256,6 +257,10 @@ export default function HomePageNav() {
           <div className="inline-flex items-center gap-2 text-slate-400 text-sm">
             <Sun className="w-4 h-4" /> 用学习创造价值，让成长看得见
           </div>
+        </div>
+
+        <div className="mt-4 text-center">
+          <VisitorCounter />
         </div>
       </div>
     </div>
