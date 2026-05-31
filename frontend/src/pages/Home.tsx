@@ -319,7 +319,7 @@ export default function HomePageNav() {
               </div>
               <div className="flex-1">
                 <h3 className="font-bold text-slate-800">{displayAvatar.name}</h3>
-                <p className="text-sm text-slate-500">{displayAvatar.goal || '我的数字分身'}</p>
+                <p className="text-sm text-slate-500">我的数字分身</p>
               </div>
               <div className="flex items-center gap-2">
                 {syncMsg && (

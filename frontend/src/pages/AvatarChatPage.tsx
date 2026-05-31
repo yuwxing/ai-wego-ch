@@ -57,9 +57,9 @@ export default function AvatarChatPage() {
         }
       }
     } catch {}
-    const greeting = `你好！我是你的${avatar.companionTitle || 'AI助手'}${avatar.name ? ` ${avatar.name}` : ''}。${avatar.goal ? `\n\n${avatar.goal}` : ''}\n\n有什么我可以帮你的吗？`
+    const greeting = `你好！我是你的${avatar.companionTitle || 'AI助手'}${avatar.name ? ` ${avatar.name}` : ''}。\n\n有什么我可以帮你的吗？`
     setMessages([{ id: generateId(), role: 'assistant', content: greeting }])
-  }, [])
+  }, [avatar, navigate])
 
   // Load saved items from server
   useEffect(() => {
@@ -141,7 +141,7 @@ export default function AvatarChatPage() {
   const handleClear = () => {
     if (!confirm('确定清空所有对话记录？')) return
     localStorage.removeItem(CHAT_HISTORY_KEY)
-    const greeting = `你好！我是你的${avatar.companionTitle || 'AI助手'}${avatar.name ? ` ${avatar.name}` : ''}。${avatar.goal ? `\n\n${avatar.goal}` : ''}\n\n有什么我可以帮你的吗？`
+    const greeting = `你好！我是你的${avatar.companionTitle || 'AI助手'}${avatar.name ? ` ${avatar.name}` : ''}。\n\n有什么我可以帮你的吗？`
     setMessages([{ id: generateId(), role: 'assistant', content: greeting }])
   }
 

@@ -315,6 +315,10 @@ const JUNIOR_COMPETITIONS = {
   advanced: ALL_COMPETITIONS.filter(c => c.suitable === '挑战级' && c.entryLevel === 'junior'),
 };
 
+function searchUrl(name: string) {
+  return `https://www.baidu.com/s?wd=${encodeURIComponent(name + ' 报名')}`;
+}
+
 function CompetitionCard({ comp }: { comp: typeof ALL_COMPETITIONS[number] }) {
   const diffStars = Array.from({ length: 5 }, (_, i) => i < comp.difficulty);
   const statusColors: Record<string, string> = {
@@ -349,22 +353,18 @@ function CompetitionCard({ comp }: { comp: typeof ALL_COMPETITIONS[number] }) {
         </div>
       </div>
       <div className="flex items-center gap-2 mt-3 pt-3 border-t border-slate-100">
-        <a
-          href={comp.url}
-          target="_blank"
-          rel="noopener noreferrer"
+        <button
+          onClick={() => window.open(searchUrl(comp.name), '_blank')}
           className="text-xs text-indigo-600 hover:text-indigo-800 flex items-center gap-1"
         >
           查看详情 <ExternalLink className="w-3 h-3" />
-        </a>
-        <a
-          href={comp.url}
-          target="_blank"
-          rel="noopener noreferrer"
+        </button>
+        <button
+          onClick={() => window.open(searchUrl(comp.name), '_blank')}
           className="text-xs bg-indigo-600 text-white px-3 py-1 rounded-full hover:bg-indigo-700 flex items-center gap-1"
         >
           立即报名 <ExternalLink className="w-3 h-3" />
-        </a>
+        </button>
       </div>
     </div>
   );
