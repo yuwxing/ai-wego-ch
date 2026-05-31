@@ -169,6 +169,7 @@ export const MultiAgentChat: React.FC<MultiAgentChatProps> = ({ scene, onBack })
   const [careerGoal, setCareerGoal] = useState('');
   const [evaluationReport, setEvaluationReport] = useState<EvaluationReport | null>(null);
   const [interviewHistory, setInterviewHistory] = useState<string[]>([]);
+  const [auxMap, setAuxMap] = useState<Record<string, { student: string; mentor: string; showStudent: boolean; showMentor: boolean }>>({});
   
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
@@ -254,6 +255,16 @@ export const MultiAgentChat: React.FC<MultiAgentChatProps> = ({ scene, onBack })
     }
   };
 
+  // 收起/展开辅助内容
+  const toggleAux = useCallback((msgId: string, type: 'student' | 'mentor') => {
+    setAuxMap(prev => {
+      const item = prev[msgId];
+      if (!item) return prev;
+      const key = type === 'student' ? 'showStudent' : 'showMentor';
+      return { ...prev, [msgId]: { ...item, [key]: !item[key] } };
+    });
+  }, []);
+
   // 用户提交回答 - 单次调用生成三角色内容
   const submitAnswer = async () => {
     if (!inputValue.trim() || isLoading) return;
@@ -280,13 +291,13 @@ export const MultiAgentChat: React.FC<MultiAgentChatProps> = ({ scene, onBack })
       const parsed = parseStructuredResponse(fullResponse);
 
       if (parsed.interviewer) {
-        addMessage(parsed.interviewer, 'interviewer');
-      }
-      if (parsed.student) {
-        addMessage(parsed.student, 'student');
-      }
-      if (parsed.mentor) {
-        addMessage(parsed.mentor, 'mentor');
+        const msgId = addMessage(parsed.interviewer, 'interviewer');
+        if (parsed.student || parsed.mentor) {
+          setAuxMap(prev => ({
+            ...prev,
+            [msgId]: { student: parsed.student, mentor: parsed.mentor, showStudent: false, showMentor: false }
+          }));
+        }
       }
 
       const nextRound = currentQuestion + 1;
@@ -452,6 +463,7 @@ ${resumeContent}
     setInterviewHistory([]);
     setResumeContent('');
     setCareerGoal('');
+    setAuxMap({});
   };
 
   // 导出报告
@@ -627,11 +639,45 @@ ${evaluationReport.suggestions.map((s, i) => `${i + 1}. ${s}`).join('\n')}
               )}
 
               {messages.map((message) => (
-                <ChatBubble
-                  key={message.id}
-                  message={message}
-                  isStreaming={streamingMessageId === message.id}
-                />
+                <div key={message.id}>
+                  <ChatBubble message={message} isStreaming={streamingMessageId === message.id} />
+                  {message.agent === 'interviewer' && auxMap[message.id] && (
+                    <div className="ml-14 mt-1 flex gap-2">
+                      <button
+                        onClick={() => toggleAux(message.id, 'student')}
+                        className={`text-xs px-2.5 py-1 rounded-full border transition-colors ${
+                          auxMap[message.id].showStudent
+                            ? 'bg-blue-100 border-blue-200 text-blue-600'
+                            : 'bg-white border-sky-200 text-sky-500 hover:bg-sky-50'
+                        }`}
+                      >
+                        {auxMap[message.id].showStudent ? '收起' : '💡'} 同学答案
+                      </button>
+                      <button
+                        onClick={() => toggleAux(message.id, 'mentor')}
+                        className={`text-xs px-2.5 py-1 rounded-full border transition-colors ${
+                          auxMap[message.id].showMentor
+                            ? 'bg-emerald-100 border-emerald-200 text-emerald-600'
+                            : 'bg-white border-sky-200 text-sky-500 hover:bg-sky-50'
+                        }`}
+                      >
+                        {auxMap[message.id].showMentor ? '收起' : '📝'} 导师点评
+                      </button>
+                    </div>
+                  )}
+                  {message.agent === 'interviewer' && auxMap[message.id]?.showStudent && (
+                    <div className="ml-14 mt-1.5 p-3 rounded-xl bg-blue-50 border border-blue-100">
+                      <div className="text-xs font-semibold text-blue-600 mb-1">💡 同学参考答案</div>
+                      <div className="text-sm text-slate-700 whitespace-pre-wrap">{auxMap[message.id].student}</div>
+                    </div>
+                  )}
+                  {message.agent === 'interviewer' && auxMap[message.id]?.showMentor && (
+                    <div className="ml-14 mt-1.5 p-3 rounded-xl bg-emerald-50 border border-emerald-100">
+                      <div className="text-xs font-semibold text-emerald-600 mb-1">📝 导师点评</div>
+                      <div className="text-sm text-slate-700 whitespace-pre-wrap">{auxMap[message.id].mentor}</div>
+                    </div>
+                  )}
+                </div>
               ))}
 
               {evaluationReport && (
