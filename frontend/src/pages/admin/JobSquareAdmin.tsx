@@ -1,13 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Plus, Save, Trash2, Edit3, Eye, Loader2, Check, AlertCircle, ChevronLeft, Sparkles, X } from 'lucide-react';
+import { Plus, Save, Trash2, Edit3, Eye, Loader2, Check, AlertCircle, ChevronLeft, X } from 'lucide-react';
 import toast from 'react-hot-toast';
-import { getApiKey } from '../../utils/deepseek';
 
 const SUPABASE_URL = 'https://mzjmfyoemcsoqzoooiej.supabase.co/rest/v1/';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im16am1meW9lbWNzb3F6b29vaWVqIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NzQ5MDgwMCwiZXhwIjoyMDkzMDY2ODAwfQ.BaovYmOpmOANyo6fmSPKV1FwNwLWlkVVSa7r8KsaMtM';
-
-const DEEPSEEK_URL = 'https://api.deepseek.com/v1/chat/completions';
 
 const LOCATIONS = ['广州', '深圳', '佛山', '珠海', '东莞', '中山', '惠州', '肇庆', '江门', '湛江', '汕头', '韶关', '清远', '茂名', '梅州', '揭阳', '河源', '阳江', '潮州', '云浮', '汕尾', '全国'];
 
@@ -51,8 +48,6 @@ export default function JobSquareAdmin() {
   const [form, setForm] = useState<Omit<JobListing, 'id'>>({ ...emptyForm });
   const [editingId, setEditingId] = useState<number | null>(null);
   const [showForm, setShowForm] = useState(false);
-
-  const [generating, setGenerating] = useState(false);
 
   const loadItems = async () => {
     setLoading(true);
@@ -166,84 +161,7 @@ export default function JobSquareAdmin() {
     }
   };
 
-  const generateWithAI = async () => {
-    const apiKey = getApiKey();
-    if (!apiKey) { toast.error('请先在"系统中心 → API密钥"中配置DeepSeek API密钥'); setGenerating(false); return; }
-    setGenerating(true);
-    try {
-      const prompt = `你是一个广东省人才引进/实习招聘信息编辑。请生成一条真实的招聘信息 JSON。
 
-要求：
-- 工作地点在广东省内
-- 如果是人才引进(talent)：偏向事业编制、高校、国企、政府单位
-- 如果是实习招聘(internship)：偏向互联网大厂、知名企业
-- deadline 必须在未来（${new Date().toISOString().slice(0, 10)} 之后一个月内）
-- description 60-120 字，说明招聘条件
-- tags 从以下选择：编制、硕士、博士、本科、专科、大厂、央国企、可转正、免笔试、远程、教师、公务员、金融、技术岗、产品、管培、电力、云计算、省属、计算机
-- is_hot 为 true 或 false
-
-输出严格 JSON，不要其他文字：
-
-{
-  "type": "talent",
-  "title": "招聘公告标题",
-  "organization": "单位名称",
-  "location": "城市名",
-  "salary": "薪资描述（如：事业编制 / 面议 / 15k-25k）",
-  "deadline": "2026-XX-XX",
-  "url": "https://...",
-  "description": "招聘条件描述",
-  "tags": ["标签1", "标签2"],
-  "is_hot": false
-}`;
-
-      const resp = await fetch(DEEPSEEK_URL, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${apiKey}`,
-        },
-        body: JSON.stringify({
-          model: 'deepseek-chat',
-          messages: [{ role: 'user', content: prompt }],
-          temperature: 0.8,
-          max_tokens: 2048,
-        }),
-      });
-
-      if (!resp.ok) {
-        const err = await resp.text();
-        throw new Error(`API ${resp.status}: ${err}`);
-      }
-
-      const json = await resp.json();
-      const text = json.choices?.[0]?.message?.content || '';
-      const jsonMatch = text.match(/```(?:json)?\s*([\s\S]*?)```/);
-      const raw = jsonMatch ? jsonMatch[1].trim() : text.trim();
-      const parsed = JSON.parse(raw);
-
-      setForm({
-        type: parsed.type || 'talent',
-        title: parsed.title || '',
-        organization: parsed.organization || '',
-        location: parsed.location || '广州',
-        salary: parsed.salary || '',
-        deadline: parsed.deadline || '',
-        url: parsed.url || '',
-        description: parsed.description || '',
-        tags: parsed.tags || [],
-        is_hot: parsed.is_hot || false,
-        published_at: new Date().toISOString().slice(0, 10),
-      });
-      setEditingId(null);
-      setShowForm(true);
-      toast.success('AI 生成成功，请检查并保存');
-    } catch (e: any) {
-      toast.error('生成失败: ' + e.message);
-    } finally {
-      setGenerating(false);
-    }
-  };
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-violet-50 to-white pb-20">
@@ -277,14 +195,7 @@ export default function JobSquareAdmin() {
           >
             <Plus className="w-4 h-4" /> 新增招聘信息
           </button>
-          <button
-            onClick={generateWithAI}
-            disabled={generating}
-            className="px-4 py-2.5 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl font-medium flex items-center gap-2 hover:opacity-90 disabled:opacity-50 transition-all"
-          >
-            {generating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Sparkles className="w-4 h-4" />}
-            {generating ? '生成中...' : 'AI 智能生成'}
-          </button>
+
         </div>
 
         {/* 编辑表单 */}
