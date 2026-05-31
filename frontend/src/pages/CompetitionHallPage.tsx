@@ -142,7 +142,6 @@ export default function CompetitionHallPage() {
       </div>
 
       {/* 竞赛活动内容 */}
-      {activeTab === 'competitions' && (<>
       {/* 适合人群 */}
       <div className="max-w-4xl mx-auto -mt-6 px-4">
         <div className="bg-white rounded-2xl shadow-sm border border-indigo-100 p-5">
@@ -251,7 +250,6 @@ export default function CompetitionHallPage() {
           </p>
         </div>
       </div>
-      </>)}
     </div>
   );
 }
