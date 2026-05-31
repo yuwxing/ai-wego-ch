@@ -493,23 +493,23 @@ ${evaluationReport.suggestions.map((s, i) => `${i + 1}. ${s}`).join('\n')}
   const renderJobSelector = () => (
     <div className="space-y-4">
       <div className="text-center mb-8">
-        <h3 className="text-2xl font-bold text-white mb-2">选择目标岗位</h3>
-        <p className="text-white/60">选择一个你想要面试的岗位</p>
+        <h3 className="text-2xl font-bold text-slate-800 mb-2">选择目标岗位</h3>
+        <p className="text-slate-500">选择一个你想要面试的岗位</p>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {jobOptions.map((job) => (
           <button
             key={job.id}
             onClick={() => startInterview(job)}
-            className="p-5 rounded-2xl bg-white/5 border border-white/10 hover:border-violet-500/50 hover:bg-white/10 transition-all text-left group"
+            className="p-5 rounded-2xl bg-white border-2 border-sky-100 hover:border-sky-300 hover:bg-sky-50 transition-all text-left group"
           >
             <div className="flex items-center gap-3 mb-2">
               <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-red-500/20 to-orange-500/20 flex items-center justify-center">
                 <Mic className="w-5 h-5 text-red-400" />
               </div>
-              <span className="text-lg font-semibold text-white group-hover:text-violet-300">{job.name}</span>
+              <span className="text-lg font-semibold text-slate-800">{job.name}</span>
             </div>
-            <p className="text-sm text-white/50">{job.description}</p>
+            <p className="text-sm text-slate-400">{job.description}</p>
           </button>
         ))}
       </div>
@@ -520,14 +520,14 @@ ${evaluationReport.suggestions.map((s, i) => `${i + 1}. ${s}`).join('\n')}
   const renderResumeInput = () => (
     <div className="space-y-4">
       <div className="text-center mb-6">
-        <h3 className="text-2xl font-bold text-white mb-2">📄 简历优化</h3>
-        <p className="text-white/60">粘贴你的简历内容，AI简历师帮你分析优化</p>
+        <h3 className="text-2xl font-bold text-slate-800 mb-2">📄 简历优化</h3>
+        <p className="text-slate-500">粘贴你的简历内容，AI简历师帮你分析优化</p>
       </div>
       <textarea
         value={resumeContent}
         onChange={(e) => setResumeContent(e.target.value)}
         placeholder="请粘贴简历内容..."
-        className="w-full h-64 p-4 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/30 resize-none focus:outline-none focus:border-violet-500/50"
+        className="w-full h-64 p-4 rounded-xl bg-white border-2 border-sky-100 text-slate-700 placeholder-slate-300 resize-none focus:outline-none focus:border-sky-300"
       />
       <button
         onClick={handleResumeAnalysis}
@@ -544,14 +544,14 @@ ${evaluationReport.suggestions.map((s, i) => `${i + 1}. ${s}`).join('\n')}
   const renderCareerInput = () => (
     <div className="space-y-4">
       <div className="text-center mb-6">
-        <h3 className="text-2xl font-bold text-white mb-2">🗺️ 职业规划</h3>
-        <p className="text-white/60">告诉AI导师你的职业目标，获取专属求职路线图</p>
+        <h3 className="text-2xl font-bold text-slate-800 mb-2">🗺️ 职业规划</h3>
+        <p className="text-slate-500">告诉AI导师你的职业目标，获取专属求职路线图</p>
       </div>
       <textarea
         value={careerGoal}
         onChange={(e) => setCareerGoal(e.target.value)}
         placeholder="请描述你的情况，例如：\n- 你的专业和工作经验\n- 你的职业目标\n- 感兴趣的岗位\n- 遇到的困惑..."
-        className="w-full h-48 p-4 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/30 resize-none focus:outline-none focus:border-violet-500/50"
+        className="w-full h-48 p-4 rounded-xl bg-white border-2 border-sky-100 text-slate-700 placeholder-slate-300 resize-none focus:outline-none focus:border-sky-300"
       />
       <button
         onClick={handleCareerChat}
@@ -565,23 +565,23 @@ ${evaluationReport.suggestions.map((s, i) => `${i + 1}. ${s}`).join('\n')}
   );
 
   return (
-    <div className="flex flex-col h-full bg-gradient-to-br from-slate-900 via-slate-800 to-slate-900">
+    <div className="flex flex-col h-full bg-gradient-to-br from-sky-50 via-white to-emerald-50">
       {/* 头部 */}
-      <div className="flex items-center justify-between px-4 py-3 border-b border-white/10 bg-slate-900/50 backdrop-blur-sm">
+      <div className="flex items-center justify-between px-4 py-3 border-b border-sky-100 bg-white/80 backdrop-blur-sm">
         <button
           onClick={onBack}
-          className="p-2 rounded-lg hover:bg-white/10 text-white/70 hover:text-white transition-colors"
+          className="p-2 rounded-lg hover:bg-sky-50 text-sky-600 hover:text-sky-700 transition-colors"
         >
           <ArrowLeft className="w-5 h-5" />
         </button>
         <div className="text-center">
-          <h2 className="text-lg font-semibold text-white">
+          <h2 className="text-lg font-semibold text-slate-800">
             {scene === 'interview' && '🎤 模拟面试'}
             {scene === 'resume' && '📄 简历优化'}
             {scene === 'career' && '🗺️ 职业规划'}
           </h2>
           {selectedJob && (
-            <p className="text-xs text-white/50">{selectedJob.name} · 面试进行中</p>
+            <p className="text-xs text-slate-400">{selectedJob.name} · 面试进行中</p>
           )}
         </div>
         <div className="w-9" />
@@ -608,17 +608,17 @@ ${evaluationReport.suggestions.map((s, i) => `${i + 1}. ${s}`).join('\n')}
               {/* 欢迎消息 */}
               {messages.length === 0 && (
                 <div className="text-center py-12">
-                  <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-violet-500/20 to-purple-500/20 flex items-center justify-center">
-                    {scene === 'interview' && <Mic className="w-8 h-8 text-violet-400" />}
-                    {scene === 'resume' && <FileText className="w-8 h-8 text-violet-400" />}
-                    {scene === 'career' && <Map className="w-8 h-8 text-violet-400" />}
+                  <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-sky-100 to-emerald-100 flex items-center justify-center">
+                    {scene === 'interview' && <Mic className="w-8 h-8 text-sky-500" />}
+                    {scene === 'resume' && <FileText className="w-8 h-8 text-sky-500" />}
+                    {scene === 'career' && <Map className="w-8 h-8 text-sky-500" />}
                   </div>
-                  <h3 className="text-xl font-bold text-white mb-2">
+                  <h3 className="text-xl font-bold text-slate-800 mb-2">
                     {scene === 'interview' && `准备开始${selectedJob?.name}面试`}
                     {scene === 'resume' && '开始简历优化'}
                     {scene === 'career' && '开始职业规划'}
                   </h3>
-                  <p className="text-white/50 text-sm">
+                  <p className="text-slate-400 text-sm">
                     {scene === 'interview' && '面试官、同学、导师已就位，请准备好后开始'}
                     {scene === 'resume' && '请在下方输入简历内容'}
                     {scene === 'career' && '请描述你的职业目标'}
@@ -635,28 +635,28 @@ ${evaluationReport.suggestions.map((s, i) => `${i + 1}. ${s}`).join('\n')}
               ))}
 
               {evaluationReport && (
-                <div className="mt-6 p-6 rounded-2xl bg-gradient-to-br from-emerald-500/10 to-teal-500/10 border border-emerald-500/30">
+                <div className="mt-6 p-6 rounded-2xl bg-gradient-to-br from-emerald-50 to-teal-50 border-2 border-emerald-200">
                   <div className="flex items-center gap-2 mb-4">
-                    <CheckCircle className="w-6 h-6 text-emerald-400" />
-                    <h4 className="text-lg font-bold text-emerald-300">面试完成！</h4>
+                    <CheckCircle className="w-6 h-6 text-emerald-500" />
+                    <h4 className="text-lg font-bold text-emerald-700">面试完成！</h4>
                   </div>
                   <div className="grid grid-cols-3 gap-4 mb-4">
-                    <div className="text-center p-3 rounded-xl bg-white/5">
-                      <div className="text-2xl font-bold text-white">{evaluationReport.overall}</div>
-                      <div className="text-xs text-white/50">综合评分</div>
+                    <div className="text-center p-3 rounded-xl bg-white shadow-sm">
+                      <div className="text-2xl font-bold text-slate-800">{evaluationReport.overall}</div>
+                      <div className="text-xs text-slate-400">综合评分</div>
                     </div>
-                    <div className="text-center p-3 rounded-xl bg-white/5">
-                      <div className="text-2xl font-bold text-blue-300">{evaluationReport.interviewScore}</div>
-                      <div className="text-xs text-white/50">面试表现</div>
+                    <div className="text-center p-3 rounded-xl bg-white shadow-sm">
+                      <div className="text-2xl font-bold text-blue-500">{evaluationReport.interviewScore}</div>
+                      <div className="text-xs text-slate-400">面试表现</div>
                     </div>
-                    <div className="text-center p-3 rounded-xl bg-white/5">
-                      <div className="text-2xl font-bold text-purple-300">{evaluationReport.technicalScore}</div>
-                      <div className="text-xs text-white/50">技术能力</div>
+                    <div className="text-center p-3 rounded-xl bg-white shadow-sm">
+                      <div className="text-2xl font-bold text-purple-500">{evaluationReport.technicalScore}</div>
+                      <div className="text-xs text-slate-400">技术能力</div>
                     </div>
                   </div>
                   <button
                     onClick={exportReport}
-                    className="w-full py-2 rounded-xl bg-emerald-500/20 border border-emerald-500/30 text-emerald-300 hover:bg-emerald-500/30 transition-colors flex items-center justify-center gap-2"
+                    className="w-full py-2 rounded-xl bg-emerald-100 border border-emerald-200 text-emerald-600 hover:bg-emerald-200 transition-colors flex items-center justify-center gap-2 font-medium"
                   >
                     <Download className="w-4 h-4" />
                     导出评估报告
@@ -669,7 +669,7 @@ ${evaluationReport.suggestions.map((s, i) => `${i + 1}. ${s}`).join('\n')}
 
             {/* 输入区域 */}
             {scene === 'resume' && (
-              <div className="p-4 border-t border-white/10 bg-slate-900/50">
+              <div className="p-4 border-t border-sky-100 bg-white">
                 <div className="flex gap-3">
                   <textarea
                     ref={inputRef}
@@ -682,7 +682,7 @@ ${evaluationReport.suggestions.map((s, i) => `${i + 1}. ${s}`).join('\n')}
                       }
                     }}
                     placeholder="继续输入或粘贴更多简历内容..."
-                    className="flex-1 p-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/30 resize-none focus:outline-none focus:border-violet-500/50"
+                    className="flex-1 p-3 rounded-xl bg-sky-50 border-2 border-sky-100 text-slate-700 placeholder-slate-300 resize-none focus:outline-none focus:border-sky-300"
                     rows={2}
                   />
                   <button
@@ -697,7 +697,7 @@ ${evaluationReport.suggestions.map((s, i) => `${i + 1}. ${s}`).join('\n')}
             )}
 
             {scene === 'career' && (
-              <div className="p-4 border-t border-white/10 bg-slate-900/50">
+              <div className="p-4 border-t border-sky-100 bg-white">
                 <div className="flex gap-3">
                   <textarea
                     ref={inputRef}
@@ -710,7 +710,7 @@ ${evaluationReport.suggestions.map((s, i) => `${i + 1}. ${s}`).join('\n')}
                       }
                     }}
                     placeholder="继续描述你的情况..."
-                    className="flex-1 p-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/30 resize-none focus:outline-none focus:border-cyan-500/50"
+                    className="flex-1 p-3 rounded-xl bg-sky-50 border-2 border-sky-100 text-slate-700 placeholder-slate-300 resize-none focus:outline-none focus:border-sky-300"
                     rows={2}
                   />
                   <button
@@ -725,17 +725,16 @@ ${evaluationReport.suggestions.map((s, i) => `${i + 1}. ${s}`).join('\n')}
             )}
 
             {scene === 'interview' && !evaluationReport && (
-              <div className="p-4 border-t border-white/10 bg-slate-900/50">
-                {/* 进度指示 */}
+              <div className="p-4 border-t border-sky-100 bg-white">
                 {isInterviewStarted && selectedJob && (
                   <div className="flex items-center gap-2 mb-3">
-                    <div className="flex-1 h-1 rounded-full bg-white/10 overflow-hidden">
+                    <div className="flex-1 h-1 rounded-full bg-sky-100 overflow-hidden">
                       <div
-                        className="h-full bg-gradient-to-r from-violet-500 to-purple-500 transition-all duration-300"
+                        className="h-full bg-gradient-to-r from-sky-400 to-emerald-400 transition-all duration-300"
                         style={{ width: `${(currentQuestion / 6) * 100}%` }}
                         />
                       </div>
-                      <span className="text-xs text-white/50">
+                      <span className="text-xs text-slate-400">
                         第{currentQuestion}/6轮
                       </span>
                   </div>
@@ -753,14 +752,14 @@ ${evaluationReport.suggestions.map((s, i) => `${i + 1}. ${s}`).join('\n')}
                       }
                     }}
                     placeholder="输入你的回答..."
-                    className="flex-1 p-3 rounded-xl bg-white/5 border border-white/10 text-white placeholder-white/30 resize-none focus:outline-none focus:border-violet-500/50"
+                    className="flex-1 p-3 rounded-xl bg-sky-50 border-2 border-sky-100 text-slate-700 placeholder-slate-300 resize-none focus:outline-none focus:border-sky-300"
                     rows={2}
                     disabled={isLoading || !isInterviewStarted}
                   />
                   {isLoading ? (
                     <button
                       onClick={stopGeneration}
-                      className="px-4 rounded-xl bg-red-500/20 border border-red-500/30 text-red-300 hover:bg-red-500/30 transition-colors"
+                      className="px-4 rounded-xl bg-rose-100 border-2 border-rose-200 text-rose-500 hover:bg-rose-200 transition-colors font-medium"
                     >
                       停止
                     </button>
@@ -768,7 +767,7 @@ ${evaluationReport.suggestions.map((s, i) => `${i + 1}. ${s}`).join('\n')}
                     <button
                       onClick={submitAnswer}
                       disabled={!inputValue.trim() || !isInterviewStarted}
-                      className="px-4 rounded-xl bg-gradient-to-r from-violet-600 to-purple-600 text-white hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity"
+                      className="px-4 rounded-xl bg-gradient-to-r from-sky-500 to-emerald-500 text-white hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity"
                     >
                       <Send className="w-5 h-5" />
                     </button>
@@ -782,10 +781,10 @@ ${evaluationReport.suggestions.map((s, i) => `${i + 1}. ${s}`).join('\n')}
 
       {/* 重新开始按钮 */}
       {messages.length > 0 && (
-        <div className="p-4 border-t border-white/10 bg-slate-900/50">
+        <div className="p-4 border-t border-sky-100 bg-white">
           <button
             onClick={handleRestart}
-            className="w-full py-2 rounded-xl bg-white/5 border border-white/10 text-white/70 hover:bg-white/10 hover:text-white transition-colors flex items-center justify-center gap-2"
+            className="w-full py-2 rounded-xl bg-sky-50 border-2 border-sky-100 text-sky-600 hover:bg-sky-100 hover:text-sky-700 transition-colors flex items-center justify-center gap-2 font-medium"
           >
             <RefreshCw className="w-4 h-4" />
             {scene === 'interview' ? '重新开始面试' : '重新开始'}
