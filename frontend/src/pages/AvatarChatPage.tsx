@@ -50,21 +50,19 @@ export default function AvatarChatPage() {
     return el.scrollHeight - el.scrollTop - el.clientHeight < 120
   }
 
-  const scrollToBottom = (smooth = true) => {
-    endRef.current?.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto' })
+  const scrollToBottom = () => {
+    const el = chatRef.current
+    if (el) el.scrollTop = el.scrollHeight
   }
 
   const handleScroll = () => {
     setUserScrolledUp(!isNearBottom())
   }
 
-  // Auto-scroll only if user hasn't scrolled up, and only on new messages
   useEffect(() => {
-    if (messages.length > prevMsgLenRef.current && !userScrolledUp) {
-      scrollToBottom(messages.length > prevMsgLenRef.current + 1)
-    }
+    if (!userScrolledUp) scrollToBottom()
     prevMsgLenRef.current = messages.length
-  }, [messages, userScrolledUp])
+  }, [messages])
 
   useEffect(() => {
     if (!avatar) { navigate('/register'); return }
@@ -145,7 +143,6 @@ export default function AvatarChatPage() {
     const updated = [...messages, userMsg]
     setMessages(updated)
     setLoading(true)
-    scrollToBottom(false)
     try {
       const reply = await callApi(text, updated)
       setMessages([...updated, { id: generateId(), role: 'assistant', content: reply }])
@@ -204,7 +201,7 @@ export default function AvatarChatPage() {
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto" ref={chatRef} onScroll={handleScroll}>
+      <div className="flex-1 overflow-y-auto overscroll-contain scroll-smooth" ref={chatRef} onScroll={handleScroll} style={{ overflowAnchor: 'auto' }}>
         <div className="max-w-3xl mx-auto px-4 py-6 space-y-4">
           {messages.map(msg => (
             <div key={msg.id} className={`flex gap-3 group ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
@@ -232,16 +229,18 @@ export default function AvatarChatPage() {
               )}
             </div>
           ))}
-          {loading && (
-            <div className="flex gap-3">
-              <div className="w-7 h-7 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-white text-xs font-bold flex-shrink-0 mt-1">
-                {avatar.name?.[0] || 'A'}
+          <div style={{ height: loading ? 44 : 0, overflow: 'hidden', transition: 'height 0s' }}>
+            {loading && (
+              <div className="flex gap-3">
+                <div className="w-7 h-7 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-white text-xs font-bold flex-shrink-0 mt-1">
+                  {avatar.name?.[0] || 'A'}
+                </div>
+                <div className="bg-slate-50 rounded-2xl rounded-tl-md px-4 py-3">
+                  <Loader2 className="w-4 h-4 text-indigo-400 animate-spin" />
+                </div>
               </div>
-              <div className="bg-slate-50 rounded-2xl rounded-tl-md px-4 py-3">
-                <Loader2 className="w-4 h-4 text-indigo-400 animate-spin" />
-              </div>
-            </div>
-          )}
+            )}
+          </div>
           <div ref={endRef} />
         </div>
         {userScrolledUp && (
