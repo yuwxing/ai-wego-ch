@@ -169,12 +169,12 @@ const shouldShowTransaction = (tx: TokenTransaction): boolean => {
 
 const BalancePage: React.FC = () => {
   const [searchParams] = useSearchParams();
-  const { user: loggedUser } = useUser();
+  const { user: loggedUser, isGuest, balance: contextBalance } = useUser();
   const getUserId = (): number => {
     const urlUserId = searchParams.get('userId');
     if (urlUserId) return parseInt(urlUserId, 10);
-    if (loggedUser?.id) return loggedUser.id;
-    return 0; // 未登录
+    if (loggedUser?.id && loggedUser.id > 0) return loggedUser.id;
+    return 0;
   };
   const userId = getUserId();
   
@@ -207,6 +207,9 @@ const BalancePage: React.FC = () => {
           fetchTransactions(userId),
           fetchCalculatedBalance(userId)
         ]);
+        if (!userData && loggedUser) {
+          setError('用户数据加载失败，请稍后重试');
+        }
         setUser(userData);
         setTransactions(txData);
         setCalculatedBalance(balance);
@@ -216,7 +219,16 @@ const BalancePage: React.FC = () => {
         setLoading(false);
       }
     };
-    loadData();
+
+    if (userId > 0) {
+      loadData();
+    } else if (loggedUser === null) {
+      // context 还没加载完，等待
+      setLoading(true);
+    } else {
+      setLoading(false);
+      setError(null);
+    }
   }, [userId]);
 
   // 查看赔付详情
