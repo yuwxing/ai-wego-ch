@@ -28,6 +28,13 @@ export default function AvatarChatPage() {
   const [showSaved, setShowSaved] = useState(false)
   const [savedItems, setSavedItems] = useState<any[]>([])
   const endRef = useRef<HTMLDivElement>(null)
+  const chatRef = useRef<HTMLDivElement>(null)
+  const [userScrolledUp, setUserScrolledUp] = useState(false)
+  const prevMsgLenRef = useRef(0)
+
+  const saveHistory = useCallback((msgs: Message[]) => {
+    try { localStorage.setItem(CHAT_HISTORY_KEY, JSON.stringify(msgs)) } catch {}
+  }, [])
 
   const avatar = (() => {
     try {
@@ -37,13 +44,27 @@ export default function AvatarChatPage() {
     } catch { return null }
   })()
 
-  const saveHistory = useCallback((msgs: Message[]) => {
-    try { localStorage.setItem(CHAT_HISTORY_KEY, JSON.stringify(msgs)) } catch {}
-  }, [])
+  const isNearBottom = () => {
+    const el = chatRef.current
+    if (!el) return true
+    return el.scrollHeight - el.scrollTop - el.clientHeight < 120
+  }
 
+  const scrollToBottom = (smooth = true) => {
+    endRef.current?.scrollIntoView({ behavior: smooth ? 'smooth' : 'auto' })
+  }
+
+  const handleScroll = () => {
+    setUserScrolledUp(!isNearBottom())
+  }
+
+  // Auto-scroll only if user hasn't scrolled up, and only on new messages
   useEffect(() => {
-    endRef.current?.scrollIntoView({ behavior: 'smooth' })
-  }, [messages])
+    if (messages.length > prevMsgLenRef.current && !userScrolledUp) {
+      scrollToBottom(messages.length > prevMsgLenRef.current + 1)
+    }
+    prevMsgLenRef.current = messages.length
+  }, [messages, userScrolledUp])
 
   useEffect(() => {
     if (!avatar) { navigate('/register'); return }
@@ -119,10 +140,12 @@ export default function AvatarChatPage() {
     const text = input.trim()
     if (!text || loading) return
     setInput('')
+    setUserScrolledUp(false)
     const userMsg: Message = { id: generateId(), role: 'user', content: text }
     const updated = [...messages, userMsg]
     setMessages(updated)
     setLoading(true)
+    scrollToBottom(false)
     try {
       const reply = await callApi(text, updated)
       setMessages([...updated, { id: generateId(), role: 'assistant', content: reply }])
@@ -181,7 +204,7 @@ export default function AvatarChatPage() {
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto">
+      <div className="flex-1 overflow-y-auto" ref={chatRef} onScroll={handleScroll}>
         <div className="max-w-3xl mx-auto px-4 py-6 space-y-4">
           {messages.map(msg => (
             <div key={msg.id} className={`flex gap-3 group ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
@@ -221,6 +244,12 @@ export default function AvatarChatPage() {
           )}
           <div ref={endRef} />
         </div>
+        {userScrolledUp && (
+          <button onClick={() => { setUserScrolledUp(false); scrollToBottom() }}
+            className="sticky bottom-4 left-1/2 -translate-x-1/2 mx-auto px-4 py-2 rounded-full bg-indigo-500 text-white text-xs font-medium shadow-lg hover:bg-indigo-600 active:scale-95 transition-all">
+            回到最新
+          </button>
+        )}
       </div>
 
       {/* 收藏夹面板 */}
