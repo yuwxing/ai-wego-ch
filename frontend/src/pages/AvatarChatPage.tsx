@@ -30,7 +30,6 @@ export default function AvatarChatPage() {
   const endRef = useRef<HTMLDivElement>(null)
   const chatRef = useRef<HTMLDivElement>(null)
   const [userScrolledUp, setUserScrolledUp] = useState(false)
-  const prevMsgLenRef = useRef(0)
 
   const saveHistory = useCallback((msgs: Message[]) => {
     try { localStorage.setItem(CHAT_HISTORY_KEY, JSON.stringify(msgs)) } catch {}
@@ -44,25 +43,19 @@ export default function AvatarChatPage() {
     } catch { return null }
   })()
 
-  const isNearBottom = () => {
-    const el = chatRef.current
-    if (!el) return true
-    return el.scrollHeight - el.scrollTop - el.clientHeight < 120
-  }
-
   const scrollToBottom = () => {
     const el = chatRef.current
-    if (el) el.scrollTop = el.scrollHeight
+    if (!el) return
+    el.scrollTop = el.scrollHeight
   }
 
   const handleScroll = () => {
-    setUserScrolledUp(!isNearBottom())
+    const el = chatRef.current
+    if (!el) return
+    setUserScrolledUp(el.scrollHeight - el.scrollTop - el.clientHeight > 100)
   }
 
-  useEffect(() => {
-    if (!userScrolledUp) scrollToBottom()
-    prevMsgLenRef.current = messages.length
-  }, [messages])
+  useEffect(() => { scrollToBottom() }, [])
 
   useEffect(() => {
     if (!avatar) { navigate('/register'); return }
@@ -138,7 +131,6 @@ export default function AvatarChatPage() {
     const text = input.trim()
     if (!text || loading) return
     setInput('')
-    setUserScrolledUp(false)
     const userMsg: Message = { id: generateId(), role: 'user', content: text }
     const updated = [...messages, userMsg]
     setMessages(updated)
@@ -146,6 +138,7 @@ export default function AvatarChatPage() {
     try {
       const reply = await callApi(text, updated)
       setMessages([...updated, { id: generateId(), role: 'assistant', content: reply }])
+      scrollToBottom()
     } catch (e: any) {
       setMessages([...updated, { id: generateId(), role: 'assistant', content: `出错了：${e.message}` }])
     }
@@ -201,7 +194,7 @@ export default function AvatarChatPage() {
         </div>
       </div>
 
-      <div className="flex-1 overflow-y-auto overscroll-contain scroll-smooth" ref={chatRef} onScroll={handleScroll} style={{ overflowAnchor: 'auto' }}>
+      <div className="flex-1 overflow-y-auto" ref={chatRef} onScroll={handleScroll}>
         <div className="max-w-3xl mx-auto px-4 py-6 space-y-4">
           {messages.map(msg => (
             <div key={msg.id} className={`flex gap-3 group ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
@@ -229,18 +222,16 @@ export default function AvatarChatPage() {
               )}
             </div>
           ))}
-          <div style={{ height: loading ? 44 : 0, overflow: 'hidden', transition: 'height 0s' }}>
-            {loading && (
-              <div className="flex gap-3">
-                <div className="w-7 h-7 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-white text-xs font-bold flex-shrink-0 mt-1">
-                  {avatar.name?.[0] || 'A'}
-                </div>
-                <div className="bg-slate-50 rounded-2xl rounded-tl-md px-4 py-3">
-                  <Loader2 className="w-4 h-4 text-indigo-400 animate-spin" />
-                </div>
+          {loading && (
+            <div className="flex gap-3">
+              <div className="w-7 h-7 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-white text-xs font-bold flex-shrink-0 mt-1">
+                {avatar.name?.[0] || 'A'}
               </div>
-            )}
-          </div>
+              <div className="bg-slate-50 rounded-2xl rounded-tl-md px-4 py-3">
+                <Loader2 className="w-4 h-4 text-indigo-400 animate-spin" />
+              </div>
+            </div>
+          )}
           <div ref={endRef} />
         </div>
         {userScrolledUp && (
