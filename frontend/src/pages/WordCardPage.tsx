@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { ChevronLeft, Volume2, Check, X, RefreshCw, Cloud } from 'lucide-react';
 import { useUser } from '../contexts/UserContext';
 import toast from 'react-hot-toast';
-import { xpAPI } from '../utils/supabase';
+import { xpAPI, usersAPI } from '../utils/supabase';
 
 type Grade = 7 | 8 | 9 | 10;
 
@@ -1537,7 +1537,7 @@ const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 
 export default function WordCardPage() {
   const navigate = useNavigate();
-  const { user } = useUser();
+  const { user, updateBalance, balance } = useUser();
   const [grade, setGrade] = useState<Grade>(7);
   const [index, setIndex] = useState(0);
   const [selected, setSelected] = useState<string | null>(null);
@@ -1664,7 +1664,11 @@ export default function WordCardPage() {
     setTotal(t => t + 1);
     if (opt === word.meaning) {
       setCorrect(c => c + 1);
-      setLearned(prev => new Set(prev).add(word.word));
+      const newLearned = new Set(learned);
+      newLearned.add(word.word);
+      setLearned(newLearned);
+      awardWordPoints(1);
+      checkMilestone(newLearned);
     } else {
       setWrongWords(prev => [...prev, word]);
     }
@@ -1673,8 +1677,11 @@ export default function WordCardPage() {
   const next = () => {
     if (index >= words.length - 1) {
       toast.success(`🎉 ${GRADE_LABELS[grade]}全部完成！`);
-      const userId = JSON.parse(localStorage.getItem('user') || '{}')?.id;
-      if (userId) xpAPI.award(userId, 'wordcard', 10);
+      const uid = user?.id;
+      if (uid) {
+        xpAPI.award(uid, 'wordcard', 10);
+        usersAPI.addBalance(uid, 10).then(r => { if (r.success) { toast.success(`+10 积分 (完成全年级)`); if (r.newBalance !== undefined) updateBalance(r.newBalance); } });
+      }
       setGrade(g => (g >= 10 ? 7 : (g + 1) as Grade));
       setIndex(0);
     } else {
@@ -1682,6 +1689,31 @@ export default function WordCardPage() {
     }
     setSelected(null);
     setAnswered(false);
+  };
+
+  const awardWordPoints = async (wordCount: number) => {
+    const uid = user?.id;
+    if (!uid) return;
+    const r = await usersAPI.addBalance(uid, wordCount);
+    if (r.success) { if (r.newBalance !== undefined) updateBalance(r.newBalance); }
+  };
+
+  const checkMilestone = (newLearned: Set<string>) => {
+    const size = newLearned.size;
+    if (size > 0 && size % 50 === 0 && !rewardedMilestones.has(size)) {
+      const uid = user?.id;
+      if (!uid) return;
+      usersAPI.addBalance(uid, 30).then(r => {
+        if (r.success) {
+          toast.success(`🎉 累计背词 ${size} 个，奖励 +30 积分！`);
+          if (r.newBalance !== undefined) updateBalance(r.newBalance);
+          const updated = new Set(rewardedMilestones);
+          updated.add(size);
+          setRewardedMilestones(updated);
+          localStorage.setItem('vocab_rewarded_milestones', JSON.stringify(Array.from(updated)));
+        }
+      });
+    }
   };
 
   const reset = () => {
@@ -1727,6 +1759,9 @@ export default function WordCardPage() {
             <span className="text-sm text-slate-500">正确率 {total > 0 ? Math.round(correct / total * 100) : 0}%</span>
             <span className="text-sm text-slate-500">已学 {learned.size}/{words.length}</span>
             <span className="text-sm text-emerald-600 font-medium">{correct}/{total}</span>
+            {user && (
+              <span className="text-xs text-purple-600 font-medium ml-2">积分 {balance ?? '-'}</span>
+            )}
           </div>
         )}
 
