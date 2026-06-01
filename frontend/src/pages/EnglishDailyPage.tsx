@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../contexts/UserContext';
 import toast from 'react-hot-toast';
-import { xpAPI, usersAPI } from '../utils/supabase';
+import { usersAPI } from '../utils/supabase';
 
 // Types
 interface Vocabulary {
@@ -129,36 +129,12 @@ export default function EnglishDailyPage() {
 
     setClaimLoading(true);
     try {
-      const SUPABASE_URL = 'https://mzjmfyoemcsoqzoooiej.supabase.co/rest/v1/';
-      const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im16am1meW9lbWNzb3F6b29vaWVqIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NzQ5MDgwMCwiZXhwIjoyMDkzMDY2ODAwfQ.BaovYmOpmOANyo6fmSPKV1FwNwLWlkVVSa7r8KsaMtM';
-
-      // Get current balance
-      const balResp = await fetch(`${SUPABASE_URL}users?id=eq.${user.id}&select=token_balance`, {
-        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
-      });
-      const balData = await balResp.json();
-      const currentBalance = balData[0]?.token_balance || 0;
-
-      // Add 30 to balance
-      await fetch(`${SUPABASE_URL}users?id=eq.${user.id}`, {
-        method: 'PATCH',
-        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
-        body: JSON.stringify({ token_balance: currentBalance + 30 }),
-      });
-
-      // Record transaction
-      await fetch(`${SUPABASE_URL}transactions`, {
-        method: 'POST',
-        headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          from_id: user.id, from_type: 'user', to_id: user.id, to_type: 'user',
-          amount: 30, type: 'daily_reward', description: '完成每日英语学习',
-          created_at: new Date().toISOString(),
-        }),
-      });
-
-      toast.success('获得 30 积分奖励！');
-      if (user?.id) xpAPI.award(user.id, 'daily_english', 15);
+      const r = await usersAPI.addBalance(user.id, 30, '完成每日英语学习');
+      if (r.success) {
+        toast.success('获得 30 积分奖励！');
+      } else {
+        toast.error('奖励发放失败');
+      }
     } catch (e) {
       toast.error('奖励发放失败');
     } finally {

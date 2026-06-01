@@ -366,10 +366,9 @@ export const usersAPI = {
     }
   },
 
-  // 增加用户余额（原子操作，返回新余额）
-  addBalance: async (userId: number, amount: number): Promise<{ success: boolean; newBalance?: number; error?: string }> => {
+  // 增加用户余额（原子操作，返回新余额），同时记录交易流水
+  addBalance: async (userId: number, amount: number, description = '学习奖励'): Promise<{ success: boolean; newBalance?: number; error?: string }> => {
     try {
-      // 先获取当前余额
       const userData = await supabaseFetch(`users?id=eq.${userId}&select=token_balance`);
       if (!userData || !userData[0]) {
         return { success: false, error: '用户不存在' };
@@ -380,6 +379,15 @@ export const usersAPI = {
         method: 'PATCH',
         body: JSON.stringify({ token_balance: newBalance }),
       });
+      // 同时记录交易流水
+      await supabaseFetch('transactions', {
+        method: 'POST',
+        body: JSON.stringify({
+          from_id: userId, from_type: 'user', to_id: userId, to_type: 'user',
+          amount, type: 'learning_reward', description,
+          created_at: new Date().toISOString(),
+        }),
+      }).catch(() => {});
       return { success: true, newBalance };
     } catch (err) {
       return { success: false, error: err instanceof Error ? err.message : '充值失败' };

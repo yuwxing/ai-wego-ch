@@ -1679,8 +1679,7 @@ export default function WordCardPage() {
       toast.success(`🎉 ${GRADE_LABELS[grade]}全部完成！`);
       const uid = user?.id;
       if (uid) {
-        xpAPI.award(uid, 'wordcard', 10);
-        usersAPI.addBalance(uid, 10).then(r => { if (r.success) { toast.success(`+10 积分 (完成全年级)`); if (r.newBalance !== undefined) updateBalance(r.newBalance); } });
+        usersAPI.addBalance(uid, 10, '完成全年级单词').then(r => { if (r.success) { toast.success(`+10 积分 (完成全年级)`); if (r.newBalance !== undefined) updateBalance(r.newBalance); } });
       }
       setGrade(g => (g >= 10 ? 7 : (g + 1) as Grade));
       setIndex(0);
@@ -1694,7 +1693,7 @@ export default function WordCardPage() {
   const awardWordPoints = async (wordCount: number) => {
     const uid = user?.id;
     if (!uid) return;
-    const r = await usersAPI.addBalance(uid, wordCount);
+    const r = await usersAPI.addBalance(uid, wordCount, '背单词');
     if (r.success) { if (r.newBalance !== undefined) updateBalance(r.newBalance); }
   };
 
@@ -1703,7 +1702,7 @@ export default function WordCardPage() {
     if (size > 0 && size % 50 === 0 && !rewardedMilestones.has(size)) {
       const uid = user?.id;
       if (!uid) return;
-      usersAPI.addBalance(uid, 30).then(r => {
+      usersAPI.addBalance(uid, 30, '累计背词50个').then(r => {
         if (r.success) {
           toast.success(`🎉 累计背词 ${size} 个，奖励 +30 积分！`);
           if (r.newBalance !== undefined) updateBalance(r.newBalance);
