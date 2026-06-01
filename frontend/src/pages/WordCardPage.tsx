@@ -1675,13 +1675,21 @@ export default function WordCardPage() {
 
   const next = () => {
     if (index >= words.length - 1) {
-      toast.success(`🎉 ${GRADE_LABELS[grade]}全部完成！`);
-      const uid = user?.id;
-      if (uid) {
-        usersAPI.addBalance(uid, 10, '完成全年级单词').then(r => { if (r.success) { toast.success(`+10 积分 (完成全年级)`); if (r.newBalance !== undefined) updateBalance(r.newBalance); } });
+      if (confirm(`🎉 ${GRADE_LABELS[grade]}全部完成！\n\n确定 → 进入下一级\n取消 → 重新开始本年级`)) {
+        const uid = user?.id;
+        if (uid) {
+          usersAPI.addBalance(uid, 10, '完成全年级单词').then(r => { if (r.success) { toast.success(`+10 积分 (完成全年级)`); if (r.newBalance !== undefined) updateBalance(r.newBalance); } });
+        }
+        setGrade(g => (g >= 10 ? 7 : (g + 1) as Grade));
+        setIndex(0);
+      } else {
+        setIndex(0);
+        setCorrect(0);
+        setTotal(0);
+        setLearned(new Set());
+        setWrongWords([]);
+        toast('已重新开始本年级', { icon: '🔄' });
       }
-      setGrade(g => (g >= 10 ? 7 : (g + 1) as Grade));
-      setIndex(0);
     } else {
       setIndex(i => i + 1);
     }
