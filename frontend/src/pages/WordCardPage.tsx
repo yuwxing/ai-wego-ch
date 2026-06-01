@@ -1667,7 +1667,6 @@ export default function WordCardPage() {
       const newLearned = new Set(learned);
       newLearned.add(word.word);
       setLearned(newLearned);
-      awardWordPoints(1);
       checkMilestone(newLearned);
     } else {
       setWrongWords(prev => [...prev, word]);
@@ -1688,13 +1687,6 @@ export default function WordCardPage() {
     }
     setSelected(null);
     setAnswered(false);
-  };
-
-  const awardWordPoints = async (wordCount: number) => {
-    const uid = user?.id;
-    if (!uid) return;
-    const r = await usersAPI.addBalance(uid, wordCount, '背单词');
-    if (r.success) { if (r.newBalance !== undefined) updateBalance(r.newBalance); }
   };
 
   const checkMilestone = (newLearned: Set<string>) => {
