@@ -7,29 +7,29 @@ import { TeachingWorkflow } from '../components/digital-teacher/TeacherWorkflow'
 import TeachingBlackboard from '../components/digital-teacher/TeachingBlackboard'
 import VirtualJoystick from '../components/digital-teacher/VirtualJoystick'
 
+const DEFAULT_MODEL = ''
+
 type State = 'IDLE' | 'LISTENING' | 'THINKING' | 'TALKING' | 'TEACHING'
 const STATE_LABEL: Record<State, string> = {
   IDLE: '待机', LISTENING: '聆听中', THINKING: '思考中', TALKING: '说话中', TEACHING: '教学中',
 }
 
 const TEACHING_TOPICS = [
-  '定语从句',
-  '虚拟语气',
-  '被动语态',
-  '现在完成时',
-  '阅读理解技巧',
-  '作文结构分析',
+  '定语从句', '虚拟语气', '被动语态', '现在完成时', '阅读理解技巧', '作文结构分析',
 ]
 
 export default function DigitalTeacherPage() {
   const [state, setState] = useState<State>('IDLE')
   const [mode, setMode] = useState<'idle' | 'walk' | 'talk'>('idle')
   const [walkDir, setWalkDir] = useState<[number, number]>([0, 0])
+  const [modelUrl, setModelUrl] = useState(DEFAULT_MODEL)
+  const [showConfig, setShowConfig] = useState(false)
+  const [modelInput, setModelInput] = useState('')
   const teacherAIRef = useRef(new TeacherAI())
   const memoryRef = useRef(getTeacherMemory())
   const workflowRef = useRef(new TeachingWorkflow(teacherAIRef.current))
   const [messages, setMessages] = useState<{ text: string; user: boolean }[]>([
-    { text: '同学们好，我是你的等距小教师。点击麦克风或输入问题。', user: false },
+    { text: '同学们好，我是你的数字教师。点击麦克风或输入问题。', user: false },
   ])
   const [input, setInput] = useState('')
   const [topic, setTopic] = useState('')
@@ -40,7 +40,6 @@ export default function DigitalTeacherPage() {
 
   useEffect(() => { msgEndRef.current?.scrollIntoView({ behavior: 'smooth' }) }, [messages])
 
-  // Keyboard
   useEffect(() => {
     const down = (e: KeyboardEvent) => keysRef.current.add(e.key.toLowerCase())
     const up = (e: KeyboardEvent) => keysRef.current.delete(e.key.toLowerCase())
@@ -48,7 +47,6 @@ export default function DigitalTeacherPage() {
     return () => { window.removeEventListener('keydown', down); window.removeEventListener('keyup', up) }
   }, [])
 
-  // Walk direction from keys + joystick
   useEffect(() => {
     const interval = setInterval(() => {
       const jd = joystickDirRef.current
@@ -69,14 +67,12 @@ export default function DigitalTeacherPage() {
     joystickDirRef.current = dir
   }, [])
 
-  // ── AI message send ──
   const handleSend = useCallback(async (text: string) => {
     if (!text.trim()) return
     setMessages(prev => [...prev, { text, user: true }])
     setState('THINKING')
     setInput('')
     setMode('talk')
-
     try {
       const ai = teacherAIRef.current
       memoryRef.current.add('interaction', `学生问: ${text}`)
@@ -93,18 +89,14 @@ export default function DigitalTeacherPage() {
     setMode('idle')
   }, [])
 
-  // ── Voice input ──
   const handleVoice = useCallback(async () => {
     setState('LISTENING')
     try {
       const text = await listen()
       handleSend(text)
-    } catch {
-      setState('IDLE')
-    }
+    } catch { setState('IDLE') }
   }, [handleSend])
 
-  // ── Teaching mode ──
   const startTeaching = useCallback(async () => {
     if (!topic) return
     setState('TEACHING')
@@ -122,7 +114,6 @@ export default function DigitalTeacherPage() {
     setMode('idle')
   }, [topic])
 
-  // ── Lesson step navigation ──
   const nextStep = useCallback(() => {
     const step = workflowRef.current.nextStep()
     if (step) {
@@ -130,9 +121,7 @@ export default function DigitalTeacherPage() {
       setBlackboardContent(`${lesson?.topic}\n\n${step.title}\n${step.content}`)
       setMessages(prev => [...prev, { text: `📖 ${step.title}\n${step.content.slice(0, 200)}`, user: false }])
       speak(step.content.slice(0, 150))
-    } else {
-      setBlackboardContent('✅ 本节课到这里，有问题可以提问！')
-    }
+    } else setBlackboardContent('✅ 本节课到这里，有问题可以提问！')
   }, [])
 
   const prevStep = useCallback(() => {
@@ -145,12 +134,10 @@ export default function DigitalTeacherPage() {
 
   return (
     <div style={{ width: '100vw', height: '100vh', position: 'relative', overflow: 'hidden', background: '#0a0a12' }}>
-      {/* 3D Scene */}
       <div style={{ position: 'absolute', inset: 0 }}>
-        <TeacherScene mode={mode} walkDir={walkDir} blackboard={blackboardContent} />
+        <TeacherScene mode={mode} walkDir={walkDir} blackboard={blackboardContent} modelUrl={modelUrl} />
       </div>
 
-      {/* Mobile joystick */}
       <VirtualJoystick onMove={handleJoystick} />
 
       {/* Top bar */}
@@ -160,14 +147,52 @@ export default function DigitalTeacherPage() {
         padding: '10px 24px', borderRadius: 16, border: '1px solid #4a4a8a',
         display: 'flex', gap: 16, alignItems: 'center', zIndex: 100,
       }}>
-        <span>🎮</span>
-        <b style={{ color: '#e2e8f0' }}>等距小教师</b>
-        <span style={{ color: '#a78bfa', fontSize: 13 }} id="stateLabel">{STATE_LABEL[state]}</span>
-        <button onClick={handleVoice} style={{
-          background: '#7c3aed', border: 'none', color: 'white', padding: '4px 14px',
-          borderRadius: 8, cursor: 'pointer', fontSize: 14,
-        }}>🎤 语音</button>
+        <b style={{ color: '#e2e8f0' }}>数字教师</b>
+        <span style={{ color: '#a78bfa', fontSize: 13 }}>{STATE_LABEL[state]}</span>
+        <button onClick={() => { setShowConfig(!showConfig); setModelInput(modelUrl) }}
+          style={{ background: 'transparent', border: '1px solid #4a4a8a', color: '#c4b5fd', padding: '4px 10px', borderRadius: 6, cursor: 'pointer', fontSize: 12 }}>
+          更换模型
+        </button>
+        <button onClick={handleVoice}
+          style={{ background: '#7c3aed', border: 'none', color: 'white', padding: '4px 14px', borderRadius: 8, cursor: 'pointer', fontSize: 14 }}>
+          🎤 语音
+        </button>
       </div>
+
+      {/* Model URL config panel */}
+      {showConfig && (
+        <div style={{
+          position: 'absolute', top: 80, left: '50%', transform: 'translateX(-50%)',
+          background: 'rgba(19,19,26,0.95)', backdropFilter: 'blur(12px)',
+          padding: 16, borderRadius: 12, border: '1px solid #4a4a8a', zIndex: 200,
+          display: 'flex', flexDirection: 'column', gap: 8, minWidth: 420,
+        }}>
+          <div style={{ color: '#e2e8f0', fontSize: 14, fontWeight: 'bold' }}>Ready Player Me 模型</div>
+          <div style={{ color: '#94a3b8', fontSize: 12, lineHeight: 1.6 }}>
+            1. 打开 <a href="https://readyplayer.me" target="_blank" rel="noreferrer" style={{ color: '#7c3aed' }}>readyplayer.me</a> 创建你的教师形象<br />
+            2. 保存后复制页面网址（如 https://readyplayer.me/avatar/abc123）<br />
+            3. 粘贴到下方输入框，点确认
+          </div>
+          <div style={{ display: 'flex', gap: 8 }}>
+            <input value={modelInput} onChange={e => setModelInput(e.target.value)}
+              placeholder="https://readyplayer.me/avatar/..."
+              style={{
+                flex: 1, background: '#252540', border: '1px solid #4a4a8a', borderRadius: 8,
+                padding: '8px 12px', color: '#e2e8f0', outline: 'none', fontSize: 12,
+              }}
+            />
+            <button onClick={() => {
+              const id = modelInput.trim().split('/').pop() || ''
+              if (id) setModelUrl(`https://models.readyplayer.me/${id}.glb`)
+              setShowConfig(false)
+            }} style={{
+              background: '#7c3aed', border: 'none', color: 'white', padding: '8px 16px',
+              borderRadius: 8, cursor: 'pointer', fontSize: 12,
+            }}>确认</button>
+          </div>
+          {modelUrl && <div style={{ color: '#4ade80', fontSize: 11 }}>✓ 模型已加载</div>}
+        </div>
+      )}
 
       {/* Teaching toolbar */}
       <div style={{
@@ -199,11 +224,7 @@ export default function DigitalTeacherPage() {
         )}
       </div>
 
-      {/* Hints */}
-      <div style={{
-        position: 'absolute', bottom: 240, left: 20, zIndex: 80,
-        color: '#94a3b8', fontSize: 11,
-      }}>
+      <div style={{ position: 'absolute', bottom: 240, left: 20, zIndex: 80, color: '#94a3b8', fontSize: 11 }}>
         WASD/摇杆移动 · 🎤 语音对话
       </div>
 
@@ -219,14 +240,11 @@ export default function DigitalTeacherPage() {
               <span style={{
                 background: msg.user ? '#7c3aed' : '#334155',
                 padding: '8px 12px', borderRadius: 10,
-                display: 'inline-block', maxWidth: '75%',
-                color: '#e2e8f0',
+                display: 'inline-block', maxWidth: '75%', color: '#e2e8f0',
               }}>{msg.text}</span>
             </div>
           ))}
-          {state === 'THINKING' && (
-            <div style={{ color: '#94a3b8', fontSize: 12, margin: 4 }}>思考中...</div>
-          )}
+          {state === 'THINKING' && <div style={{ color: '#94a3b8', fontSize: 12, margin: 4 }}>思考中...</div>}
           <div ref={msgEndRef} />
         </div>
         <div style={{ display: 'flex', padding: '10px 12px', gap: 8, background: '#1a1a2e' }}>
