@@ -43,6 +43,15 @@ import DailyEnglishAdmin from './pages/admin/DailyEnglishAdmin'
 import JobSquareAdmin from './pages/admin/JobSquareAdmin'
 import OnlineClassroom from './pages/OnlineClassroom'
 import CreativeWorkshopPage from './pages/CreativeWorkshopPage'
+import WritingGrowthPage from './pages/WritingGrowthPage'
+import DigitalTeacherPage from './pages/DigitalTeacherPage'
+import RobotPage from './pages/RobotPage'
+import SequenceTestPage from './pages/SequenceTestPage'
+import MathSpeedTestPage from './pages/MathSpeedTestPage'
+import QuizChallengePage from './pages/QuizChallengePage'
+
+import LiteraryClubHall from './pages/literature/LiteraryClubHall'
+import LiteratureWritePage from './pages/literature/LiteratureWritePage'
 import NotFound from './pages/NotFound'
 
 function ParamRedirect({ to }: { to: string }) {
@@ -71,6 +80,9 @@ export default function App() {
       <Route path="/learn/competitions" element={<LearnCompetitions />} />
       <Route path="/learn/online-classroom" element={<OnlineClassroom />} />
       <Route path="/learn/creative-workshop" element={<CreativeWorkshopPage />} />
+      <Route path="/learn/writing" element={<WritingGrowthPage />} />
+      <Route path="/learn/teacher" element={<DigitalTeacherPage />} />
+      <Route path="/learn/robot" element={<RobotPage />} />
 
       {/* WEG Economy */}
       <Route path="/weg" element={<WegHub />} />
@@ -92,6 +104,16 @@ export default function App() {
       <Route path="/competitions/:id" element={<CompetitionDetailPage />} />
       <Route path="/competitions/new" element={<CreateCompetitionPage />} />
       <Route path="/competitions/:id/submit" element={<SubmitPage />} />
+
+      {/* 绿草地文学社 */}
+      <Route path="/literature" element={<LiteraryClubHall />} />
+      <Route path="/literature/write/:storyId" element={<LiteratureWritePage />} />
+
+      {/* WEG社区 */}
+      <Route path="/community/creative-workshop" element={<CreativeWorkshopPage />} />
+      <Route path="/community/sequence-test" element={<SequenceTestPage />} />
+      <Route path="/community/math-speed" element={<MathSpeedTestPage />} />
+      <Route path="/community/quiz/:type" element={<QuizChallengePage />} />
 
       {/* System */}
       <Route path="/announcements" element={<SystemAnnouncementsPage />} />
@@ -133,6 +155,7 @@ export default function App() {
       <Route path="/transactions" element={<Navigate to="/weg" replace />} />
       <Route path="/video-search" element={<Navigate to="/" replace />} />
       <Route path="/aigc-templates" element={<Navigate to="/learn/creative-workshop" replace />} />
+      <Route path="/learn/creative-workshop" element={<Navigate to="/community/creative-workshop" replace />} />
       <Route path="/adopt" element={<AdoptPage />} />
       <Route path="/pet-chat/:petId" element={<PetChatPage />} />
       <Route path="/avatar-chat" element={<AvatarChatPage />} />
