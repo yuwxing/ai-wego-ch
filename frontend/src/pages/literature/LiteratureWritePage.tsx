@@ -71,13 +71,11 @@ export default function LiteratureWritePage() {
           for (const sub of subs) {
             if (!sub?.content) continue
             if (next.find(c => c.content === sub.content)) continue
-            let chTitle = (sub.chapter_title || '').replace(/^第[一二三四五六七八九十]+章：/, '')
-            if (!chTitle) {
-              const lines = sub.content.trim().split('\n')
-              for (const line of lines) {
-                const clean = line.replace(/^["""「」\s]+/, '').trim()
-                if (clean.length >= 4) { chTitle = clean.length > 22 ? clean.slice(0, 22) + '…' : clean; break }
-              }
+            const lines = sub.content.trim().split('\n')
+            let chTitle = ''
+            for (const line of lines) {
+              const clean = line.replace(/^[""「」\s]+/, '').trim()
+              if (clean.length >= 4) { chTitle = clean.length > 22 ? clean.slice(0, 22) + '…' : clean; break }
             }
             const idx = next.length
             const chNum = CN[idx] || String(idx + 1)
@@ -120,7 +118,7 @@ export default function LiteratureWritePage() {
   function autoGenTitle(content: string): string {
     const lines = content.trim().split('\n')
     for (const line of lines) {
-      const clean = line.replace(/^["""「」\s]+/, '').trim()
+      const clean = line.replace(/^[""「」\s]+/, '').trim()
       if (clean.length >= 4) return clean.length > 22 ? clean.slice(0, 22) + '…' : clean
     }
     return '新篇章'
