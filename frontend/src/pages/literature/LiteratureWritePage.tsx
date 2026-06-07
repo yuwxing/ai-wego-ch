@@ -15,6 +15,7 @@ const REVIEW_PROMPT = `你是一位严格的语文老师，正在评审学生的
 3. 文学性：语言表达是否优美
 
 并给出总体评分（满分100分，>=80分通过）和3条具体改进建议。
+同时为这段续写生成一个精炼的章节标题（4-10字，概括本段核心情节）。
 请以 JSON 格式返回，不要带 markdown 包裹：
 {
   "coherence": 数字,
@@ -22,6 +23,7 @@ const REVIEW_PROMPT = `你是一位严格的语文老师，正在评审学生的
   "literary": 数字,
   "total_score": 数字,
   "passed": true/false,
+  "chapter_title": "生成的标题",
   "suggestions": ["建议1", "建议2", "建议3"]
 }`
 
@@ -51,7 +53,7 @@ export default function LiteratureWritePage() {
   const [submitted, setSubmitted] = useState(false)
   const [reviewResult, setReviewResult] = useState<{
     score: number; passed: boolean; code: string; suggestions: string[]
-    coherence?: number; creativity?: number; literary?: number
+    coherence?: number; creativity?: number; literary?: number; chapter_title?: string
   } | null>(null)
   const [analysis, setAnalysis] = useState({ coherence: 92, creativity: 87, literary: 84 })
   const [pendingSubmit, setPendingSubmit] = useState<{content: string, chapterTitle: string} | null>(null)
@@ -105,6 +107,15 @@ export default function LiteratureWritePage() {
   const previousContent = previousChapters.map(c => c.content).join('\n\n')
 
   const wordCount = userContent.replace(/\s/g, '').length
+
+  function autoGenTitle(content: string): string {
+    const lines = content.trim().split('\n')
+    for (const line of lines) {
+      const clean = line.replace(/^["""「」\s]+/, '').trim()
+      if (clean.length >= 4) return clean.length > 22 ? clean.slice(0, 22) + '…' : clean
+    }
+    return '新篇章'
+  }
 
   const callAI = async (prompt: string): Promise<string> => {
     const key = getApiKey()
@@ -193,6 +204,7 @@ ${userContent}
                 literary: parsed.literary,
                 passed: parsed.passed ?? parsed.total_score >= 80,
                 code: '',
+                chapter_title: parsed.chapter_title || '',
                 suggestions: parsed.suggestions || [],
               }
             }
@@ -213,11 +225,12 @@ ${userContent}
           }
         }
         setReviewResult(result)
+        if (result.chapter_title && !chapterTitle.trim()) setChapterTitle(result.chapter_title)
         setAnalysis({ coherence: result.coherence || 80, creativity: result.creativity || 75, literary: result.literary || 85 })
         localStorage.removeItem('literature_pending')
         setPendingSubmit(null)
         if (result.passed) {
-          const chTitle = chapterTitle.trim() || (current?.title || '枕书行').replace(/^第[一二三四五六七八九十]+章：/, '')
+          const chTitle = chapterTitle.trim() || result.chapter_title?.trim() || autoGenTitle(userContent) || (current?.title || '枕书行').replace(/^第[一二三四五六七八九十]+章：/, '')
           const authorName = user?.name || user?.id ? `用户${user.id}` : '匿名'
           // Save to shared table
           try {
@@ -458,7 +471,7 @@ ${userContent}
                 <span className="text-xs font-medium text-emerald-600">你的续写</span>
               </div>
               <input type="text" value={chapterTitle} onChange={e => setChapterTitle(e.target.value)}
-                placeholder="给你的续写起个标题（选填）" maxLength={30}
+                placeholder={userContent.trim() ? `如：${autoGenTitle(userContent)}` : '给你的续写起个标题（选填）'} maxLength={30}
                 className="w-full mb-3 px-4 py-2.5 rounded-xl bg-white/70 border border-slate-200 text-sm text-slate-700 placeholder-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-300 focus:border-transparent"
               />
               <textarea
