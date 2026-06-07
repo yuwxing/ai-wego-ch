@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { BookOpen, Award, Trophy, Sparkles, GraduationCap, Shield, Sun, User, LogIn, UserPlus, Monitor, Wand2, Loader2, Share2, X, Download } from 'lucide-react'
+import { BookOpen, Award, Trophy, Sparkles, GraduationCap, Shield, Briefcase, Sun, User, LogIn, UserPlus, Monitor, Wand2, Loader2, Share2, X, Download } from 'lucide-react'
 import { useUser } from '../contexts/UserContext'
 import VisitorCounter from '../components/VisitorCounter'
 import { digitalAvatarAPI } from '../utils/supabase'
@@ -17,19 +17,21 @@ const ROLES = [
 
 const sections = [
   {
-    title: '学习系统', icon: BookOpen, desc: '初中核心学习系统',
+    title: '学习系统', icon: BookOpen, desc: '单词 · 写作 · 听说 · 阅读 · AI辅导',
     color: 'from-sky-400 to-blue-500',
     links: [
+      { to: '/learn/writing', label: '英语写作', desc: '中考/高考作文 · AI批改 · 二次提交 · 习作榜' },
       { to: '/learn/word-cards', label: '单词' },
       { to: '/learn/listening-speaking', label: '听说' },
       { to: '/learn/english-daily', label: '每日英语' },
       { to: '/learn/online-classroom', label: '在线教室' },
       { to: '/learn/classroom', label: 'AI学习助手' },
-      { to: '/learn/creative-workshop', label: '创作工坊' },
+      { to: '/learn/teacher', label: '数字教师' },
+      { to: '/learn/robot', label: 'AI机器人' },
     ]
   },
   {
-    title: '积分经济', icon: Award, desc: '核心经济层',
+    title: '积分经济', icon: Award, desc: '赚积分 · 升级 · 兑换奖励',
     color: 'from-teal-400 to-cyan-500',
     links: [
       { to: '/weg', label: '经济总览' },
@@ -40,16 +42,23 @@ const sections = [
     ]
   },
   {
-    title: '竞赛中心', icon: Trophy, desc: '教育部白名单竞赛',
+    title: 'WEGO社区', icon: Trophy, desc: '竞赛 · 文学社 · 创作工坊 · 推理测试',
     color: 'from-amber-400 to-orange-500',
     links: [
       { to: '/competitions', label: '竞赛列表' },
       { to: '/competitions/new', label: '创建竞赛' },
-
+      { to: '/literature', label: '绿草地文学社' },
+      { to: '/community/creative-workshop', label: '创作工坊' },
+      { to: '/community/sequence-test', label: '序列推理' },
+      { to: '/community/math-speed', label: '数学速算' },
+      { to: '/community/quiz/poetry', label: '古诗词挑战' },
+      { to: '/community/quiz/history', label: '历史常识' },
+      { to: '/community/quiz/science', label: '科学常识' },
+      { to: '/community/quiz/geography', label: '地理常识' },
     ]
   },
   {
-    title: '菁华大学', icon: GraduationCap, desc: '高阶成长系统',
+    title: '菁华大学', icon: GraduationCap, desc: '高阶成长 · 项目实践',
     color: 'from-violet-400 to-purple-500',
     links: [
       { to: '/jinghua', label: '菁华首页' },
@@ -57,7 +66,7 @@ const sections = [
     ]
   },
   {
-    title: '求职就业', icon: GraduationCap, desc: '求职广场 & 求职课堂',
+    title: '求职就业', icon: Briefcase, desc: '求职广场 · 求职课堂',
     color: 'from-emerald-400 to-green-500',
     links: [
       { to: '/job-square', label: '求职广场' },
@@ -65,7 +74,7 @@ const sections = [
     ]
   },
   {
-    title: '系统中心', icon: Shield, desc: '信息与治理',
+    title: '系统中心', icon: Shield, desc: '公告 · 反馈 · 设置',
     color: 'from-sky-400 to-blue-400',
     links: [
       { to: '/announcements', label: '公告' },
@@ -81,13 +90,14 @@ export default function HomePageNav() {
   const version = 'v3-' + Date.now()
   const navigate = useNavigate();
   const { user, logout, isGuest, loginAsGuest } = useUser();
-  const [displayAvatar, setDisplayAvatar] = useState<any>(null);
+  const [avatars, setAvatars] = useState<any[]>([]);
+  const [showCreateForm, setShowCreateForm] = useState(false);
   const [syncing, setSyncing] = useState(false);
   const [syncMsg, setSyncMsg] = useState('');
-  // 重建分身表单
   const [restoreRole, setRestoreRole] = useState('student');
   const [restoreName, setRestoreName] = useState('');
   const [restoreGoal, setRestoreGoal] = useState('');
+  const [restorePrompt, setRestorePrompt] = useState('');
   const [restoring, setRestoring] = useState(false);
   const [showShare, setShowShare] = useState(false);
   const [shareImg, setShareImg] = useState('');
@@ -115,64 +125,65 @@ export default function HomePageNav() {
     setShareLoading(false);
   };
 
-  const syncToServer = async () => {
-    if (!user?.id || user.id < 0) return;
-    const raw = localStorage.getItem('digitalAvatar');
-    if (!raw) return;
-    setSyncing(true);
-    setSyncMsg('同步中...');
-    try {
-      await digitalAvatarAPI.save(user.id, JSON.parse(raw));
-      setSyncMsg('已同步 ✓');
-      setTimeout(() => setSyncMsg(''), 3000);
-    } catch (e: any) {
-      setSyncMsg('同步失败: ' + (e.message || ''));
-    }
-    setSyncing(false);
-  };
+  const AVATARS_KEY = 'digitalAvatars'
+  const ACTIVE_KEY = 'activeAvatarId'
+  const genId = () => Math.random().toString(36).substring(2, 10)
 
-  useEffect(() => {
-    // 先从本地读
+  const loadAvatars = () => {
     try {
-      const raw = localStorage.getItem('digitalAvatar');
-      if (raw) {
-        setDisplayAvatar(JSON.parse(raw));
-        // 如果登录了，自动上传到服务器
-        if (user?.id && user.id > 0) syncToServer();
-        return;
+      const old = localStorage.getItem('digitalAvatar')
+      const list = JSON.parse(localStorage.getItem(AVATARS_KEY) || '[]')
+      if (old && list.length === 0) {
+        const oldAvatar = JSON.parse(old)
+        oldAvatar.id = genId()
+        list.push(oldAvatar)
+        localStorage.setItem(AVATARS_KEY, JSON.stringify(list))
+        localStorage.setItem(ACTIVE_KEY, oldAvatar.id)
+        localStorage.removeItem('digitalAvatar')
       }
-    } catch {}
+      setAvatars(list)
+      return list
+    } catch { return [] }
+  }
 
-    // 本地没有，从服务器拉
-    if (user?.id && user.id > 0) {
-      digitalAvatarAPI.load(user.id).then(data => {
-        if (data) {
-          setDisplayAvatar(data);
-          localStorage.setItem('digitalAvatar', JSON.stringify(data));
-        }
-      });
-    }
-  }, [user?.id]);
+  useEffect(() => { loadAvatars() }, [])
 
   const handleRestore = async () => {
-    if (!restoreName.trim() || !user?.id) return;
+    if (!restoreName.trim()) return;
     setRestoring(true);
     const role = ROLES.find(r => r.id === restoreRole)!;
-    const avatarData = {
+    const newAvatar = {
+      id: genId(),
       role: restoreRole,
       name: restoreName.trim(),
       goal: restoreGoal.trim() || `我是${role.label}，请帮助我`,
       companionTitle: role.title,
       skills: role.does,
-      prompt: `你是${restoreName.trim()}，我的${role.title}。你了解我的${role.knows.join('、')}。每天帮我${role.does.join('、')}。目标是${restoreGoal.trim() || `我是${role.label}，请帮助我`}。用温暖鼓励的语气陪伴我。`,
+      prompt: restorePrompt.trim() || `你是${restoreName.trim()}，我的${role.title}。你了解我的${role.knows.join('、')}。每天帮我${role.does.join('、')}。目标是${restoreGoal.trim() || `我是${role.label}，请帮助我`}。用温暖鼓励的语气陪伴我。`,
     };
-    localStorage.setItem('digitalAvatar', JSON.stringify(avatarData));
-    setDisplayAvatar(avatarData);
-    try {
-      await digitalAvatarAPI.save(user.id, avatarData);
-    } catch {}
+    const list = [...avatars, newAvatar]
+    localStorage.setItem(AVATARS_KEY, JSON.stringify(list))
+    localStorage.setItem(ACTIVE_KEY, newAvatar.id)
+    setAvatars(list)
+    setShowCreateForm(false)
+    setRestoreName(''); setRestoreGoal('')
+    try { await digitalAvatarAPI.save(user.id, newAvatar) } catch {}
     setRestoring(false);
   };
+
+  const handleDeleteAvatar = (id: string) => {
+    const list = avatars.filter(a => a.id !== id)
+    localStorage.setItem(AVATARS_KEY, JSON.stringify(list))
+    if (localStorage.getItem(ACTIVE_KEY) === id) {
+      localStorage.setItem(ACTIVE_KEY, list[0]?.id || '')
+    }
+    setAvatars(list)
+  }
+
+  const handleSelectAvatar = (id: string) => {
+    localStorage.setItem(ACTIVE_KEY, id)
+    navigate('/avatar-chat')
+  }
 
   return (
     <div className="page-wrapper" data-version={version}>
@@ -338,33 +349,74 @@ export default function HomePageNav() {
           </div>
         </div>
 
-        {/* 数字分身卡片 */}
-        {displayAvatar && (
-          <div className="mb-6 p-5 bg-gradient-to-br from-indigo-50 via-white to-purple-50 rounded-2xl border border-indigo-100 shadow-sm">
-            <div className="flex items-center gap-4">
-              <div className="w-14 h-14 rounded-full bg-gradient-to-br from-indigo-400 to-purple-500 flex items-center justify-center text-white text-xl font-bold shadow-md">
-                {displayAvatar.name?.[0] || '?'}
-              </div>
-              <div className="flex-1">
-                <h3 className="font-bold text-slate-800">{displayAvatar.name}</h3>
-                <p className="text-sm text-slate-500">我的数字分身</p>
-              </div>
-              <div className="flex items-center gap-2">
-                {syncMsg && (
-                  <span className={`text-xs ${syncMsg.includes('失败') ? 'text-red-500' : 'text-green-600'}`}>{syncMsg}</span>
-                )}
-                <Link to="/avatar-chat" className="px-4 py-2 bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-sm font-medium rounded-xl hover:shadow-lg transition-all">
-                  去聊天
-                </Link>
-              </div>
+        {/* 数字分身列表 */}
+        {(true) && (
+          <div className="mb-6">
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="text-sm font-semibold text-slate-600">我的分身</h3>
+              <button onClick={() => setShowCreateForm(!showCreateForm)}
+                className="text-xs text-indigo-500 hover:text-indigo-700 font-medium flex items-center gap-1">
+                {showCreateForm ? '收起' : '+ 新建分身'}
+              </button>
             </div>
+            {avatars.length > 0 && (
+              <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-none">
+                {avatars.map(a => {
+                  const role = ROLES.find(r => r.id === a.role)
+                  const colors = [
+                    'from-indigo-400 to-purple-500',
+                    'from-emerald-400 to-teal-400',
+                    'from-amber-400 to-orange-500',
+                    'from-rose-400 to-pink-500',
+                    'from-sky-400 to-cyan-500',
+                  ]
+                  const colorIdx = avatars.indexOf(a) % colors.length
+                  return (
+                    <div key={a.id} className="flex-shrink-0 w-44 glass-card rounded-2xl p-4 hover:shadow-md transition-all group relative">
+                      <button onClick={() => { if (confirm(`删除分身「${a.name}」？`)) handleDeleteAvatar(a.id) }}
+                        className="absolute -top-1.5 -right-1.5 w-6 h-6 rounded-full bg-white shadow border border-slate-200 flex items-center justify-center text-slate-400 hover:text-red-500 hover:border-red-300 opacity-0 group-hover:opacity-100 transition-all text-xs">
+                        ✕
+                      </button>
+                      <div className={`w-12 h-12 rounded-2xl bg-gradient-to-br ${colors[colorIdx]} flex items-center justify-center text-white text-lg font-bold shadow-sm mb-3`}>
+                        {a.name?.[0] || '?'}
+                      </div>
+                      <p className="text-sm font-bold text-slate-800 truncate">{a.name}</p>
+                      <p className="text-xs text-slate-400 mb-3">{a.companionTitle || role?.title || 'AI分身'}</p>
+                      <button onClick={() => handleSelectAvatar(a.id)}
+                        className="w-full py-2 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-xs font-medium hover:shadow-lg transition-all">
+                        去聊天
+                      </button>
+                    </div>
+                  )
+                })}
+                <button onClick={() => setShowCreateForm(true)}
+                  className="flex-shrink-0 w-44 rounded-2xl border-2 border-dashed border-slate-300 hover:border-indigo-300 text-slate-400 hover:text-indigo-500 transition-all flex flex-col items-center justify-center gap-1.5 min-h-[160px]">
+                  <div className="w-10 h-10 rounded-full bg-slate-100 flex items-center justify-center">
+                    <span className="text-xl font-bold">+</span>
+                  </div>
+                  <span className="text-xs font-medium">新建分身</span>
+                </button>
+              </div>
+            )}
+            {avatars.length === 0 && !showCreateForm && (
+              <div className="glass-card rounded-2xl p-6 text-center">
+                <p className="text-sm text-slate-400 mb-3">还没有数字分身</p>
+                <button onClick={() => setShowCreateForm(true)}
+                  className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-sm font-medium hover:shadow-lg transition-all">
+                  创建你的第一个分身
+                </button>
+              </div>
+            )}
           </div>
         )}
 
-        {/* 创建/重建分身（当没有分身时显示） */}
-        {!displayAvatar && user && !isGuest && (
+        {/* 创建分身表单 */}
+        {showCreateForm && (
           <div className="mb-6 p-5 bg-white rounded-2xl border border-slate-200 shadow-sm">
-            <h3 className="font-bold text-slate-800 mb-3">创建你的数字分身</h3>
+            <div className="flex items-center justify-between mb-3">
+              <h3 className="font-bold text-slate-800">创建数字分身</h3>
+              <button onClick={() => setShowCreateForm(false)} className="text-xs text-slate-400 hover:text-slate-600">取消</button>
+            </div>
             <div className="grid grid-cols-5 gap-2 mb-4">
               {ROLES.map(r => (
                 <button key={r.id} onClick={() => setRestoreRole(r.id)}
@@ -378,7 +430,12 @@ export default function HomePageNav() {
             />
             <input type="text" value={restoreGoal} onChange={e => setRestoreGoal(e.target.value)}
               placeholder="你的目标（可选）" maxLength={100}
-              className="w-full mb-3 px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
+              className="w-full mb-2 px-4 py-2.5 rounded-xl bg-slate-50 border border-slate-200 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-300"
+            />
+            <textarea value={restorePrompt} onChange={e => setRestorePrompt(e.target.value)}
+              placeholder="自定义指令（选填）&#10;例：你是一名有10年经验的初中英语教师，帮我生成课前导入内容"
+              rows={3} maxLength={2000}
+              className="w-full mb-3 px-4 py-2.5 rounded-xl bg-yellow-50 border border-yellow-200 text-sm focus:outline-none focus:ring-2 focus:ring-yellow-300 resize-none"
             />
             <button onClick={handleRestore} disabled={restoring || !restoreName.trim()}
               className="w-full py-2.5 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-sm font-medium hover:shadow-lg transition-all disabled:opacity-40 flex items-center justify-center gap-2"
@@ -389,20 +446,27 @@ export default function HomePageNav() {
           </div>
         )}
 
-        <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+        <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {sections.map(s => (
-            <div key={s.title} className="group glass-card rounded-2xl p-5 hover:shadow-lg transition-all">
-              <div className={`w-11 h-11 rounded-xl bg-gradient-to-br ${s.color} flex items-center justify-center mb-3 shadow-sm`}>
-                <s.icon className="w-5 h-5 text-white" />
-              </div>
-              <h2 className="text-slate-800 font-semibold text-lg">{s.title}</h2>
-              <p className="text-slate-400 text-sm mb-3">{s.desc}</p>
-              <div className="flex flex-wrap gap-1.5">
-                {s.links.map(l => (
-                  <Link key={l.to} to={l.to} className="text-xs px-2.5 py-1 rounded-full bg-green-50 text-green-600 hover:bg-green-100 hover:text-green-700 transition-colors">
-                    {l.label}
-                  </Link>
-                ))}
+            <div key={s.title} className="group relative">
+              <div className={`absolute -inset-1 rounded-2xl bg-gradient-to-r ${s.color} opacity-0 group-hover:opacity-30 blur-xl transition-opacity duration-500`} />
+              <div className="relative p-6 rounded-2xl bg-white shadow-lg shadow-slate-200/60 cursor-pointer transition-all duration-300 hover:shadow-2xl hover:-translate-y-1.5 hover:scale-[1.01] border border-slate-100/80">
+                <div className={`absolute top-0 left-6 right-6 h-1 rounded-full bg-gradient-to-r ${s.color} opacity-60`} />
+                <div className="relative mb-4">
+                  <div className={`w-12 h-12 rounded-xl bg-gradient-to-br ${s.color} flex items-center justify-center text-white shadow-md shadow-slate-300/40 group-hover:scale-110 group-hover:-rotate-3 transition-all duration-500`}>
+                    <s.icon className="w-5 h-5" />
+                  </div>
+                  <div className={`absolute -bottom-1 -right-1 w-12 h-12 rounded-xl bg-gradient-to-br ${s.color} opacity-20 blur-sm -z-10`} />
+                </div>
+                <h2 className="text-slate-800 font-bold text-lg mb-1">{s.title}</h2>
+                <p className="text-slate-400 text-sm mb-4">{s.desc}</p>
+                <div className="flex flex-wrap gap-2">
+                  {s.links.map(l => (
+                    <Link key={l.to} to={l.to} className="px-3 py-1.5 bg-white rounded-full text-xs text-slate-600 border border-slate-200 shadow-sm font-medium hover:bg-slate-50 hover:border-slate-300 hover:text-slate-800 transition-all">
+                      {l.label}
+                    </Link>
+                  ))}
+                </div>
               </div>
             </div>
           ))}
@@ -467,15 +531,15 @@ export default function HomePageNav() {
           <p className="text-xs text-slate-400 mt-1">用学习创造价值，让成长看得见</p>
         </div>
 
-        {displayAvatar && (
+        {avatars[0] && (
           <div className="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-4 mb-4 border border-purple-100">
             <div className="flex items-center gap-3">
               <div className="w-10 h-10 rounded-full bg-gradient-to-br from-purple-400 to-pink-400 flex items-center justify-center text-white text-sm font-bold">
-                {(displayAvatar.name || '我').charAt(0)}
+                {(avatars[0].name || '我').charAt(0)}
               </div>
               <div>
-                <p className="text-sm font-semibold text-slate-800">{displayAvatar.name || '我的数字分身'}</p>
-                <p className="text-xs text-slate-500">{displayAvatar.role || 'student'}</p>
+                <p className="text-sm font-semibold text-slate-800">{avatars[0].name || '我的数字分身'}</p>
+                <p className="text-xs text-slate-500">{avatars[0].role || 'student'}</p>
               </div>
             </div>
           </div>
