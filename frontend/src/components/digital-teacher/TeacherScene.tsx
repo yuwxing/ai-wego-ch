@@ -23,10 +23,10 @@ export default function TeacherScene({ mode, walkDir, blackboard, modelUrl }: Pr
       camera={{ position: [1.5, 1.6, 3.0], fov: 50 }}
       style={{ width: '100%', height: '100%', background: '#050510' }}
     >
-      <ambientLight intensity={0.3} color="#2266aa" />
-      <directionalLight position={[5, 10, 6]} intensity={0.8} color="#4488ff" />
-      <directionalLight position={[-4, 1, -5]} intensity={0.3} color="#22d3ee" />
-      <pointLight position={[0, 2.5, 0]} intensity={0.6} color="#22d3ee" />
+      <ambientLight intensity={1.2} color="#ffffff" />
+      <directionalLight position={[5, 10, 6]} intensity={3} castShadow shadow-mapSize-width={1024} shadow-mapSize-height={1024} />
+      <directionalLight position={[-4, 1, -5]} intensity={0.8} color="#88ccff" />
+      <directionalLight position={[0, -2, 4]} intensity={0.6} color="#22d3ee" />
 
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.02, 0]}>
         <planeGeometry args={[24, 24]} />

@@ -10,7 +10,7 @@ function HolographicRing({ radius, y, color = '#22d3ee' }: { radius: number; y: 
   return (
     <mesh ref={ringRef} position={[0, y, 0]} rotation={[Math.PI / 3, 0, 0]}>
       <torusGeometry args={[radius, 0.015, 8, 48]} />
-      <meshBasicMaterial color={color} transparent opacity={0.25} />
+          <meshBasicMaterial color={color} transparent opacity={0.4} />
     </mesh>
   )
 }
@@ -23,7 +23,7 @@ function HolographicRingH({ radius, y, color = '#22d3ee' }: { radius: number; y:
   return (
     <mesh ref={ringRef} position={[0, y, 0]} rotation={[Math.PI / 2, 0, 0]}>
       <ringGeometry args={[radius - 0.02, radius, 48]} />
-      <meshBasicMaterial color={color} transparent opacity={0.12} side={THREE.DoubleSide} />
+          <meshBasicMaterial color={color} transparent opacity={0.25} side={THREE.DoubleSide} />
     </mesh>
   )
 }
@@ -90,13 +90,13 @@ export default function HolographicClassroom() {
       {/* Holographic floor circle */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.005, 0]}>
         <ringGeometry args={[0.5, 2.5, 64]} />
-        <meshBasicMaterial color="#22d3ee" transparent opacity={0.06} side={THREE.DoubleSide} />
+        <meshBasicMaterial color="#22d3ee" transparent opacity={0.15} side={THREE.DoubleSide} />
       </mesh>
 
       {/* Floor grid */}
       <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, 0, 0]}>
         <planeGeometry args={[5, 5, 16, 16]} />
-        <meshBasicMaterial color="#22d3ee" wireframe transparent opacity={0.08} />
+        <meshBasicMaterial color="#22d3ee" wireframe transparent opacity={0.2} />
       </mesh>
 
       {/* Scanning line */}
