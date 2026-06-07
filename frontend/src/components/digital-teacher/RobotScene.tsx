@@ -6,9 +6,10 @@ import RobotAvatar, { type RobotAnim } from './RobotAvatar'
 interface Props {
   animation: RobotAnim
   animSpeed?: number
+  walkDir?: [number, number]
 }
 
-export default function RobotScene({ animation, animSpeed = 1 }: Props) {
+export default function RobotScene({ animation, animSpeed = 1, walkDir }: Props) {
   return (
     <Canvas
       shadows
@@ -38,7 +39,7 @@ export default function RobotScene({ animation, animSpeed = 1 }: Props) {
       </mesh>
 
       {/* Robot */}
-      <RobotAvatar animation={animation} animSpeed={animSpeed} />
+      <RobotAvatar animation={animation} animSpeed={animSpeed} walkDir={walkDir} />
 
       {/* Controls */}
       <OrbitControls target={[0, 0.9, 0]} enableDamping maxPolarAngle={Math.PI / 2} />

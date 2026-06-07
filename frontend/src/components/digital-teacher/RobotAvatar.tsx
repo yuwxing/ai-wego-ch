@@ -8,6 +8,7 @@ interface Props {
   animation?: RobotAnim
   animSpeed?: number
   visible?: boolean
+  walkDir?: [number, number]
 }
 
 /** Shared mesh material components to avoid Three instances in JSX */
@@ -18,9 +19,11 @@ function MatGlow() { return <meshStandardMaterial color="#60a5fa" emissive="#3b8
 function MatJoint() { return <meshStandardMaterial color="#6b7280" metalness={0.7} roughness={0.4} /> }
 function MatChestAccent() { return <meshStandardMaterial color="#1e293b" metalness={0.6} roughness={0.3} emissive="#1e40af" emissiveIntensity={0.15} /> }
 
-export default function RobotAvatar({ animation = 'idle', animSpeed = 1, visible = true }: Props) {
+export default function RobotAvatar({ animation = 'idle', animSpeed = 1, visible = true, walkDir }: Props) {
   const groupRef = useRef<THREE.Group>(null!)
   const phaseRef = useRef(0)
+  const velocityRef = useRef(new THREE.Vector3())
+  const targetRotRef = useRef(0)
 
   const joints = useMemo(() => ({
     head: new THREE.Object3D(),
@@ -42,6 +45,32 @@ export default function RobotAvatar({ animation = 'idle', animSpeed = 1, visible
     const dt = Math.min(delta, 0.03) * animSpeed
     phaseRef.current += dt
     const t = phaseRef.current
+
+    // Movement from walkDir
+    if (walkDir) {
+      const [fx, fz] = walkDir
+      const speed = 1.8 * animSpeed
+      const dir = new THREE.Vector3(fx, 0, fz)
+      if (dir.length() > 0) {
+        dir.normalize().multiplyScalar(speed * dt)
+        velocityRef.current.lerp(dir, 0.2)
+        targetRotRef.current = Math.atan2(fx, fz)
+      } else {
+        velocityRef.current.lerp(new THREE.Vector3(), 0.15)
+      }
+    }
+    const g = groupRef.current
+    if (g) {
+      g.position.x += velocityRef.current.x
+      g.position.z += velocityRef.current.z
+      if (velocityRef.current.lengthSq() > 0.001) {
+        const target = targetRotRef.current
+        let diff = target - g.rotation.y
+        while (diff > Math.PI) diff -= Math.PI * 2
+        while (diff < -Math.PI) diff += Math.PI * 2
+        g.rotation.y += diff * 6 * dt
+      }
+    }
 
     let bob = 0, headTilt = 0, armSwing = 0, antennaBend = 0
 

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
 import RobotScene from '../components/digital-teacher/RobotScene'
 import type { RobotAnim } from '../components/digital-teacher/RobotAvatar'
 
@@ -13,12 +13,44 @@ const ANIM_OPTIONS: { key: RobotAnim; label: string; icon: string }[] = [
 export default function RobotPage() {
   const [anim, setAnim] = useState<RobotAnim>('idle')
   const [speed, setSpeed] = useState(1)
+  const [walkDir, setWalkDir] = useState<[number, number]>([0, 0])
+  const keysRef = useRef<Set<string>>(new Set())
+
+  // Keyboard movement
+  useEffect(() => {
+    const down = (e: KeyboardEvent) => {
+      keysRef.current.add(e.key.toLowerCase())
+      if (['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright'].includes(e.key.toLowerCase())) {
+        e.preventDefault()
+      }
+    }
+    const up = (e: KeyboardEvent) => keysRef.current.delete(e.key.toLowerCase())
+    window.addEventListener('keydown', down)
+    window.addEventListener('keyup', up)
+    return () => { window.removeEventListener('keydown', down); window.removeEventListener('keyup', up) }
+  }, [])
+
+  // Poll keys → walkDir
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const k = keysRef.current
+      let fx = 0, fz = 0
+      if (k.has('w') || k.has('arrowup')) fz -= 1
+      if (k.has('s') || k.has('arrowdown')) fz += 1
+      if (k.has('a') || k.has('arrowleft')) fx -= 1
+      if (k.has('d') || k.has('arrowright')) fx += 1
+      setWalkDir([fx, fz])
+      if (fx !== 0 || fz !== 0) setAnim('walk')
+      else setAnim(a => a === 'walk' ? 'idle' : a)
+    }, 50)
+    return () => clearInterval(interval)
+  }, [])
 
   return (
     <div style={{ width: '100vw', height: '100vh', position: 'relative', overflow: 'hidden', background: '#080818' }}>
       {/* 3D Scene */}
       <div style={{ position: 'absolute', inset: 0 }}>
-        <RobotScene animation={anim} animSpeed={speed} />
+        <RobotScene animation={anim} animSpeed={speed} walkDir={walkDir} />
       </div>
 
       {/* Top bar */}
@@ -87,7 +119,7 @@ export default function RobotPage() {
         position: 'absolute', bottom: 20, left: '50%', transform: 'translateX(-50%)',
         color: '#475569', fontSize: 11, zIndex: 80, textAlign: 'center',
       }}>
-        🖱 拖拽旋转 · 滚轮缩放 · 点击按钮切换动画
+        🖱 拖拽旋转 · 滚轮缩放 · WASD/方向键移动 · 点击按钮切换动画
       </div>
     </div>
   )
