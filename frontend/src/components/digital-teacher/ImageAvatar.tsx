@@ -1,5 +1,5 @@
 import React, { useRef, useMemo, useEffect, useState } from 'react'
-import { useFrame, useLoader } from '@react-three/fiber'
+import { useFrame } from '@react-three/fiber'
 import * as THREE from 'three'
 import type { RobotAnim } from './RobotAvatar'
 
@@ -11,6 +11,24 @@ interface Props {
   walkDir?: [number, number]
 }
 
+function createBodyGeometry(w: number, h: number, radius: number, depth: number) {
+  const shape = new THREE.Shape()
+  shape.moveTo(-w / 2 + radius, -h / 2)
+  shape.lineTo(w / 2 - radius, -h / 2)
+  shape.quadraticCurveTo(w / 2, -h / 2, w / 2, -h / 2 + radius)
+  shape.lineTo(w / 2, h / 2 - radius)
+  shape.quadraticCurveTo(w / 2, h / 2, w / 2 - radius, h / 2)
+  shape.lineTo(-w / 2 + radius, h / 2)
+  shape.quadraticCurveTo(-w / 2, h / 2, -w / 2, h / 2 - radius)
+  shape.lineTo(-w / 2, -h / 2 + radius)
+  shape.quadraticCurveTo(-w / 2, -h / 2, -w / 2 + radius, -h / 2)
+
+  const geo = new THREE.ShapeGeometry(shape)
+  geo.rotateX(-Math.PI / 2)
+  geo.translate(0, 0, depth / 2)
+  return geo
+}
+
 export default function ImageAvatar({ imageUrl, animation = 'idle', animSpeed = 1, visible = true, walkDir }: Props) {
   const groupRef = useRef<THREE.Group>(null!)
   const phaseRef = useRef(0)
@@ -18,7 +36,6 @@ export default function ImageAvatar({ imageUrl, animation = 'idle', animSpeed = 
   const targetRotRef = useRef(0)
   const [texture, setTexture] = useState<THREE.Texture | null>(null)
 
-  // Load image as texture
   useEffect(() => {
     const loader = new THREE.TextureLoader()
     loader.load(imageUrl, (tex) => {
@@ -26,6 +43,8 @@ export default function ImageAvatar({ imageUrl, animation = 'idle', animSpeed = 
       setTexture(tex)
     })
   }, [imageUrl])
+
+  const bodyGeo = useMemo(() => createBodyGeometry(0.48, 0.60, 0.08, 0.06), [])
 
   const joints = useMemo(() => ({
     body: new THREE.Object3D(),
@@ -41,7 +60,6 @@ export default function ImageAvatar({ imageUrl, animation = 'idle', animSpeed = 
     phaseRef.current += dt
     const t = phaseRef.current
 
-    // Movement from walkDir
     if (walkDir) {
       const [fx, fz] = walkDir
       const speed = 1.8 * animSpeed
@@ -88,11 +106,11 @@ export default function ImageAvatar({ imageUrl, animation = 'idle', animSpeed = 
     joints.body.position.y = 0.75 + bob
     joints.body.rotation.x = bob * 0.3
 
-    joints.head.position.y = 1.30 + bob
+    joints.head.position.y = 1.35 + bob
 
-    joints.leftArm.position.set(-0.28, 1.05 + bob, 0)
+    joints.leftArm.position.set(-0.30, 1.05 + bob, 0)
     joints.leftArm.rotation.x = armSwing * 0.8
-    joints.rightArm.position.set(0.28, 1.05 + bob, 0)
+    joints.rightArm.position.set(0.30, 1.05 + bob, 0)
     joints.rightArm.rotation.x = -armSwing * 0.8
 
     if (animation === 'wave') {
@@ -109,28 +127,22 @@ export default function ImageAvatar({ imageUrl, animation = 'idle', animSpeed = 
 
   return (
     <group ref={groupRef} position={[0, 0, 0]}>
-      {/* Body with texture */}
+      {/* Body – front face with full image */}
       <primitive object={joints.body}>
         <mesh position={[0, 0, 0]} castShadow>
-          <boxGeometry args={[0.50, 0.50, 0.18]} />
+          <primitive object={bodyGeo} attach="geometry" />
           {texture ? (
             <meshStandardMaterial
               map={texture}
-              metalness={0.1}
-              roughness={0.8}
+              metalness={0}
+              roughness={0.9}
               side={THREE.DoubleSide}
+              transparent
             />
           ) : (
             <meshStandardMaterial color="#8a9bb5" />
           )}
         </mesh>
-        {/* Back side (solid color when no texture) */}
-        {texture && (
-          <mesh position={[0, 0, -0.09]} castShadow>
-            <planeGeometry args={[0.48, 0.48]} />
-            <meshStandardMaterial color="#2a2a3a" />
-          </mesh>
-        )}
       </primitive>
 
       {/* Head */}
