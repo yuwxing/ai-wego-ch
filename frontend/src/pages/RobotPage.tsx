@@ -3,6 +3,13 @@ import RobotScene from '../components/digital-teacher/RobotScene'
 import type { RobotAnim } from '../components/digital-teacher/RobotAvatar'
 import { TeacherAI } from '../components/digital-teacher/TeacherAI'
 import { speak, listen } from '../components/digital-teacher/TeacherVoice'
+import VirtualJoystick from '../components/digital-teacher/VirtualJoystick'
+
+const AVATAR_OPTIONS = [
+  { id: 'robot', label: '3D机器人', icon: '🤖' },
+  { id: 'img1', label: '形象01', icon: '🖼️', img: '/avatars/teacher01.jpg' },
+  { id: 'img2', label: '形象02', icon: '🖼️', img: '/avatars/teacher02.jpg' },
+]
 
 const ROBOT_SYSTEM = `你是一个有趣的 AI 机器人助手，名字叫「小铁」。你的性格特点：
 - 活泼、热情、充满好奇心
@@ -28,6 +35,7 @@ export default function RobotPage() {
   const [speed, setSpeed] = useState(1)
   const [walkDir, setWalkDir] = useState<[number, number]>([0, 0])
   const [state, setState] = useState<string>('IDLE')
+  const [avatar, setAvatar] = useState<string>('robot')
   const [messages, setMessages] = useState<{ text: string; user: boolean }[]>([
     { text: '哔哔——！你好，我是小铁 🤖 按 WASD 可以让我走动，也可以和我聊天！', user: false },
   ])
@@ -35,6 +43,7 @@ export default function RobotPage() {
   const keysRef = useRef<Set<string>>(new Set())
   const msgEndRef = useRef<HTMLDivElement>(null)
   const aiRef = useRef(new TeacherAI())
+  const joystickDirRef = useRef<[number, number]>([0, 0])
 
   // Override AI system prompt
   useEffect(() => {
@@ -58,21 +67,7 @@ export default function RobotPage() {
     return () => { window.removeEventListener('keydown', down); window.removeEventListener('keyup', up) }
   }, [])
 
-  // Poll keys → walkDir
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const k = keysRef.current
-      let fx = 0, fz = 0
-      if (k.has('w') || k.has('arrowup')) fz -= 1
-      if (k.has('s') || k.has('arrowdown')) fz += 1
-      if (k.has('a') || k.has('arrowleft')) fx -= 1
-      if (k.has('d') || k.has('arrowright')) fx += 1
-      setWalkDir([fx, fz])
-      if (fx !== 0 || fz !== 0) setAnim('walk')
-      else setAnim(a => a === 'walk' ? 'idle' : a)
-    }, 50)
-    return () => clearInterval(interval)
-  }, [])
+
 
   const handleSend = useCallback(async (text: string) => {
     if (!text.trim()) return
@@ -94,6 +89,29 @@ export default function RobotPage() {
     setAnim('idle')
   }, [])
 
+  // Joystick movement (mobile)
+  const handleJoystick = useCallback((dir: [number, number]) => {
+    joystickDirRef.current = dir
+    const [fx, fz] = dir
+    if (fx !== 0 || fz !== 0) setAnim('walk')
+    else setAnim(a => a === 'walk' ? 'idle' : a)
+  }, [])
+
+  // Merge keyboard + joystick walkDir
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const jd = joystickDirRef.current
+      const k = keysRef.current
+      let fx = jd[0], fz = jd[1]
+      if (k.has('w') || k.has('arrowup')) fz = -1
+      if (k.has('s') || k.has('arrowdown')) fz = 1
+      if (k.has('a') || k.has('arrowleft')) fx = -1
+      if (k.has('d') || k.has('arrowright')) fx = 1
+      setWalkDir([fx, fz])
+    }, 50)
+    return () => clearInterval(interval)
+  }, [])
+
   const handleVoice = useCallback(async () => {
     setState('LISTENING')
     try {
@@ -108,7 +126,7 @@ export default function RobotPage() {
     <div style={{ width: '100vw', height: '100vh', position: 'relative', overflow: 'hidden', background: '#080818' }}>
       {/* 3D Scene */}
       <div style={{ position: 'absolute', inset: 0 }}>
-        <RobotScene animation={anim} animSpeed={speed} walkDir={walkDir} />
+        <RobotScene animation={anim} animSpeed={speed} walkDir={walkDir} useImage={avatar === 'img1' ? '/avatars/teacher01.jpg' : avatar === 'img2' ? '/avatars/teacher02.jpg' : false} />
       </div>
 
       {/* Top bar */}
@@ -124,6 +142,17 @@ export default function RobotPage() {
           {ANIM_OPTIONS.find(o => o.key === anim)?.label}
         </span>
         <span style={{ color: '#94a3b8', fontSize: 12 }}>{state}</span>
+        <div style={{ display: 'flex', gap: 4 }}>
+          {AVATAR_OPTIONS.map(opt => (
+            <button key={opt.id} onClick={() => setAvatar(opt.id)}
+              style={{
+                background: avatar === opt.id ? '#3b82f6' : 'rgba(30,41,59,0.8)',
+                border: 'none', color: 'white', padding: '4px 10px',
+                borderRadius: 6, cursor: 'pointer', fontSize: 12,
+              }}
+            >{opt.icon} {opt.label}</button>
+          ))}
+        </div>
         <button onClick={handleVoice} style={{
           background: '#3b82f6', border: 'none', color: 'white', padding: '4px 14px',
           borderRadius: 8, cursor: 'pointer', fontSize: 14,
@@ -177,6 +206,9 @@ export default function RobotPage() {
         ))}
       </div>
 
+      {/* Mobile virtual joystick */}
+      <VirtualJoystick onMove={handleJoystick} />
+
       {/* Chat panel */}
       <div style={{
         position: 'absolute', bottom: 20, left: 20, right: 20, height: 200, zIndex: 100,
@@ -220,7 +252,7 @@ export default function RobotPage() {
         position: 'absolute', bottom: 230, left: '50%', transform: 'translateX(-50%)',
         color: '#475569', fontSize: 11, zIndex: 80, textAlign: 'center',
       }}>
-        🖱 拖拽旋转 · 滚轮缩放 · WASD/方向键移动 · 🎤 语音对话
+        🖱 拖拽旋转 · 滚轮缩放 · WASD/方向键/手机摇杆移动 · 🎤 语音对话
       </div>
     </div>
   )
