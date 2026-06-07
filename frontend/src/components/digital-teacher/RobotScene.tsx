@@ -50,9 +50,8 @@ export default function RobotScene({ animation, animSpeed = 1, walkDir, useImage
         <RobotAvatar animation={animation} animSpeed={animSpeed} walkDir={walkDir} />
       )}
 
-      <OrbitControls target={[0, 0.9, 0]} enableDamping maxPolarAngle={isIso ? 0.01 : Math.PI / 2}
-        minZoom={isIso ? 3 : undefined} maxZoom={isIso ? 3 : undefined}
-        enableRotate={!isIso}
+      <OrbitControls target={[0, 0.9, 0]} enableDamping maxPolarAngle={Math.PI / 2}
+        minDistance={1.5} maxDistance={10} minZoom={10} maxZoom={80}
       />
 
       <fog attach="fog" args={['#080818', 12, 30]} />
