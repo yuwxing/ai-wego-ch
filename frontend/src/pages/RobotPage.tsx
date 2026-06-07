@@ -8,9 +8,6 @@ import VirtualJoystick from '../components/digital-teacher/VirtualJoystick'
 
 const AVATAR_OPTIONS = [
   { id: 'robot', label: '机器人', icon: '🤖' },
-  { id: 'img1', label: '形象01', icon: '🖼️' },
-  { id: 'img2', label: '形象02', icon: '🖼️' },
-  { id: 'iso', label: '等距机器人', icon: '🎮' },
   { id: 'teacher-f', label: '女教师', icon: '👩‍🏫' },
   { id: 'teacher-m', label: '男教师', icon: '👨‍🏫' },
 ]

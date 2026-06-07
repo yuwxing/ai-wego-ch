@@ -2,12 +2,10 @@ import React from 'react'
 import { Canvas } from '@react-three/fiber'
 import { OrbitControls, Stars } from '@react-three/drei'
 import RobotAvatar, { type RobotAnim } from './RobotAvatar'
-import ImageAvatar from './ImageAvatar'
-import IsometricRobot from './IsometricRobot'
 import ChibiTeacher from './ChibiTeacher'
 import ChibiTeacherMale from './ChibiTeacherMale'
 
-export type AvatarType = 'robot' | 'img1' | 'img2' | 'iso' | 'teacher-f' | 'teacher-m'
+export type AvatarType = 'robot' | 'teacher-f' | 'teacher-m'
 
 interface Props {
   animation: RobotAnim
@@ -17,13 +15,8 @@ interface Props {
 }
 
 export default function RobotScene({ animation, animSpeed = 1, walkDir, avatar = 'robot' }: Props) {
-  const isOrtho = avatar === 'iso'
-
   const renderAvatar = () => {
     switch (avatar) {
-      case 'img1': return <ImageAvatar imageUrl="/avatars/teacher01.jpg" animation={animation} animSpeed={animSpeed} walkDir={walkDir} />
-      case 'img2': return <ImageAvatar imageUrl="/avatars/teacher02.jpg" animation={animation} animSpeed={animSpeed} walkDir={walkDir} />
-      case 'iso': return <IsometricRobot animation={animation} animSpeed={animSpeed} walkDir={walkDir} />
       case 'teacher-f': return <ChibiTeacher animation={animation} animSpeed={animSpeed} walkDir={walkDir} />
       case 'teacher-m': return <ChibiTeacherMale animation={animation} animSpeed={animSpeed} walkDir={walkDir} />
       default: return <RobotAvatar animation={animation} animSpeed={animSpeed} walkDir={walkDir} />
@@ -34,7 +27,6 @@ export default function RobotScene({ animation, animSpeed = 1, walkDir, avatar =
     <Canvas
       shadows
       camera={{ position: [3, 2, 5], fov: 40 }}
-      orthographic={isOrtho}
       style={{ width: '100%', height: '100%', background: '#080818' }}
     >
       <ambientLight intensity={0.3} color="#8888cc" />
@@ -58,7 +50,7 @@ export default function RobotScene({ animation, animSpeed = 1, walkDir, avatar =
       {renderAvatar()}
 
       <OrbitControls target={[0, 0.9, 0]} enableDamping maxPolarAngle={Math.PI / 2}
-        minDistance={1.5} maxDistance={10} minZoom={10} maxZoom={80}
+        minDistance={1.5} maxDistance={10}
       />
 
       <fog attach="fog" args={['#080818', 12, 30]} />
