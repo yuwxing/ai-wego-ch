@@ -1,11 +1,11 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react'
 import TeacherScene from '../components/digital-teacher/TeacherScene'
-import type { TeacherMode } from '../components/digital-teacher/TeacherCharacter'
 import { TeacherAI } from '../components/digital-teacher/TeacherAI'
 import { getTeacherMemory } from '../components/digital-teacher/TeacherMemory'
 import { speak, listen } from '../components/digital-teacher/TeacherVoice'
 import { TeachingWorkflow } from '../components/digital-teacher/TeacherWorkflow'
 import TeachingBlackboard from '../components/digital-teacher/TeachingBlackboard'
+import VirtualJoystick from '../components/digital-teacher/VirtualJoystick'
 
 type State = 'IDLE' | 'LISTENING' | 'THINKING' | 'TALKING' | 'TEACHING'
 const STATE_LABEL: Record<State, string> = {
@@ -23,45 +23,51 @@ const TEACHING_TOPICS = [
 
 export default function DigitalTeacherPage() {
   const [state, setState] = useState<State>('IDLE')
-  const [mode, setMode] = useState<TeacherMode>('idle')
+  const [mode, setMode] = useState<'idle' | 'walk' | 'talk'>('idle')
   const [walkDir, setWalkDir] = useState<[number, number]>([0, 0])
-  const [ikTarget, setIkTarget] = useState<[number, number, number] | null>(null)
   const teacherAIRef = useRef(new TeacherAI())
   const memoryRef = useRef(getTeacherMemory())
   const workflowRef = useRef(new TeachingWorkflow(teacherAIRef.current))
   const [messages, setMessages] = useState<{ text: string; user: boolean }[]>([
-    { text: '同学们好，我是你的英语数字教师。点击麦克风或输入问题。', user: false },
+    { text: '同学们好，我是你的等距小教师。点击麦克风或输入问题。', user: false },
   ])
   const [input, setInput] = useState('')
   const [topic, setTopic] = useState('')
   const [blackboardContent, setBlackboardContent] = useState('')
   const keysRef = useRef<Set<string>>(new Set())
   const msgEndRef = useRef<HTMLDivElement>(null)
+  const joystickDirRef = useRef<[number, number]>([0, 0])
 
   useEffect(() => { msgEndRef.current?.scrollIntoView({ behavior: 'smooth' }) }, [messages])
+
+  // Keyboard
   useEffect(() => {
-    const down = (e: KeyboardEvent) => { keysRef.current.add(e.key.toLowerCase());
-      if (e.key === '1') setMode('idle'); if (e.key === '2') setMode('walk'); if (e.key === '3') setMode('ragdoll'); }
+    const down = (e: KeyboardEvent) => keysRef.current.add(e.key.toLowerCase())
     const up = (e: KeyboardEvent) => keysRef.current.delete(e.key.toLowerCase())
     window.addEventListener('keydown', down); window.addEventListener('keyup', up)
     return () => { window.removeEventListener('keydown', down); window.removeEventListener('keyup', up) }
   }, [])
 
-  // Walk direction from keys
+  // Walk direction from keys + joystick
   useEffect(() => {
     const interval = setInterval(() => {
+      const jd = joystickDirRef.current
       const k = keysRef.current
-      let fx = 0, fz = 0
-      if (k.has('w') || k.has('arrowup')) fz -= 1
-      if (k.has('s') || k.has('arrowdown')) fz += 1
-      if (k.has('a') || k.has('arrowleft')) fx -= 1
-      if (k.has('d') || k.has('arrowright')) fx += 1
+      let fx = jd[0], fz = jd[1]
+      if (k.has('w') || k.has('arrowup')) fz = -1
+      if (k.has('s') || k.has('arrowdown')) fz = 1
+      if (k.has('a') || k.has('arrowleft')) fx = -1
+      if (k.has('d') || k.has('arrowright')) fx = 1
       setWalkDir([fx, fz])
       if ((fx !== 0 || fz !== 0) && mode === 'idle') setMode('walk')
       if (fx === 0 && fz === 0 && mode === 'walk') setMode('idle')
     }, 50)
     return () => clearInterval(interval)
   }, [mode])
+
+  const handleJoystick = useCallback((dir: [number, number]) => {
+    joystickDirRef.current = dir
+  }, [])
 
   // ── AI message send ──
   const handleSend = useCallback(async (text: string) => {
@@ -103,7 +109,6 @@ export default function DigitalTeacherPage() {
     if (!topic) return
     setState('TEACHING')
     setMode('talk')
-    setIkTarget([0, 1.6, -3])
     memoryRef.current.add('lesson', `开始讲解主题: ${topic}`)
     setMessages(prev => [...prev, { text: `📚 开始讲解「${topic}」...`, user: false }])
     const lesson = await workflowRef.current.createLesson(topic)
@@ -115,7 +120,6 @@ export default function DigitalTeacherPage() {
     }
     setState('IDLE')
     setMode('idle')
-    setIkTarget(null)
   }, [topic])
 
   // ── Lesson step navigation ──
@@ -143,8 +147,11 @@ export default function DigitalTeacherPage() {
     <div style={{ width: '100vw', height: '100vh', position: 'relative', overflow: 'hidden', background: '#0a0a12' }}>
       {/* 3D Scene */}
       <div style={{ position: 'absolute', inset: 0 }}>
-        <TeacherScene mode={mode} walkDir={walkDir} ikTarget={ikTarget} blackboard={blackboardContent} onMeshClick={() => setMode(mode === 'ragdoll' ? 'idle' : 'ragdoll')} />
+        <TeacherScene mode={mode} walkDir={walkDir} blackboard={blackboardContent} />
       </div>
+
+      {/* Mobile joystick */}
+      <VirtualJoystick onMove={handleJoystick} />
 
       {/* Top bar */}
       <div style={{
@@ -153,19 +160,9 @@ export default function DigitalTeacherPage() {
         padding: '10px 24px', borderRadius: 16, border: '1px solid #4a4a8a',
         display: 'flex', gap: 16, alignItems: 'center', zIndex: 100,
       }}>
-        <span>🧠</span>
-        <b style={{ color: '#e2e8f0' }}>数字教师</b>
+        <span>🎮</span>
+        <b style={{ color: '#e2e8f0' }}>等距小教师</b>
         <span style={{ color: '#a78bfa', fontSize: 13 }} id="stateLabel">{STATE_LABEL[state]}</span>
-        <div style={{ display: 'flex', gap: 4 }}>
-          {(['idle', 'walk', 'ragdoll'] as const).map(m => (
-            <button key={m} onClick={() => setMode(m)}
-              style={{
-                background: mode === m ? '#7c3aed' : '#252540', border: 'none',
-                color: '#c4b5fd', padding: '4px 12px', borderRadius: 6, cursor: 'pointer', fontSize: 12,
-              }}
-            >{m === 'idle' ? '待机' : m === 'walk' ? '行走' : '物理'}</button>
-          ))}
-        </div>
         <button onClick={handleVoice} style={{
           background: '#7c3aed', border: 'none', color: 'white', padding: '4px 14px',
           borderRadius: 8, cursor: 'pointer', fontSize: 14,
@@ -207,7 +204,7 @@ export default function DigitalTeacherPage() {
         position: 'absolute', bottom: 240, left: 20, zIndex: 80,
         color: '#94a3b8', fontSize: 11,
       }}>
-        WASD 移动 · 1待机 2行走 3物理 · 点击身体推 · 🎤 语音对话
+        WASD/摇杆移动 · 🎤 语音对话
       </div>
 
       {/* Chat panel */}
