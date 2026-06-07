@@ -1,15 +1,18 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react'
 import RobotScene from '../components/digital-teacher/RobotScene'
+import type { AvatarType } from '../components/digital-teacher/RobotScene'
 import type { RobotAnim } from '../components/digital-teacher/RobotAvatar'
 import { TeacherAI } from '../components/digital-teacher/TeacherAI'
 import { speak, listen } from '../components/digital-teacher/TeacherVoice'
 import VirtualJoystick from '../components/digital-teacher/VirtualJoystick'
 
 const AVATAR_OPTIONS = [
-  { id: 'robot', label: '3D机器人', icon: '🤖' },
-  { id: 'img1', label: '形象01', icon: '🖼️', img: '/avatars/teacher01.jpg' },
-  { id: 'img2', label: '形象02', icon: '🖼️', img: '/avatars/teacher02.jpg' },
+  { id: 'robot', label: '机器人', icon: '🤖' },
+  { id: 'img1', label: '形象01', icon: '🖼️' },
+  { id: 'img2', label: '形象02', icon: '🖼️' },
   { id: 'iso', label: '等距机器人', icon: '🎮' },
+  { id: 'teacher-f', label: '女教师', icon: '👩‍🏫' },
+  { id: 'teacher-m', label: '男教师', icon: '👨‍🏫' },
 ]
 
 const ROBOT_SYSTEM = `你是一个有趣的 AI 机器人助手，名字叫「小铁」。你的性格特点：
@@ -36,7 +39,7 @@ export default function RobotPage() {
   const [speed, setSpeed] = useState(1)
   const [walkDir, setWalkDir] = useState<[number, number]>([0, 0])
   const [state, setState] = useState<string>('IDLE')
-  const [avatar, setAvatar] = useState<string>('robot')
+  const [avatar, setAvatar] = useState<AvatarType>('robot')
   const [messages, setMessages] = useState<{ text: string; user: boolean }[]>([
     { text: '哔哔——！你好，我是小铁 🤖 按 WASD 可以让我走动，也可以和我聊天！', user: false },
   ])
@@ -127,7 +130,7 @@ export default function RobotPage() {
     <div style={{ width: '100vw', height: '100vh', position: 'relative', overflow: 'hidden', background: '#080818' }}>
       {/* 3D Scene */}
       <div style={{ position: 'absolute', inset: 0 }}>
-        <RobotScene animation={anim} animSpeed={speed} walkDir={walkDir} mode={avatar === 'iso' ? 'isometric' : '3d'} useImage={avatar === 'img1' ? '/avatars/teacher01.jpg' : avatar === 'img2' ? '/avatars/teacher02.jpg' : false} />
+        <RobotScene animation={anim} animSpeed={speed} walkDir={walkDir} avatar={avatar as AvatarType} />
       </div>
 
       {/* Top bar */}
