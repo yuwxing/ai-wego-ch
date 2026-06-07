@@ -67,16 +67,25 @@ export default function LiteratureWritePage() {
         const subs = await sharedStoryAPI.fetchAll()
         setChapters(prev => {
           let next = [...prev]
+          const CN = ['一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十']
           for (const sub of subs) {
             if (!sub?.content) continue
             if (next.find(c => c.content === sub.content)) continue
-            const chTitle = (sub.chapter_title || '').replace(/^第[一二三四五六七八九十]+章：/, '')
-            const chNum = (['一','二','三','四','五','六','七','八','九','十'])[next.length] || String(next.length + 1)
-            const chId = next.length + 1
+            let chTitle = (sub.chapter_title || '').replace(/^第[一二三四五六七八九十]+章：/, '')
+            if (!chTitle) {
+              const lines = sub.content.trim().split('\n')
+              for (const line of lines) {
+                const clean = line.replace(/^["""「」\s]+/, '').trim()
+                if (clean.length >= 4) { chTitle = clean.length > 22 ? clean.slice(0, 22) + '…' : clean; break }
+              }
+            }
+            const idx = next.length
+            const chNum = CN[idx] || String(idx + 1)
+            const chId = idx + 1
             next = [...next.map(c => ({ ...c, current: false })), {
               id: chId,
               dbId: sub.id,
-              title: `第${chNum}章：${chTitle}`,
+              title: `第${chNum}章：${chTitle || '续写'}`,
               content: sub.content,
               author: sub.author_name || '匿名',
               wordCount: sub.content.replace(/\s/g, '').length,
