@@ -1,13 +1,13 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef, useCallback, useMemo, useLayoutEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { ArrowLeft, Send, User, Loader2, Copy, Trash2, Check, Star, Bookmark, X } from 'lucide-react'
+import { ArrowLeft, Send, User, Loader2, Copy, Trash2, Check, Star, Bookmark, X, Key } from 'lucide-react'
 import { getApiKey } from '../utils/deepseek'
 import { digitalAvatarAPI } from '../utils/supabase'
 import { useUser } from '../contexts/UserContext'
 
 const DEEPSEEK_BASE_URL = 'https://api.deepseek.com'
 const DEEPSEEK_MODEL = 'deepseek-chat'
-const CHAT_HISTORY_KEY = 'avatarChatHistory'
+const chatHistoryKey = (id: string) => `avatarChatHistory_${id}`
 
 interface Message {
   id: string
@@ -16,6 +16,28 @@ interface Message {
 }
 
 const generateId = () => Math.random().toString(36).substring(2, 15)
+
+function renderMarkdown(text: string): string {
+  let html = text
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+    .replace(/^#+\s*/gm, '')
+    .replace(/\*\*(.+?)\*\*/g, '$1')
+    .replace(/\*(.+?)\*/g, '$1')
+    .replace(/```[\s\S]*?```/g, '')
+    .replace(/`([^`]+)`/g, '$1')
+    .split('\n').filter(l => l.trim()).map(l => {
+      l = l.trim()
+      if (/^\|.*\|$/.test(l)) {
+        const cells = l.split('|').filter(c => c.trim())
+        if (cells.every(c => /^[-:\s]+$/.test(c))) return ''
+        if (cells.length >= 2) return `<div class="flex py-1.5 border-b border-slate-100 last:border-0">${cells.map(c => `<span class="flex-1 text-sm text-slate-700">${c.trim()}</span>`).join('')}</div>`
+      }
+      if (/^[-*]\s/.test(l)) return `<div class="flex items-start gap-2 ml-2 my-0.5"><span class="text-slate-400 mt-1.5 w-1.5 h-1.5 rounded-full bg-slate-400 shrink-0"></span><span class="text-sm leading-7 text-slate-700 flex-1">${l.replace(/^[-*]\s+/, '')}</span></div>`
+      if (/^\d+[.、]\s/.test(l)) return `<div class="flex items-start gap-2 ml-2 my-0.5"><span class="text-slate-500 text-xs mt-1.5 shrink-0">${l.match(/^\d+/)[0]}.</span><span class="text-sm leading-7 text-slate-700 flex-1">${l.replace(/^\d+[.、]\s+/, '')}</span></div>`
+      return `<p class="text-sm leading-7 text-slate-700 my-0.5">${l}</p>`
+    }).join('')
+  return html
+}
 
 export default function AvatarChatPage() {
   const navigate = useNavigate()
@@ -29,45 +51,89 @@ export default function AvatarChatPage() {
   const [savedItems, setSavedItems] = useState<any[]>([])
   const endRef = useRef<HTMLDivElement>(null)
   const chatRef = useRef<HTMLDivElement>(null)
-  const [userScrolledUp, setUserScrolledUp] = useState(false)
+  const [showBackBtn, setShowBackBtn] = useState(false)
+  const [avatar, setAvatar] = useState<any | null>(null)
+  const [syncing, setSyncing] = useState(true)
+
+  useEffect(() => {
+    if (!user?.id || user.id < 0) {
+      const loadLocal = () => {
+        try {
+          const listRaw = localStorage.getItem('digitalAvatars')
+          const activeId = localStorage.getItem('activeAvatarId')
+          if (listRaw) {
+            const list = JSON.parse(listRaw)
+            if (Array.isArray(list) && list.length > 0) {
+              const active = list.find((a: any) => a.id === activeId)
+              setAvatar(active || list[0])
+              setSyncing(false)
+              return
+            }
+          }
+          const old = localStorage.getItem('digitalAvatar')
+          if (old) {
+            const parsed = JSON.parse(old)
+            parsed.id = parsed.id || Math.random().toString(36).substring(2, 10)
+            setAvatar(parsed)
+            setSyncing(false)
+            return
+          }
+        } catch {}
+        setAvatar(null)
+        setSyncing(false)
+      }
+      loadLocal()
+      return
+    }
+    digitalAvatarAPI.load(user.id).then(list => {
+      if (list && Array.isArray(list) && list.length > 0) {
+        const activeId = localStorage.getItem('activeAvatarId')
+        setAvatar(list.find((a: any) => a.id === activeId) || list[0])
+      } else {
+        const listRaw = localStorage.getItem('digitalAvatars')
+        const activeId = localStorage.getItem('activeAvatarId')
+        if (listRaw) {
+          const fallback = JSON.parse(listRaw)
+          if (Array.isArray(fallback) && fallback.length > 0) {
+            setAvatar(fallback.find((a: any) => a.id === activeId) || fallback[0])
+          }
+        }
+      }
+      setSyncing(false)
+    })
+  }, [user?.id])
 
   const saveHistory = useCallback((msgs: Message[]) => {
-    try { localStorage.setItem(CHAT_HISTORY_KEY, JSON.stringify(msgs)) } catch {}
-  }, [])
-
-  const avatar = (() => {
-    try {
-      const raw = localStorage.getItem('digitalAvatar')
-      if (!raw) return null
-      return JSON.parse(raw)
-    } catch { return null }
-  })()
+    if (!avatar?.id) return
+    try { localStorage.setItem(chatHistoryKey(avatar.id), JSON.stringify(msgs)) } catch {}
+  }, [avatar?.id])
 
   const scrollToBottom = () => {
-    const el = chatRef.current
-    if (!el) return
-    el.scrollTop = el.scrollHeight
+    endRef.current?.scrollIntoView({ behavior: 'auto' })
   }
+
+  useLayoutEffect(() => {
+    scrollToBottom()
+  }, [messages])
 
   const handleScroll = () => {
     const el = chatRef.current
     if (!el) return
-    setUserScrolledUp(el.scrollHeight - el.scrollTop - el.clientHeight > 100)
+    setShowBackBtn(el.scrollHeight - el.scrollTop - el.clientHeight > 200)
   }
 
-  useEffect(() => { scrollToBottom() }, [])
-
   useEffect(() => {
-    if (!avatar) { navigate('/register'); return }
+    if (!avatar || syncing) return
+    const key = chatHistoryKey(avatar.id)
     try {
-      const saved = localStorage.getItem(CHAT_HISTORY_KEY)
+      const saved = localStorage.getItem(key)
       if (saved) {
         const parsed = JSON.parse(saved)
         if (Array.isArray(parsed) && parsed.length > 0) {
           const newGreeting = `你好！我是你的${avatar.companionTitle || 'AI助手'}${avatar.name ? ` ${avatar.name}` : ''}。\n\n有什么我可以帮你的吗？`
           if (parsed[0]?.role === 'assistant' && parsed[0]?.content !== newGreeting) {
             parsed[0].content = newGreeting
-            localStorage.setItem(CHAT_HISTORY_KEY, JSON.stringify(parsed))
+            localStorage.setItem(key, JSON.stringify(parsed))
           }
           setMessages(parsed)
           return
@@ -76,9 +142,8 @@ export default function AvatarChatPage() {
     } catch {}
     const greeting = `你好！我是你的${avatar.companionTitle || 'AI助手'}${avatar.name ? ` ${avatar.name}` : ''}。\n\n有什么我可以帮你的吗？`
     setMessages([{ id: generateId(), role: 'assistant', content: greeting }])
-  }, [avatar, navigate])
+  }, [avatar, navigate, syncing])
 
-  // Load saved items from server
   useEffect(() => {
     if (user?.id && user.id > 0) {
       digitalAvatarAPI.loadSavedItems(user.id).then(items => {
@@ -107,10 +172,12 @@ export default function AvatarChatPage() {
   }
 
   const callApi = async (userMsg: string, history: Message[]) => {
+    const key = getApiKey()
+    if (!key) throw new Error('请先在系统中心配置 DeepSeek API 密钥')
     const recent = history.slice(-10).map(m => ({ role: m.role, content: m.content }))
-    const res = await fetch(`${DEEPSEEK_BASE_URL}/chat/completions`, {
+    const res = await fetch(`${DEEPSEEK_BASE_URL}/v1/chat/completions`, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${getApiKey()}` },
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${key}` },
       body: JSON.stringify({
         model: DEEPSEEK_MODEL,
         messages: [
@@ -122,7 +189,10 @@ export default function AvatarChatPage() {
         max_tokens: 2000,
       }),
     })
-    if (!res.ok) throw new Error(`API请求失败: ${res.status}`)
+    if (!res.ok) {
+      const errText = await res.text().catch(() => '')
+      throw new Error(`API请求失败: ${res.status}${errText ? ' - ' + errText.slice(0, 100) : ''}`)
+    }
     const data = await res.json()
     return data.choices[0]?.message?.content || ''
   }
@@ -138,7 +208,6 @@ export default function AvatarChatPage() {
     try {
       const reply = await callApi(text, updated)
       setMessages([...updated, { id: generateId(), role: 'assistant', content: reply }])
-      scrollToBottom()
     } catch (e: any) {
       setMessages([...updated, { id: generateId(), role: 'assistant', content: `出错了：${e.message}` }])
     }
@@ -158,12 +227,31 @@ export default function AvatarChatPage() {
 
   const handleClear = () => {
     if (!confirm('确定清空所有对话记录？')) return
-    localStorage.removeItem(CHAT_HISTORY_KEY)
+    localStorage.removeItem(chatHistoryKey(avatar.id))
     const greeting = `你好！我是你的${avatar.companionTitle || 'AI助手'}${avatar.name ? ` ${avatar.name}` : ''}。\n\n有什么我可以帮你的吗？`
     setMessages([{ id: generateId(), role: 'assistant', content: greeting }])
   }
 
-  if (!avatar) return null
+  if (!avatar && !syncing) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 flex flex-col items-center justify-center p-6">
+        <div className="text-6xl mb-4">🫥</div>
+        <h2 className="text-xl font-bold text-slate-800 mb-2">还没有数字分身</h2>
+        <p className="text-sm text-slate-500 mb-6 text-center">先去首页创建一个分身，再回来聊天</p>
+        <button onClick={() => navigate('/')} className="px-6 py-2.5 bg-gradient-to-r from-indigo-500 to-purple-500 text-white rounded-xl text-sm font-medium hover:shadow-lg transition-all">
+          去创建分身
+        </button>
+      </div>
+    )
+  }
+
+  if (!avatar) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-white">
+        <Loader2 className="w-6 h-6 text-indigo-400 animate-spin" />
+      </div>
+    )
+  }
 
   return (
     <div className="min-h-screen bg-white flex flex-col">
@@ -179,23 +267,33 @@ export default function AvatarChatPage() {
             <div className="text-sm font-semibold text-slate-800">{avatar.name || 'AI助手'}</div>
             <div className="text-xs text-slate-400">{avatar.companionTitle || ''}</div>
           </div>
-          <div className="flex items-center gap-1">
-            <button onClick={() => { setShowSaved(!showSaved) }} title="收藏夹" className={`p-2 rounded-lg transition-all ${showSaved ? 'bg-amber-100 text-amber-600' : 'hover:bg-slate-100 text-slate-400 hover:text-slate-600'}`}>
-              <Bookmark className="w-4 h-4" />
-              {savedItems.length > 0 && <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-amber-500 text-white text-[10px] rounded-full flex items-center justify-center font-bold">{savedItems.length}</span>}
-            </button>
-            <button onClick={handleExport} title="导出对话" className="p-2 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-all">
-              {copied ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
-            </button>
-            <button onClick={handleClear} title="清空对话" className="p-2 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-red-500 transition-all">
-              <Trash2 className="w-4 h-4" />
-            </button>
-          </div>
+          <button onClick={() => navigate('/settings/api-key')} className="p-2 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-all" title="API密钥">
+            <Key className="w-4 h-4" />
+          </button>
+          <button onClick={() => { setShowSaved(!showSaved) }} title="收藏夹" className={`relative p-2 rounded-lg transition-all ${showSaved ? 'bg-amber-100 text-amber-600' : 'hover:bg-slate-100 text-slate-400 hover:text-slate-600'}`}>
+            <Bookmark className="w-4 h-4" />
+            {savedItems.length > 0 && <span className="absolute -top-0.5 -right-0.5 w-4 h-4 bg-amber-500 text-white text-[10px] rounded-full flex items-center justify-center font-bold">{savedItems.length}</span>}
+          </button>
+          <button onClick={handleExport} title="导出对话" className="p-2 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-slate-600 transition-all">
+            {copied ? <Check className="w-4 h-4 text-green-500" /> : <Copy className="w-4 h-4" />}
+          </button>
+          <button onClick={handleClear} title="清空对话" className="p-2 rounded-lg hover:bg-slate-100 text-slate-400 hover:text-red-500 transition-all">
+            <Trash2 className="w-4 h-4" />
+          </button>
         </div>
       </div>
 
       <div className="flex-1 overflow-y-auto" ref={chatRef} onScroll={handleScroll}>
         <div className="max-w-3xl mx-auto px-4 py-6 space-y-4">
+          {!getApiKey() && (
+            <div className="bg-amber-50 border border-amber-200 rounded-2xl px-5 py-4 text-center">
+              <Key className="w-6 h-6 text-amber-500 mx-auto mb-2" />
+              <p className="text-sm text-amber-700 font-medium mb-1">需要设置 API 密钥才能对话</p>
+              <p className="text-xs text-amber-500 mb-3">你的密钥仅存储在本地，安全可靠</p>
+              <button onClick={() => navigate('/settings/api-key')} className="px-4 py-2 bg-amber-500 text-white rounded-xl text-sm font-medium hover:bg-amber-600 transition-all">去设置</button>
+            </div>
+          )}
+
           {messages.map(msg => (
             <div key={msg.id} className={`flex gap-3 group ${msg.role === 'user' ? 'flex-row-reverse' : ''}`}>
               {msg.role === 'assistant' ? (
@@ -208,7 +306,11 @@ export default function AvatarChatPage() {
                 </div>
               )}
               <div className={`max-w-[80%] ${msg.role === 'user' ? 'bg-indigo-500 text-white rounded-2xl rounded-tr-md px-4 py-2.5' : 'text-slate-700'}`}>
-                <p className="text-sm leading-relaxed whitespace-pre-wrap">{msg.content}</p>
+                {msg.role === 'user' ? (
+                  <p className="text-sm leading-7 whitespace-pre-wrap text-white">{msg.content}</p>
+                ) : (
+                  <div className="text-sm leading-7 [&_li]:my-0.5" dangerouslySetInnerHTML={{ __html: renderMarkdown(msg.content) }} />
+                )}
               </div>
               {msg.role === 'assistant' && (
                 <button onClick={() => toggleSave(msg)}
@@ -234,15 +336,14 @@ export default function AvatarChatPage() {
           )}
           <div ref={endRef} />
         </div>
-        {userScrolledUp && (
-          <button onClick={() => { setUserScrolledUp(false); scrollToBottom() }}
+        {showBackBtn && (
+          <button onClick={() => { setShowBackBtn(false); scrollToBottom() }}
             className="sticky bottom-4 left-1/2 -translate-x-1/2 mx-auto px-4 py-2 rounded-full bg-indigo-500 text-white text-xs font-medium shadow-lg hover:bg-indigo-600 active:scale-95 transition-all">
             回到最新
           </button>
         )}
       </div>
 
-      {/* 收藏夹面板 */}
       {showSaved && (
         <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center">
           <div className="fixed inset-0 bg-black/20" onClick={() => setShowSaved(false)} />

@@ -214,7 +214,14 @@ const DEFAULT_LS_DATA: LSData = {
 export default function ListeningSpeakingPage() {
   const navigate = useNavigate();
   const { user } = useUser();
+  const [hasPet, setHasPet] = useState<boolean | null>(null);
   const [data, setData] = useState<LSData | null>(null);
+
+  useEffect(() => {
+    const pet = localStorage.getItem('adoptedPet')
+    if (!pet) { setHasPet(false); return }
+    try { setHasPet(!!JSON.parse(pet)) } catch { setHasPet(false) }
+  }, [])
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [activeTab, setActiveTab] = useState('a');
@@ -1405,6 +1412,36 @@ export default function ListeningSpeakingPage() {
         </div>
       </div>
     );
+  }
+
+  if (hasPet === null) {
+    return (
+      <div style={{ minHeight: '100vh', background: '#f0f7ff', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <p style={{ color: '#94a3b8' }}>加载中...</p>
+      </div>
+    )
+  }
+
+  if (hasPet === false) {
+    return (
+      <div style={{ minHeight: '100vh', background: '#f0f7ff', display: 'flex', alignItems: 'center', justifyContent: 'center', padding: '24px' }}>
+        <div style={{ maxWidth: '400px', width: '100%', background: '#fff', borderRadius: '20px', padding: '40px 24px', textAlign: 'center', boxShadow: '0 4px 24px rgba(0,0,0,0.08)' }}>
+          <div style={{ width: '80px', height: '80px', borderRadius: '20px', background: 'linear-gradient(135deg, #f59e0b, #ea580c)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 20px', fontSize: '36px' }}>🐾</div>
+          <h2 style={{ fontSize: '20px', fontWeight: '700', color: '#1e293b', marginBottom: '8px' }}>先领养一只学习精灵</h2>
+          <p style={{ fontSize: '14px', color: '#94a3b8', lineHeight: '1.6', marginBottom: '24px' }}>
+            听说训练需要学习精灵的陪伴才能开始哦！<br />领养一只属于你的宠物，一起学习吧。
+          </p>
+          <div style={{ display: 'flex', gap: '12px' }}>
+            <button onClick={() => navigate('/adopt')} style={{ flex: 1, padding: '12px', borderRadius: '12px', border: 'none', background: 'linear-gradient(135deg, #f59e0b, #ea580c)', color: '#fff', fontSize: '15px', fontWeight: '600', cursor: 'pointer' }}>
+              去领养
+            </button>
+            <button onClick={() => navigate('/learn')} style={{ flex: 1, padding: '12px', borderRadius: '12px', border: '1px solid #e2e8f0', background: '#fff', color: '#64748b', fontSize: '15px', fontWeight: '500', cursor: 'pointer' }}>
+              稍后再说
+            </button>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   return (

@@ -804,12 +804,30 @@ export const usageAPI = {
 // ============ 数字分身 ============
 
 export const digitalAvatarAPI = {
-  save: async (userId: number, avatarData: object) => {
+  save: async (userId: number, avatarData: any) => {
+    const localList = JSON.parse(localStorage.getItem('digitalAvatars') || '[]')
     localStorage.setItem('digitalAvatar', JSON.stringify(avatarData));
     await supabaseFetch(`users?id=eq.${userId}`, {
       method: 'PATCH',
-      body: JSON.stringify({ digital_avatar: avatarData }),
+      body: JSON.stringify({ digital_avatar: { list: localList, activeId: localStorage.getItem('activeAvatarId') } }),
     });
+  },
+
+  load: async (userId: number) => {
+    try {
+      const data = await supabaseFetch(`users?id=eq.${userId}&select=digital_avatar`);
+      if (data && data[0]?.digital_avatar) {
+        const stored = data[0].digital_avatar
+        const list = stored.list || (Array.isArray(stored) ? stored : [stored])
+        localStorage.setItem('digitalAvatars', JSON.stringify(list))
+        if (stored.activeId) localStorage.setItem('activeAvatarId', stored.activeId)
+        localStorage.setItem('digitalAvatar', JSON.stringify(list[0] || stored))
+        return list
+      }
+    } catch {}
+    const localList = localStorage.getItem('digitalAvatars')
+    if (localList) return JSON.parse(localList)
+    return null;
   },
 
   load: async (userId: number) => {
@@ -862,4 +880,133 @@ export const digitalAvatarAPI = {
   },
 
   remove: () => localStorage.removeItem('digitalAvatar'),
+};
+
+export const sharedStoryAPI = {
+  fetchAll: async () => {
+    try {
+      const data = await supabaseFetch('story_submissions?select=*&order=id.asc')
+      return data || []
+    } catch { return [] }
+  },
+  add: async (submission: {
+    chapter_title: string; content: string; author_name: string
+    score: number; passed: boolean; code?: string; timestamp: number
+  }) => {
+    return supabaseFetch('story_submissions', {
+      method: 'POST',
+      body: JSON.stringify(submission),
+    })
+  },
+  remove: async (id: number) => {
+    return supabaseFetch(`story_submissions?id=eq.${id}`, {
+      method: 'DELETE',
+    })
+  },
+}
+
+export const literatureAPI = {
+  saveToLocal: (data: any) => {
+    try { localStorage.setItem('literature_latest', JSON.stringify(data)) } catch {}
+  },
+
+  loadFromLocal: () => {
+    try {
+      const raw = localStorage.getItem('literature_latest')
+      return raw ? JSON.parse(raw) : null
+    } catch { return null }
+  },
+
+  syncToServer: async (userId: number, literatureData: any) => {
+    if (!userId || userId < 0) return
+    try {
+      const data = await supabaseFetch(`users?id=eq.${userId}&select=digital_avatar`)
+      const avatar = data?.[0]?.digital_avatar || {}
+      avatar.literature = literatureData
+      await supabaseFetch(`users?id=eq.${userId}`, {
+        method: 'PATCH',
+        body: JSON.stringify({ digital_avatar: avatar }),
+      })
+    } catch {}
+  },
+
+  syncFromServer: async (userId: number) => {
+    if (!userId || userId < 0) return null
+    try {
+      const data = await supabaseFetch(`users?id=eq.${userId}&select=digital_avatar`)
+      const lit = data?.[0]?.digital_avatar?.literature
+      if (lit) {
+        localStorage.setItem('literature_latest', JSON.stringify(lit))
+        return lit
+      }
+    } catch {}
+    return null
+  },
+};
+
+// Store teacher writing tasks in the existing `tasks` table with source='writing_teacher'
+export const writingTasksAPI = {
+  async fetchByGrade(grade: 'junior' | 'senior'): Promise<any[]> {
+    try {
+      const raw = await supabaseFetch(`tasks?source=eq.writing_teacher&order=id.desc`)
+      if (!raw) return []
+      const data = Array.isArray(raw) ? raw : []
+      return data
+        .map((t: any) => {
+          const desc = typeof t.description === 'string' ? JSON.parse(t.description) : t.description || {}
+          return { ...desc, id: t.title?.startsWith('wt_') ? t.title : 'wt_' + t.id }
+        })
+        .filter((t: any) => t.grade === grade)
+    } catch {
+      try {
+        const raw = localStorage.getItem('writing_teacher_tasks')
+        const list = raw ? JSON.parse(raw) : []
+        return list.filter((t: any) => t.grade === grade)
+      } catch { return [] }
+    }
+  },
+  async fetchAll(): Promise<any[]> {
+    try {
+      const raw = await supabaseFetch(`tasks?source=eq.writing_teacher&order=id.desc`)
+      if (!raw) return []
+      const data = Array.isArray(raw) ? raw : []
+      return data.map((t: any) => {
+        const desc = typeof t.description === 'string' ? JSON.parse(t.description) : t.description || {}
+        return { ...desc, id: t.title?.startsWith('wt_') ? t.title : 'wt_' + t.id }
+      })
+    } catch {
+      try {
+        const raw = localStorage.getItem('writing_teacher_tasks')
+        return raw ? JSON.parse(raw) : []
+      } catch { return [] }
+    }
+  },
+  async save(task: any): Promise<void> {
+    const id = 'wt_' + (task.id || Date.now().toString(36))
+    const uid = 3
+    const payload = {
+      title: id,
+      description: JSON.stringify(task),
+      publisher_id: uid,
+      requirements: [],
+      budget: 0,
+      status: 'open',
+      source: 'writing_teacher',
+    }
+    try {
+      await supabaseFetch('tasks', { method: 'POST', body: JSON.stringify(payload) })
+    } catch {
+      const list = JSON.parse(localStorage.getItem('writing_teacher_tasks') || '[]')
+      list.push(task)
+      localStorage.setItem('writing_teacher_tasks', JSON.stringify(list))
+    }
+  },
+  async remove(id: string): Promise<void> {
+    try {
+      await supabaseFetch(`tasks?title=eq.${id}&source=eq.writing_teacher`, { method: 'DELETE' })
+    } catch {
+      const list = JSON.parse(localStorage.getItem('writing_teacher_tasks') || '[]')
+      localStorage.setItem('writing_teacher_tasks', JSON.stringify(list.filter((t: any) => t.id !== id)))
+    }
+  },
 };

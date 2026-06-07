@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Bot, Send, Loader2, Key, Bookmark, BookmarkCheck } from 'lucide-react';
+import { ArrowLeft, Bot, Send, Loader2, Key, Bookmark, BookmarkCheck, GraduationCap } from 'lucide-react';
 import { getApiKey, getApiBaseUrl } from '../../utils/deepseek';
 
 const CORE_MENTORS: Record<string, { name: string; prompt: string; color: string }> = {
@@ -138,89 +138,122 @@ const JinghuaChat: React.FC = () => {
     setTimeout(() => { setShowSavedToast(false); setSavedId(null); }, 2000);
   };
 
+  const formatContent = (content: string) => {
+    const paragraphs = content.split('\n\n').filter(p => p.trim());
+    return paragraphs.map((p, i) => (
+      <p key={i} className="mb-3 last:mb-0">{p}</p>
+    ));
+  };
+
   return (
-    <div className="min-h-screen flex flex-col bg-gradient-to-b from-slate-900 to-slate-800">
-      <div className="flex items-center gap-3 px-4 py-3 border-b border-white/10 bg-slate-900/50 backdrop-blur-xl">
-        <button onClick={() => navigate(-1)} className="p-1 rounded-lg hover:bg-white/10 transition-colors">
-          <ArrowLeft className="w-5 h-5 text-white/70" />
-        </button>
-        <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${config?.color || 'from-amber-400 to-amber-600'} flex items-center justify-center`}>
-          <Bot className="w-4 h-4 text-white" />
-        </div>
-        <div className="flex-1">
-          <h3 className="font-semibold text-white text-sm">{title}</h3>
-          <p className="text-xs text-white/50">DeepSeek 实时对话</p>
-        </div>
-        <button onClick={() => navigate('/notes')} className="p-2 rounded-lg hover:bg-white/10 transition-colors" title="查看笔记">
-          <Bookmark className="w-4 h-4 text-white/50" />
-        </button>
-        <button onClick={() => navigate('/settings/api-key')} className="p-2 rounded-lg hover:bg-white/10 transition-colors" title="设置API密钥">
-          <Key className="w-4 h-4 text-white/50" />
-        </button>
-      </div>
-
-      <div className="flex-1 overflow-y-auto px-4 py-4 space-y-4">
-        {messages.map((msg) => (
-          <div key={msg.id} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}>
-            <div className="max-w-[80%]">
-              <div className={`px-4 py-2.5 rounded-2xl text-sm leading-relaxed ${
-                msg.role === 'user'
-                  ? 'bg-amber-500 text-white rounded-br-md'
-                  : 'bg-white/10 border border-white/10 text-white/90 rounded-bl-md'
-              }`}>
-                {msg.content}
-              </div>
-              {msg.role === 'assistant' && (
-                <button
-                  onClick={() => saveNote(msg.content, msg.id)}
-                  className="mt-1 ml-1 p-1 rounded-lg hover:bg-white/10 transition-colors flex items-center gap-1"
-                >
-                  {savedId === msg.id ? (
-                    <BookmarkCheck className="w-3.5 h-3.5 text-amber-400" />
-                  ) : (
-                    <Bookmark className="w-3.5 h-3.5 text-white/40" />
-                  )}
-                  <span className="text-[10px] text-white/40">{savedId === msg.id ? '已保存' : '保存'}</span>
-                </button>
-              )}
-            </div>
+    <div className="page-wrapper min-h-screen flex flex-col">
+      <div className="sticky top-0 z-50 glass-card border-b border-white/90 rounded-none">
+        <div className="max-w-3xl mx-auto px-4 h-14 flex items-center gap-3">
+          <button onClick={() => navigate(-1)} className="p-1.5 rounded-lg hover:bg-fresh-50 text-slate-500 transition-colors">
+            <ArrowLeft className="w-5 h-5" />
+          </button>
+          <div className={`w-8 h-8 rounded-lg bg-gradient-to-br ${config?.color || 'from-fresh-400 to-sky-500'} flex items-center justify-center shadow-sm`}>
+            <GraduationCap className="w-4 h-4 text-white" />
           </div>
-        ))}
-        {loading && (
-          <div className="flex justify-start">
-            <div className="bg-white/10 border border-white/10 rounded-2xl rounded-bl-md px-4 py-3 flex items-center gap-2">
-              <Loader2 className="w-4 h-4 text-amber-400 animate-spin" />
-              <span className="text-sm text-white/50">正在思考...</span>
-            </div>
+          <div className="flex-1 min-w-0">
+            <h3 className="font-semibold text-slate-800 text-sm truncate">{title}</h3>
+            <p className="text-xs text-slate-400">菁华校园 · AI导师对话</p>
           </div>
-        )}
-        {noKey && (
-          <div className="flex justify-center">
-            <div className="px-4 py-2 rounded-xl bg-amber-500/20 border border-amber-500/30 text-amber-400 text-sm flex items-center gap-2">
-              <Key className="w-4 h-4" />
-              请先设置 DeepSeek API 密钥
-              <button onClick={() => navigate('/settings/api-key')} className="underline ml-1">去设置</button>
-            </div>
-          </div>
-        )}
-        <div ref={messagesEndRef} />
-      </div>
-
-      <div className="border-t border-white/10 px-4 py-3 bg-slate-900/50 backdrop-blur-xl">
-        <div className="flex items-end gap-2">
-          <input
-            value={input}
-            onChange={e => setInput(e.target.value)}
-            onKeyDown={e => e.key === 'Enter' && !e.shiftKey && (e.preventDefault(), handleSend())}
-            placeholder={`向${title}提问...`}
-            className="flex-1 px-4 py-2.5 rounded-xl bg-white/10 border border-white/20 text-sm text-white placeholder-white/30 focus:outline-none focus:ring-2 focus:ring-amber-500/50"
-          />
-          <button onClick={handleSend} disabled={!input.trim() || loading} className="w-10 h-10 rounded-xl bg-amber-500 text-white flex items-center justify-center disabled:opacity-50 hover:bg-amber-600 transition-colors">
-            <Send className="w-4 h-4" />
+          <button onClick={() => navigate('/notes')} className="p-2 rounded-lg hover:bg-fresh-50 transition-colors" title="查看笔记">
+            <Bookmark className="w-4 h-4 text-slate-400" />
+          </button>
+          <button onClick={() => navigate('/settings/api-key')} className="p-2 rounded-lg hover:bg-fresh-50 transition-colors" title="设置API密钥">
+            <Key className="w-4 h-4 text-slate-400" />
           </button>
         </div>
-        <p className="text-xs text-white/30 text-center mt-2">需先设置 DeepSeek API 密钥才能对话</p>
       </div>
+
+      <div className="flex-1 overflow-y-auto px-4 py-6">
+        <div className="max-w-3xl mx-auto space-y-5">
+          {messages.map((msg) => (
+            <div key={msg.id} className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'} animate-in`}>
+              <div className="max-w-[80%]">
+                <div className={`px-5 py-3.5 text-sm leading-8 rounded-2xl ${
+                  msg.role === 'user'
+                    ? 'bg-gradient-to-r from-fresh-500 to-fresh-600 text-white rounded-br-md shadow-sm shadow-fresh-200/50'
+                    : 'glass-card text-slate-700 rounded-bl-md'
+                }`}>
+                  {formatContent(msg.content)}
+                </div>
+                {msg.role === 'assistant' && (
+                  <button
+                    onClick={() => saveNote(msg.content, msg.id)}
+                    className="mt-1.5 ml-2 p-1 rounded-lg hover:bg-fresh-50 transition-colors flex items-center gap-1"
+                  >
+                    {savedId === msg.id ? (
+                      <BookmarkCheck className="w-3.5 h-3.5 text-fresh-500" />
+                    ) : (
+                      <Bookmark className="w-3.5 h-3.5 text-slate-300" />
+                    )}
+                    <span className="text-[10px] text-slate-400">{savedId === msg.id ? '已保存' : '保存笔记'}</span>
+                  </button>
+                )}
+              </div>
+            </div>
+          ))}
+          {loading && (
+            <div className="flex justify-start">
+              <div className="glass-card rounded-2xl rounded-bl-md px-5 py-3.5 flex items-center gap-3">
+                <Loader2 className="w-4 h-4 text-fresh-500 animate-spin" />
+                <span className="text-sm text-slate-400">导师正在思考...</span>
+              </div>
+            </div>
+          )}
+          {noKey && (
+            <div className="flex justify-center">
+              <div className="px-5 py-2.5 rounded-xl bg-amber-50 border border-amber-200 text-amber-700 text-sm flex items-center gap-2 shadow-sm">
+                <Key className="w-4 h-4" />
+                请先设置 DeepSeek API 密钥
+                <button onClick={() => navigate('/settings/api-key')} className="underline ml-1 font-medium">去设置</button>
+              </div>
+            </div>
+          )}
+          <div ref={messagesEndRef} />
+        </div>
+      </div>
+
+      <div className="sticky bottom-0 z-40 glass-card border-t border-white/90 rounded-none">
+        <div className="max-w-3xl mx-auto px-4 py-3">
+          <div className="flex items-end gap-2">
+            <input
+              value={input}
+              onChange={e => setInput(e.target.value)}
+              onKeyDown={e => e.key === 'Enter' && !e.shiftKey && (e.preventDefault(), handleSend())}
+              placeholder={`向${title}提问...`}
+              className="flex-1 px-4 py-3 rounded-xl bg-white/80 border border-fresh-200 text-sm text-slate-700 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-fresh-300 focus:border-fresh-400 transition-all shadow-sm"
+            />
+            <button onClick={handleSend} disabled={!input.trim() || loading} className="w-10 h-10 rounded-xl bg-gradient-to-r from-fresh-500 to-fresh-600 text-white flex items-center justify-center disabled:opacity-50 hover:from-fresh-600 hover:to-fresh-700 transition-all shadow-sm shadow-fresh-200/50">
+              <Send className="w-4 h-4" />
+            </button>
+          </div>
+          <p className="text-xs text-slate-400 text-center mt-2">需先设置 DeepSeek API 密钥才能对话</p>
+        </div>
+      </div>
+
+      {showSavedToast && (
+        <div className="fixed top-20 left-1/2 -translate-x-1/2 z-50 px-4 py-2 rounded-xl bg-fresh-500 text-white text-sm shadow-lg animate-in">
+          已保存到笔记
+        </div>
+      )}
+
+      <style>{`
+        @keyframes toastIn {
+          from { opacity: 0; transform: translateY(-10px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes messageIn {
+          from { opacity: 0; transform: translateY(8px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-in {
+          animation: messageIn 0.25s ease-out;
+        }
+      `}</style>
     </div>
   );
 };

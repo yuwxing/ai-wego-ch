@@ -48,7 +48,14 @@ interface EnglishDaily {
 export default function EnglishDailyPage() {
   const navigate = useNavigate();
   const { user } = useUser();
+  const [hasPet, setHasPet] = useState<boolean | null>(null);
   const [data, setData] = useState<EnglishDaily | null>(null);
+
+  useEffect(() => {
+    const pet = localStorage.getItem('adoptedPet')
+    if (!pet) { setHasPet(false); return }
+    try { setHasPet(!!JSON.parse(pet)) } catch { setHasPet(false) }
+  }, [])
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [showTranslation, setShowTranslation] = useState(false);
@@ -214,6 +221,26 @@ export default function EnglishDailyPage() {
         </div>
       </div>
     );
+  }
+
+  if (hasPet === false) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-green-50 to-white flex items-center justify-center p-4">
+        <div className="text-center bg-white rounded-3xl p-8 shadow-lg max-w-sm">
+          <div className="w-20 h-20 mx-auto mb-4 rounded-2xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-4xl">🐾</div>
+          <h2 className="text-xl font-bold text-[#2D6A4F] mb-2">先领养一只学习精灵</h2>
+          <p className="text-[#636E72] mb-6">每日英语需要学习精灵的陪伴才能开始哦！<br />领养一只属于你的宠物，一起学习吧。</p>
+          <div className="flex gap-3">
+            <button onClick={() => navigate('/adopt')} className="flex-1 px-5 py-3 bg-gradient-to-r from-amber-500 to-orange-500 text-white rounded-xl font-bold hover:shadow-lg transition-all">
+              去领养
+            </button>
+            <button onClick={() => navigate('/learn')} className="flex-1 px-5 py-3 rounded-xl border border-slate-200 text-slate-500 font-medium hover:bg-slate-50 transition-all">
+              稍后再说
+            </button>
+          </div>
+        </div>
+      </div>
+    )
   }
 
   if (!data) return null;
