@@ -29,7 +29,7 @@ export class TeacherAI {
   private abortController: AbortController | null = null
 
   constructor(apiKey?: string) {
-    this.apiKey = apiKey || localStorage.getItem('deepseek-api-key') || ''
+    this.apiKey = apiKey || localStorage.getItem('deepseek_api_key') || ''
     // Init system prompt
     this.history.push({ role: 'system', content: PERSONALITY_SYSTEM })
   }
