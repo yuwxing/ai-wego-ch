@@ -9,6 +9,7 @@ const AVATAR_OPTIONS = [
   { id: 'robot', label: '3D机器人', icon: '🤖' },
   { id: 'img1', label: '形象01', icon: '🖼️', img: '/avatars/teacher01.jpg' },
   { id: 'img2', label: '形象02', icon: '🖼️', img: '/avatars/teacher02.jpg' },
+  { id: 'iso', label: '等距机器人', icon: '🎮' },
 ]
 
 const ROBOT_SYSTEM = `你是一个有趣的 AI 机器人助手，名字叫「小铁」。你的性格特点：
@@ -126,7 +127,7 @@ export default function RobotPage() {
     <div style={{ width: '100vw', height: '100vh', position: 'relative', overflow: 'hidden', background: '#080818' }}>
       {/* 3D Scene */}
       <div style={{ position: 'absolute', inset: 0 }}>
-        <RobotScene animation={anim} animSpeed={speed} walkDir={walkDir} useImage={avatar === 'img1' ? '/avatars/teacher01.jpg' : avatar === 'img2' ? '/avatars/teacher02.jpg' : false} />
+        <RobotScene animation={anim} animSpeed={speed} walkDir={walkDir} mode={avatar === 'iso' ? 'isometric' : '3d'} useImage={avatar === 'img1' ? '/avatars/teacher01.jpg' : avatar === 'img2' ? '/avatars/teacher02.jpg' : false} />
       </div>
 
       {/* Top bar */}

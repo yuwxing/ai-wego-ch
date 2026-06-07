@@ -1,21 +1,27 @@
 import React from 'react'
 import { Canvas } from '@react-three/fiber'
 import { OrbitControls, Stars } from '@react-three/drei'
+import * as THREE from 'three'
 import RobotAvatar, { type RobotAnim } from './RobotAvatar'
 import ImageAvatar from './ImageAvatar'
+import IsometricRobot from './IsometricRobot'
 
 interface Props {
   animation: RobotAnim
   animSpeed?: number
   walkDir?: [number, number]
   useImage?: string | false
+  mode?: '3d' | 'isometric'
 }
 
-export default function RobotScene({ animation, animSpeed = 1, walkDir, useImage = false }: Props) {
+export default function RobotScene({ animation, animSpeed = 1, walkDir, useImage = false, mode = '3d' }: Props) {
+  const isIso = mode === 'isometric'
+
   return (
     <Canvas
       shadows
       camera={{ position: [3, 2, 5], fov: 40 }}
+      orthographic={isIso}
       style={{ width: '100%', height: '100%', background: '#080818' }}
     >
       <ambientLight intensity={0.3} color="#8888cc" />
@@ -36,13 +42,18 @@ export default function RobotScene({ animation, animSpeed = 1, walkDir, useImage
         <meshBasicMaterial color="#1e40af" transparent opacity={0.15} />
       </mesh>
 
-      {useImage ? (
+      {isIso ? (
+        <IsometricRobot animation={animation} animSpeed={animSpeed} walkDir={walkDir} />
+      ) : useImage ? (
         <ImageAvatar imageUrl={useImage} animation={animation} animSpeed={animSpeed} walkDir={walkDir} />
       ) : (
         <RobotAvatar animation={animation} animSpeed={animSpeed} walkDir={walkDir} />
       )}
 
-      <OrbitControls target={[0, 0.9, 0]} enableDamping maxPolarAngle={Math.PI / 2} />
+      <OrbitControls target={[0, 0.9, 0]} enableDamping maxPolarAngle={isIso ? 0.01 : Math.PI / 2}
+        minZoom={isIso ? 3 : undefined} maxZoom={isIso ? 3 : undefined}
+        enableRotate={!isIso}
+      />
 
       <fog attach="fog" args={['#080818', 12, 30]} />
     </Canvas>
