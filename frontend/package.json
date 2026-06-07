@@ -10,7 +10,10 @@
     "deploy": "node deploy.cjs"
   },
   "dependencies": {
+    "@react-three/drei": "^9.92.0",
+    "@react-three/fiber": "^8.15.0",
     "axios": "^1.7.9",
+    "cannon-es": "^0.20.0",
     "clsx": "^2.1.1",
     "html2canvas": "^1.4.1",
     "lucide-react": "^0.475.0",
@@ -18,7 +21,8 @@
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-hot-toast": "^2.5.2",
-    "react-router-dom": "^6.30.3"
+    "react-router-dom": "^6.30.3",
+    "three": "^0.160.0"
   },
   "devDependencies": {
     "@types/qrcode": "^1.5.6",
