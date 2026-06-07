@@ -4,6 +4,7 @@ import { OrbitControls } from '@react-three/drei'
 import TeacherGLB from './TeacherGLB'
 import type { RobotAnim } from './RobotAvatar'
 import TeachingBlackboard from './TeachingBlackboard'
+import HolographicClassroom from './HolographicClassroom'
 
 interface Props {
   mode: 'idle' | 'walk' | 'talk'
@@ -19,27 +20,28 @@ export default function TeacherScene({ mode, walkDir, blackboard, modelUrl }: Pr
   return (
     <Canvas
       shadows
-      camera={{ position: [0, 1.6, 3.2], fov: 50 }}
-      style={{ width: '100%', height: '100%', background: '#0a0a12' }}
+      camera={{ position: [1.5, 1.6, 3.0], fov: 50 }}
+      style={{ width: '100%', height: '100%', background: '#050510' }}
     >
-      <ambientLight intensity={0.6} color="#f0e6ff" />
-      <directionalLight position={[5, 10, 6]} intensity={2} castShadow shadow-mapSize-width={1024} shadow-mapSize-height={1024} />
-      <directionalLight position={[-4, 1, -5]} intensity={0.4} color="#ff88cc" />
+      <ambientLight intensity={0.3} color="#2266aa" />
+      <directionalLight position={[5, 10, 6]} intensity={0.8} color="#4488ff" />
+      <directionalLight position={[-4, 1, -5]} intensity={0.3} color="#22d3ee" />
+      <pointLight position={[0, 2.5, 0]} intensity={0.6} color="#22d3ee" />
 
-      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.01, 0]} receiveShadow>
-        <planeGeometry args={[40, 40]} />
-        <meshStandardMaterial color="#1a1a2e" roughness={0.9} />
+      <mesh rotation={[-Math.PI / 2, 0, 0]} position={[0, -0.02, 0]}>
+        <planeGeometry args={[24, 24]} />
+        <meshStandardMaterial color="#08081a" roughness={0.8} />
       </mesh>
 
-      <gridHelper args={[20, 20, '#4a3a6a', '#2a1a4a']} position={[0, 0, 0]} />
+      <HolographicClassroom />
 
       <TeacherGLB modelUrl={modelUrl} animation={anim} walkDir={walkDir} />
 
       <TeachingBlackboard content={blackboard || ''} visible={!!blackboard} />
 
-      <OrbitControls target={[0, 1.2, 0]} enableDamping minDistance={1.5} maxDistance={8} />
+      <OrbitControls target={[0, 1.2, 0]} enableDamping minDistance={1.5} maxDistance={6} />
 
-      <fog attach="fog" args={['#0a0a12', 12, 30]} />
+      <fog attach="fog" args={['#050510', 6, 12]} />
     </Canvas>
   )
 }
