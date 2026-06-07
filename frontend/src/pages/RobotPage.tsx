@@ -7,7 +7,6 @@ import { speak, listen } from '../components/digital-teacher/TeacherVoice'
 import VirtualJoystick from '../components/digital-teacher/VirtualJoystick'
 
 const AVATAR_OPTIONS = [
-  { id: 'robot', label: '机器人', icon: '🤖' },
   { id: 'teacher-f', label: '女教师', icon: '👩‍🏫' },
   { id: 'teacher-m', label: '男教师', icon: '👨‍🏫' },
 ]
@@ -36,7 +35,7 @@ export default function RobotPage() {
   const [speed, setSpeed] = useState(1)
   const [walkDir, setWalkDir] = useState<[number, number]>([0, 0])
   const [state, setState] = useState<string>('IDLE')
-  const [avatar, setAvatar] = useState<AvatarType>('robot')
+  const [avatar, setAvatar] = useState<AvatarType>('teacher-f')
   const [messages, setMessages] = useState<{ text: string; user: boolean }[]>([
     { text: '哔哔——！你好，我是小铁 🤖 按 WASD 可以让我走动，也可以和我聊天！', user: false },
   ])
@@ -138,7 +137,7 @@ export default function RobotPage() {
         display: 'flex', gap: 16, alignItems: 'center', zIndex: 100, boxShadow: '0 2px 12px rgba(0,0,0,0.08)',
       }}>
         <span style={{ fontSize: 20 }}>🤖</span>
-        <b style={{ color: '#166534' }}>AI 机器人</b>
+        <b style={{ color: '#166534' }}>AI 数字教师</b>
         <span style={{ color: '#16a34a', fontSize: 13 }}>
           {ANIM_OPTIONS.find(o => o.key === anim)?.label}
         </span>

@@ -2,11 +2,11 @@ import React, { useMemo } from 'react'
 import { Canvas } from '@react-three/fiber'
 import { OrbitControls } from '@react-three/drei'
 import * as THREE from 'three'
-import RobotAvatar, { type RobotAnim } from './RobotAvatar'
+import type { RobotAnim } from './RobotAvatar'
 import ChibiTeacher from './ChibiTeacher'
 import ChibiTeacherMale from './ChibiTeacherMale'
 
-export type AvatarType = 'robot' | 'teacher-f' | 'teacher-m'
+export type AvatarType = 'teacher-f' | 'teacher-m'
 
 interface Props {
   animation: RobotAnim
@@ -56,12 +56,11 @@ function FieldLines() {
   )
 }
 
-export default function RobotScene({ animation, animSpeed = 1, walkDir, avatar = 'robot' }: Props) {
+export default function RobotScene({ animation, animSpeed = 1, walkDir, avatar = 'teacher-f' }: Props) {
   const renderAvatar = () => {
     switch (avatar) {
-      case 'teacher-f': return <ChibiTeacher animation={animation} animSpeed={animSpeed} walkDir={walkDir} />
       case 'teacher-m': return <ChibiTeacherMale animation={animation} animSpeed={animSpeed} walkDir={walkDir} />
-      default: return <RobotAvatar animation={animation} animSpeed={animSpeed} walkDir={walkDir} />
+      default: return <ChibiTeacher animation={animation} animSpeed={animSpeed} walkDir={walkDir} />
     }
   }
 
