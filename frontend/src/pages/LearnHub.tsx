@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { BookOpen, Headphones, Newspaper, Bot, Monitor, PenLine, PawPrint, MessageCircleHeart, GraduationCap, Cpu } from 'lucide-react'
+import { BookOpen, Headphones, Newspaper, Bot, Monitor, PenLine, PawPrint, MessageCircleHeart, GraduationCap, Cpu, FileText } from 'lucide-react'
 
 const tools = [
   { to: '/learn/word-cards', icon: BookOpen, title: '单词系统', desc: '单词卡片 · 记忆训练 · 测试模式', color: 'bg-blue-500' },
@@ -9,7 +9,8 @@ const tools = [
   { to: '/learn/online-classroom', icon: Monitor, title: '在线教室', desc: 'AI智能备课 · 互动授课 · OpenMAIC 课堂', color: 'bg-red-500' },
   { to: '/learn/classroom', icon: Bot, title: 'AI学习助手', desc: 'AI智能辅导 · 宠物精灵陪伴 · 互动聊天', color: 'bg-orange-500' },
   { to: '/learn/teacher', icon: GraduationCap, title: '数字教师', desc: '3D数字分身 · 物理互动 · 语音教学 · Active Ragdoll', color: 'bg-teal-500' },
-  { to: '/learn/robot', icon: Cpu, title: 'AI机器人', desc: '3D机器人形象 · WASD行走 · 语音对话 · 多动画切换', color: 'bg-blue-600' },
+  { to: '/learn/robot', icon: Cpu, title: '数字校园', desc: '3D数字人 · WASD行走 · 语音对话 · 多动画切换', color: 'bg-blue-600' },
+  { to: '/learn/reading-intensive', icon: FileText, title: '外刊精读', desc: '外刊改编 · 长难句拆分 · 语篇逻辑 · 阅读理解', color: 'bg-cyan-500' },
   { to: '/learn/writing', icon: PenLine, title: '英语写作成长空间', desc: '每天一篇 · AI详批 · 二次提交 · 优秀习作榜', color: 'bg-rose-500' },
 ]
 

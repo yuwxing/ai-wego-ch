@@ -5,6 +5,7 @@ import LearnHub from './pages/LearnHub'
 import WordCardPage from './pages/WordCardPage'
 import ListeningSpeakingPage from './pages/ListeningSpeakingPage'
 import EnglishDailyPage from './pages/EnglishDailyPage'
+import ReadingIntensivePage from './pages/ReadingIntensivePage'
 import JobClassroomPage from './pages/JobClassroomPage'
 import AIClassroomPage from './pages/AIClassroomPage'
 import LearnCompetitions from './pages/LearnCompetitions'
@@ -46,12 +47,14 @@ import CreativeWorkshopPage from './pages/CreativeWorkshopPage'
 import WritingGrowthPage from './pages/WritingGrowthPage'
 import DigitalTeacherPage from './pages/DigitalTeacherPage'
 import RobotPage from './pages/RobotPage'
+import GardenPage from './pages/GardenPage'
 import SequenceTestPage from './pages/SequenceTestPage'
 import MathSpeedTestPage from './pages/MathSpeedTestPage'
 import QuizChallengePage from './pages/QuizChallengePage'
 
 import LiteraryClubHall from './pages/literature/LiteraryClubHall'
 import LiteratureWritePage from './pages/literature/LiteratureWritePage'
+import PaperShortWritePage from './pages/literature/PaperShortWritePage'
 import NotFound from './pages/NotFound'
 
 function ParamRedirect({ to }: { to: string }) {
@@ -76,6 +79,7 @@ export default function App() {
       <Route path="/learn/word-cards" element={<WordCardPage />} />
       <Route path="/learn/listening-speaking" element={<ListeningSpeakingPage />} />
       <Route path="/learn/english-daily" element={<EnglishDailyPage />} />
+      <Route path="/learn/reading-intensive" element={<ReadingIntensivePage />} />
       <Route path="/learn/classroom" element={<AIClassroomPage />} />
       <Route path="/learn/competitions" element={<LearnCompetitions />} />
       <Route path="/learn/online-classroom" element={<OnlineClassroom />} />
@@ -83,6 +87,7 @@ export default function App() {
       <Route path="/learn/writing" element={<WritingGrowthPage />} />
       <Route path="/learn/teacher" element={<DigitalTeacherPage />} />
       <Route path="/learn/robot" element={<RobotPage />} />
+      <Route path="/learn/garden" element={<GardenPage />} />
 
       {/* WEG Economy */}
       <Route path="/weg" element={<WegHub />} />
@@ -108,6 +113,7 @@ export default function App() {
       {/* 绿草地文学社 */}
       <Route path="/literature" element={<LiteraryClubHall />} />
       <Route path="/literature/write/:storyId" element={<LiteratureWritePage />} />
+      <Route path="/literature/paper-short" element={<PaperShortWritePage />} />
 
       {/* WEG社区 */}
       <Route path="/community/creative-workshop" element={<CreativeWorkshopPage />} />
@@ -135,6 +141,7 @@ export default function App() {
       <Route path="/word-cards" element={<Navigate to="/learn/word-cards" replace />} />
       <Route path="/listening-speaking" element={<Navigate to="/learn/listening-speaking" replace />} />
       <Route path="/english-daily" element={<Navigate to="/learn/english-daily" replace />} />
+      <Route path="/reading-intensive" element={<Navigate to="/learn/reading-intensive" replace />} />
       <Route path="/classroom" element={<Navigate to="/learn/classroom" replace />} />
 
       <Route path="/balance" element={<Navigate to="/weg/balance" replace />} />

@@ -1,9 +1,9 @@
-name: Daily Content Generator
+name: Weekly Content Generator
 
 on:
   schedule:
-    # 每天北京时间 06:00 (UTC 22:00)
-    - cron: '0 22 * * *'
+    # 每周一北京时间 06:00 (UTC 22:00 Sunday)
+    - cron: '0 22 * * 0'
   workflow_dispatch:
 
 jobs:
@@ -17,13 +17,7 @@ jobs:
         with:
           node-version: 20
 
-      - name: Generate Daily Content
+      - name: Generate Weekly Content
         env:
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
-        run: node scripts/generate-daily-content.js
-
-      - name: Check Balance and Alert
-        if: failure()
-        run: |
-          echo "::error::Daily content generation failed. Check API key or network."
-          echo "Triggered at: $(date -u)"
+        run: node scripts/generate-weekly-content.js

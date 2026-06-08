@@ -27,7 +27,8 @@ const sections = [
       { to: '/learn/online-classroom', label: '在线教室' },
       { to: '/learn/classroom', label: 'AI学习助手' },
       { to: '/learn/teacher', label: '数字教师' },
-      { to: '/learn/robot', label: 'AI机器人' },
+      { to: '/learn/robot', label: '数字校园' },
+      { to: '/learn/reading-intensive', label: '外刊精读' },
     ]
   },
   {
