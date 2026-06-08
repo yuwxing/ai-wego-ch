@@ -3,7 +3,7 @@ const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZ
 const DEEPSEEK_KEY = process.env.DEEPSEEK_API_KEY || "";
 const today = () => new Date().toISOString().slice(0, 10);
 
-async function deepseek(schema) {
+async function deepseek() {
   const prompt = `Generate a simplified adapted reading passage based on The Economist (Science & Tech) or Scientific American style.
 Date: ${today()}.
 Topic: Choose a different science/technology topic each week (AI, climate, space, biotech, neuroscience, energy, computing, medicine, etc.).
