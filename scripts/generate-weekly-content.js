@@ -41,14 +41,20 @@ Requirements:
         { role: "system", content: "You are an English education content generator. Generate content in exact JSON format. For Chinese high school students." },
         { role: "user", content: `${prompt}\n\nReturn ONLY valid JSON matching this structure:\n${JSON.stringify(schema, null, 2)}` }
       ],
-      temperature: 0.8,
-      max_tokens: 4096
+      temperature: 0.7,
+      max_tokens: 8192
     })
   });
-  if (!resp.ok) throw new Error(`DeepSeek error: ${resp.status}`);
+  if (!resp.ok) { const errText = await resp.text(); throw new Error(`DeepSeek error: ${resp.status} - ${errText.slice(0, 200)}`); }
   const data = await resp.json();
-  const text = data.choices[0].message.content.replace(/```(?:json)?\s*/gi, "").trim();
-  return JSON.parse(text);
+  const raw = data.choices[0]?.message?.content || "";
+  const text = raw.replace(/```(?:json)?\s*|```/gi, "").trim();
+  if (!text) throw new Error(`Empty response from DeepSeek. Raw: ${JSON.stringify(data).slice(0, 300)}`);
+  try {
+    return JSON.parse(text);
+  } catch (e) {
+    throw new Error(`JSON parse failed. First 500 chars: ${text.slice(0, 500)}`);
+  }
 }
 
 async function insertTask(title, content) {
