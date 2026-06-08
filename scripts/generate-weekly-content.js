@@ -48,7 +48,8 @@ Requirements:
   if (!resp.ok) { const errText = await resp.text(); throw new Error(`DeepSeek error: ${resp.status} - ${errText.slice(0, 200)}`); }
   const bodyText = await resp.text();
   if (!bodyText.trim()) throw new Error(`Empty body from DeepSeek (status 200)`);
-  const data = JSON.parse(bodyText);
+  let data;
+  try { data = JSON.parse(bodyText); } catch (e) { throw new Error(`DeepSeek response not JSON: ${bodyText.slice(0, 500)}`); }
   const raw = data.choices[0]?.message?.content || "";
   const text = raw.replace(/```(?:json)?\s*|```/gi, "").trim();
   if (!text) throw new Error(`Empty response from DeepSeek. Raw: ${JSON.stringify(data).slice(0, 300)}`);
