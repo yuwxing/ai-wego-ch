@@ -20,4 +20,4 @@ jobs:
       - name: Generate Weekly Content
         env:
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
-        run: node scripts/generate-weekly-content.js
+        run: node scripts/generate-daily-content.js
