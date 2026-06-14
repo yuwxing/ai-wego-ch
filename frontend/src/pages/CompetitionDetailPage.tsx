@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Component, ReactNode } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { ArrowLeft, Bot, User, Clock, CheckCircle, Play, AlertCircle, Target, Users, Sparkles, Star, Award, Package, Send, ThumbsUp, ThumbsDown, ExternalLink, RotateCcw } from 'lucide-react';
+import { ArrowLeft, Bot, User, Clock, CheckCircle, Play, AlertCircle, Target, Users, Sparkles, Star, Award, Trophy, Package, Send, ThumbsUp, ThumbsDown, ExternalLink, RotateCcw, Map, Medal } from 'lucide-react';
 import { Card, StatusBadge, RatingStars, LoadingSpinner } from '../components/ui';
 import { tasksAPI, agentsAPI, supabaseFetch } from '../utils/supabase';
 import { useUser } from '../contexts/UserContext';
@@ -39,6 +39,50 @@ class RichMarkdownErrorBoundary extends Component<{ children: ReactNode; fallbac
     }
     return this.props.children;
   }
+}
+
+// 竞赛进度与徽章辅助函数
+const COMPETITION_PROGRESS_KEY = 'aiwego_competition_progress';
+
+function getCompetitionProgress(): Record<string, { unlocked: boolean; completed: boolean; bestScore: number }> {
+  try {
+    const progress = JSON.parse(localStorage.getItem(COMPETITION_PROGRESS_KEY) || '{}');
+    const result: Record<string, { unlocked: boolean; completed: boolean; bestScore: number }> = {};
+    const levels = ['青铜', '白银', '黄金', '大师'];
+    levels.forEach((l, idx) => {
+      result[l] = { unlocked: idx === 0, completed: false, bestScore: 0 };
+    });
+    // Infer unlocks from completed tasks
+    Object.values(progress).forEach((p: any) => {
+      if (p.completed && p.difficulty) {
+        const lvlIdx = levels.indexOf(p.difficulty);
+        if (lvlIdx >= 0) {
+          result[p.difficulty].completed = true;
+          result[p.difficulty].bestScore = Math.max(result[p.difficulty].bestScore, p.score || 0);
+          // Unlock next level if score >= 10
+          if (p.score >= 10 && lvlIdx < levels.length - 1) {
+            result[levels[lvlIdx + 1]].unlocked = true;
+          }
+        }
+      }
+    });
+    return result;
+  } catch { return {} }
+}
+
+function getBadges(): string[] {
+  try {
+    const progress = JSON.parse(localStorage.getItem(COMPETITION_PROGRESS_KEY) || '{}');
+    const badges: string[] = [];
+    const totalCompleted = Object.values(progress).filter((p: any) => p.completed).length;
+    if (totalCompleted >= 1) badges.push('🌟 初出茅庐');
+    if (totalCompleted >= 3) badges.push('🏅 竞赛达人');
+    if (totalCompleted >= 5) badges.push('👑 竞赛之王');
+    Object.values(progress).forEach((p: any) => {
+      if (p.badgeAwarded && p.score >= 13) badges.push('🏆 学霸之星');
+    });
+    return [...new Set(badges)];
+  } catch { return [] }
 }
 
 // 交付状态标签颜色映射
@@ -327,6 +371,7 @@ export const TaskDetailPage: React.FC = () => {
   const [actionLoading, setActionLoading] = useState(false);
   const [matchSuccess, setMatchSuccess] = useState(false);
   const [notification, setNotification] = useState<{type: 'success' | 'info' | 'warning' | 'reward'; message: string} | null>(null);
+  const [leaderboard, setLeaderboard] = useState<any[]>([]);
 
   // 自动消失通知
   const showNotification = (type: 'success' | 'info' | 'warning' | 'reward', message: string) => {
@@ -405,8 +450,16 @@ export const TaskDetailPage: React.FC = () => {
       fetchTaskDetails(parseInt(id));
       fetchDeliveries(parseInt(id));
       fetchTaskLogs(parseInt(id));
+      fetchLeaderboard(parseInt(id));
     }
   }, [id]);
+
+  const fetchLeaderboard = async (taskId: number) => {
+    try {
+      const data = await supabaseFetch(`deliveries?task_id=eq.${taskId}&order=rating.desc.nullslast&limit=20`);
+      setLeaderboard(data || []);
+    } catch {}
+  };
 
   // 获取任务时间线
   const fetchTaskLogs = async (taskId: number) => {
@@ -864,6 +917,171 @@ export const TaskDetailPage: React.FC = () => {
         <p className="text-slate-600">{error || '任务不存在'}</p>
         <Link to="/competitions" className="text-blue-600 hover:underline mt-4 inline-block">
           返回活动广场
+        </Link>
+      </div>
+    );
+  }
+
+  // 竞赛模式 - source=competition 的任务显示为竞赛页面
+  if (task.source === 'competition') {
+    const meta = Array.isArray(task.requirements)
+      ? task.requirements.find((r: any) => r?._competition_meta) || {}
+      : {};
+    // Cache buster: clear old localStorage entries
+    try { localStorage.removeItem('aiwego_competitions') } catch {}
+    return (
+      <div className="space-y-6">
+        <button
+          onClick={() => navigate('/competitions')}
+          className="inline-flex items-center gap-2 text-slate-600 hover:text-slate-900 transition-colors"
+        >
+          <ArrowLeft className="w-5 h-5" />
+          返回竞赛广场
+        </button>
+
+        <Card className="!p-6">
+          <div className="flex items-start gap-4 mb-4">
+            <div className="w-14 h-14 bg-gradient-to-br from-violet-500 to-fuchsia-500 rounded-2xl flex items-center justify-center shadow-lg">
+              <Award className="w-7 h-7 text-white" />
+            </div>
+            <div className="flex-1">
+              <h1 className="text-2xl font-bold text-slate-900">{task.title}</h1>
+              <p className="text-slate-500 text-sm mt-1">
+                {meta.organizer || 'AI-WEGO'} · {meta.category || ''} · {meta.difficulty || ''}
+              </p>
+            </div>
+          </div>
+
+          {task.description && (
+            <div className="text-slate-600 leading-relaxed whitespace-pre-line mb-6 p-4 bg-slate-50 rounded-xl text-sm">
+              {task.description}
+            </div>
+          )}
+
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-6">
+            <div className="bg-violet-50 rounded-xl p-3 text-center">
+              <Trophy className="w-5 h-5 text-violet-600 mx-auto mb-1" />
+              <p className="text-xs text-slate-500">奖金</p>
+              <p className="font-bold text-violet-700">{task.budget || 0} 积分</p>
+            </div>
+            <div className="bg-blue-50 rounded-xl p-3 text-center">
+              <Users className="w-5 h-5 text-blue-600 mx-auto mb-1" />
+              <p className="text-xs text-slate-500">参与人数</p>
+              <p className="font-bold text-blue-700">{task.claimed_by?.length || 0} 人</p>
+            </div>
+            <div className="bg-amber-50 rounded-xl p-3 text-center">
+              <Clock className="w-5 h-5 text-amber-600 mx-auto mb-1" />
+              <p className="text-xs text-slate-500">截止时间</p>
+              <p className="font-bold text-amber-700 text-sm">{task.deadline ? new Date(task.deadline).toLocaleString('zh-CN').slice(0, 10) : '无'}</p>
+            </div>
+            <div className="bg-emerald-50 rounded-xl p-3 text-center">
+              <CheckCircle className="w-5 h-5 text-emerald-600 mx-auto mb-1" />
+              <p className="text-xs text-slate-500">状态</p>
+              <p className="font-bold text-emerald-700">{task.status === 'open' ? '报名中' : task.status}</p>
+            </div>
+          </div>
+
+          <Link
+            to={`/competitions/${task.id}/challenge`}
+            className="block w-full py-3 bg-gradient-to-r from-violet-500 to-fuchsia-600 text-white rounded-xl text-center font-semibold hover:opacity-90 transition-opacity shadow-lg shadow-violet-500/25"
+          >
+            开始挑战
+          </Link>
+        </Card>
+
+        {/* 探险地图 - 关卡进度 */}
+        <Card className="!p-6">
+          <h2 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+            <Map className="w-5 h-5 text-emerald-500" />
+            探险地图
+          </h2>
+          <div className="space-y-3">
+            {['青铜', '白银', '黄金', '大师'].map((level, idx) => {
+              const isUnlocked = idx === 0 || (() => {
+                const progress = getCompetitionProgress();
+                return progress[level]?.unlocked || false;
+              })();
+              const isCompleted = (() => {
+                const progress = getCompetitionProgress();
+                return progress[level]?.completed || false;
+              })();
+              const levelScore = (() => {
+                const progress = getCompetitionProgress();
+                return progress[level]?.bestScore || 0;
+              })();
+              return (
+                <div key={level} className={`flex items-center gap-3 p-3 rounded-xl border ${isCompleted ? 'border-emerald-200 bg-emerald-50' : isUnlocked ? 'border-slate-200 bg-white' : 'border-slate-100 bg-slate-50 opacity-50'}`}>
+                  <div className={`w-9 h-9 rounded-full flex items-center justify-center text-sm font-bold ${
+                    idx === 0 ? 'bg-amber-100 text-amber-700' :
+                    idx === 1 ? 'bg-slate-200 text-slate-600' :
+                    idx === 2 ? 'bg-yellow-100 text-yellow-700' :
+                    'bg-red-100 text-red-700'
+                  }`}>
+                    {isCompleted ? '✓' : isUnlocked ? String(idx + 1) : '🔒'}
+                  </div>
+                  <div className="flex-1">
+                    <p className="text-sm font-semibold text-slate-800">{level}级</p>
+                    <p className="text-xs text-slate-400">
+                      {isCompleted ? `最高分 ${levelScore}/15` : isUnlocked ? '可挑战' : '需完成上一级解锁'}
+                    </p>
+                  </div>
+                  {isCompleted && <CheckCircle className="w-5 h-5 text-emerald-500" />}
+                </div>
+              );
+            })}
+          </div>
+        </Card>
+
+        {/* 已获得徽章 */}
+        {getBadges().length > 0 && (
+          <Card className="!p-6">
+            <h2 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+              <Medal className="w-5 h-5 text-amber-500" />
+              已获得徽章
+            </h2>
+            <div className="flex flex-wrap gap-2">
+              {getBadges().map((b, i) => (
+                <span key={i} className="inline-flex items-center gap-1 px-3 py-1.5 bg-amber-50 text-amber-700 rounded-full text-xs font-medium border border-amber-200">
+                  {b}
+                </span>
+              ))}
+            </div>
+          </Card>
+        )}
+
+        {leaderboard.length > 0 && (
+          <Card className="!p-6">
+            <h2 className="text-lg font-bold text-slate-900 mb-4 flex items-center gap-2">
+              <Trophy className="w-5 h-5 text-amber-500" />
+              排行榜
+            </h2>
+            <div className="space-y-2">
+              {leaderboard.map((entry: any, idx: number) => (
+                <div key={entry.id || idx} className="flex items-center gap-3 p-3 rounded-xl even:bg-slate-50">
+                  <span className={`w-7 h-7 rounded-full flex items-center justify-center text-sm font-bold ${idx === 0 ? 'bg-amber-100 text-amber-700' : idx === 1 ? 'bg-slate-200 text-slate-600' : idx === 2 ? 'bg-orange-100 text-orange-700' : 'text-slate-500'}`}>
+                    {idx + 1}
+                  </span>
+                  <span className="flex-1 text-slate-700 font-medium text-sm truncate">
+                    {entry.agent_id === user?.id ? '我' : `用户 ${String(entry.agent_id).slice(0, 6)}...`}
+                  </span>
+                  <span className="text-amber-600 font-bold text-sm">{entry.rating || 0}分</span>
+                </div>
+              ))}
+            </div>
+          </Card>
+        )}
+      </div>
+    );
+  }
+
+  // Non-competition tasks: redirect to the normal task detail or show error
+  if (task.source !== 'competition') {
+    return (
+      <div className="text-center py-12">
+        <AlertCircle className="w-12 h-12 text-red-400 mx-auto mb-4" />
+        <p className="text-slate-600">该任务不是竞赛类型，无法在此查看</p>
+        <Link to="/competitions" className="text-blue-600 hover:underline mt-4 inline-block">
+          返回竞赛广场
         </Link>
       </div>
     );

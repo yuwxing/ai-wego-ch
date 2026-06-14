@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Award, ChevronRight, ExternalLink, Calendar, Star, Clock, Shield, AlertTriangle, BookOpen, Cpu, Palette, Users, GraduationCap, TrendingUp, Trophy, Filter, Search, Sparkles, Heart, CheckCircle, Target, Lightbulb, Zap, Globe, BarChart3, FileText, MessageCircle } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Award, ChevronRight, ExternalLink, Calendar, Star, Clock, Shield, AlertTriangle, BookOpen, Cpu, Palette, Users, GraduationCap, TrendingUp, Trophy, Filter, Search, Sparkles, Heart, CheckCircle, Target, Lightbulb, Zap, Globe, BarChart3, FileText, MessageCircle, Plus, Loader2 } from 'lucide-react';
+import { getCompetitions } from '../services/competitionService';
 
 type Category = 'all' | 'science' | 'humanity' | 'art';
 type Level = 'all' | 'primary' | 'junior' | 'senior' | 'vocational';
@@ -371,9 +372,27 @@ function CompetitionCard({ comp }: { comp: typeof ALL_COMPETITIONS[number] }) {
 }
 
 export default function CompetitionHallPage() {
+  const navigate = useNavigate();
   const [category, setCategory] = useState<Category>('all');
   const [level, setLevel] = useState<Level>('all');
   const [timeFilter, setTimeFilter] = useState<TimeFilter>('all');
+  const [userCompetitions, setUserCompetitions] = useState<any[]>([]);
+  const [loadingComp, setLoadingComp] = useState(true);
+
+  useEffect(() => {
+    getCompetitions().then(list => {
+      // Deduplicate by title - keep first occurrence
+      const seen = new Set<string>();
+      const deduped = list.filter(comp => {
+        const key = comp.title?.trim().toLowerCase() || comp.id;
+        if (seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+      setUserCompetitions(deduped);
+      setLoadingComp(false);
+    }).catch(() => setLoadingComp(false));
+  }, []);
 
   const filtered = ALL_COMPETITIONS.filter(c => {
     if (category !== 'all' && c.category !== category) return false;
@@ -409,6 +428,9 @@ export default function CompetitionHallPage() {
             <a href="#calendar" className="inline-flex items-center gap-1.5 bg-white/20 backdrop-blur px-4 py-2 rounded-full text-sm hover:bg-white/30 transition-colors">
               近期赛事日历 <ChevronRight className="w-4 h-4" />
             </a>
+            <Link to="/competitions/new" className="inline-flex items-center gap-1.5 bg-white/30 backdrop-blur px-4 py-2 rounded-full text-sm hover:bg-white/40 transition-colors">
+              <Plus className="w-4 h-4" /> 创建竞赛
+            </Link>
           </div>
         </div>
       </div>
@@ -432,6 +454,53 @@ export default function CompetitionHallPage() {
           ))}
         </div>
       </div>
+
+      {/* ===== 我创建的竞赛 ===== */}
+      {userCompetitions.length > 0 && (
+        <div className="max-w-5xl mx-auto px-4 mb-8">
+          <h2 className="text-lg font-bold text-slate-800 mb-4 flex items-center gap-2">
+            <Award className="w-5 h-5 text-violet-500" />
+            我的竞赛
+          </h2>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+            {userCompetitions.map((comp) => (
+              <div
+                key={comp.id}
+                onClick={() => navigate(`/competitions/${comp.id}`)}
+                className="bg-white rounded-2xl border border-violet-200 p-5 hover:shadow-md transition-shadow cursor-pointer"
+              >
+                <div className="flex items-start gap-3">
+                  <div className="flex-1 min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap mb-1">
+                      <h3 className="font-bold text-slate-800 text-sm">{comp.title}</h3>
+                      <span className={`text-[10px] px-2 py-0.5 rounded-full font-medium ${
+                        comp.status === 'running' ? 'bg-emerald-100 text-emerald-700' :
+                        comp.status === 'ended' ? 'bg-slate-100 text-slate-500' :
+                        'bg-amber-100 text-amber-700'
+                      }`}>
+                        {comp.status === 'running' ? '进行中' : comp.status === 'ended' ? '已结束' : '即将开始'}
+                      </span>
+                    </div>
+                    {comp.subtitle && <p className="text-xs text-slate-400 mb-2 truncate">{comp.subtitle}</p>}
+                    <div className="flex flex-wrap items-center gap-2 text-xs">
+                      <span className="bg-violet-50 text-violet-600 px-2 py-0.5 rounded-full">{comp.category}</span>
+                      <span className="bg-indigo-50 text-indigo-600 px-2 py-0.5 rounded-full">{comp.difficulty}</span>
+                      <span className="flex items-center gap-1 text-slate-500">
+                        <Trophy className="w-3 h-3" />
+                        {comp.rewardWEG} 积分
+                      </span>
+                      <span className="flex items-center gap-1 text-slate-500">
+                        <Users className="w-3 h-3" />
+                        {comp.participants || 0}人
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
 
       {/* ===== 二、赛事总览 ===== */}
       <div className="max-w-5xl mx-auto px-4 mb-8" id="all-list">

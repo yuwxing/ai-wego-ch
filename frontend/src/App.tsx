@@ -3,6 +3,7 @@ import { Routes, Route, Navigate, useParams } from 'react-router-dom'
 import Home from './pages/Home'
 import LearnHub from './pages/LearnHub'
 import WordCardPage from './pages/WordCardPage'
+import GrammarPage from './pages/GrammarPage'
 import ListeningSpeakingPage from './pages/ListeningSpeakingPage'
 import EnglishDailyPage from './pages/EnglishDailyPage'
 import ReadingIntensivePage from './pages/ReadingIntensivePage'
@@ -15,6 +16,7 @@ import CompetitionDetailPage from './pages/CompetitionDetailPage'
 import CreateCompetitionPage from './pages/CreateCompetitionPage'
 
 import SubmitPage from './pages/SubmitPage'
+import ChallengePage from './pages/ChallengePage'
 import WegHub from './pages/WegHub'
 import XpPage from './pages/XpPage'
 import LevelsPage from './pages/LevelsPage'
@@ -34,6 +36,9 @@ import AdoptPage from './pages/AdoptPage'
 import { PetChatPage } from './pages/PetChatPage'
 import AvatarChatPage from './pages/AvatarChatPage'
 
+import { useState } from 'react'
+import { useUser } from './contexts/UserContext'
+import { getApiKey, getSharedApiKey } from './utils/deepseek'
 import PetWidget from './components/PetWidget'
 import AdminApplications from './pages/admin/Applications'
 import AdminFeedback from './pages/admin/Feedback'
@@ -50,12 +55,20 @@ import RobotPage from './pages/RobotPage'
 import GardenPage from './pages/GardenPage'
 import SequenceTestPage from './pages/SequenceTestPage'
 import MathSpeedTestPage from './pages/MathSpeedTestPage'
+import IrregularVerbsPage from './pages/IrregularVerbsPage'
+import BrainTrainPage from './pages/BrainTrainPage'
+import TextbookChallengePage from './pages/TextbookChallengePage'
+import StoryAcademyPage from './pages/StoryAcademyPage'
 import QuizChallengePage from './pages/QuizChallengePage'
+import PsychologyTestPage from './pages/PsychologyTestPage'
+import StudyNotesPage from './pages/StudyNotesPage'
+import TranslatorPage from './pages/TranslatorPage'
 
 import LiteraryClubHall from './pages/literature/LiteraryClubHall'
 import LiteratureWritePage from './pages/literature/LiteratureWritePage'
 import PaperShortWritePage from './pages/literature/PaperShortWritePage'
 import NotFound from './pages/NotFound'
+import ErrorBoundary from './components/ErrorBoundary'
 
 function ParamRedirect({ to }: { to: string }) {
   const params = useParams();
@@ -66,9 +79,34 @@ function ParamRedirect({ to }: { to: string }) {
   return <Navigate to={resolved} replace />;
 }
 
+function KeyPromptBanner() {
+  const { user, balance } = useUser()
+  const [dismissed, setDismissed] = useState(() => localStorage.getItem('key_banner_dismissed') === 'true')
+  const hasKey = !!getApiKey() || !!getSharedApiKey()
+  if (!user || user.id <= 0 || dismissed || hasKey || balance <= 0) return null
+  return (
+    <div style={{
+      position: 'fixed', top: 0, left: 0, right: 0, zIndex: 9999,
+      background: 'linear-gradient(135deg, #f97316, #eab308)',
+      color: '#fff', textAlign: 'center', padding: '10px 16px',
+      fontSize: 13, fontWeight: 500, fontFamily: '"Noto Serif SC", serif',
+      display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 8,
+    }}>
+      <span>💰 已充值成功！别忘了填写 DeepSeek 密钥才能使用 AI 功能 →</span>
+      <a href="/settings/api-key"
+        style={{ color: '#fff', textDecoration: 'underline', fontWeight: 700, whiteSpace: 'nowrap' }}>
+        去填写密钥
+      </a>
+      <span onClick={() => { setDismissed(true); localStorage.setItem('key_banner_dismissed', 'true'); }}
+        style={{ cursor: 'pointer', opacity: 0.7, marginLeft: 8, fontSize: 16 }}>✕</span>
+    </div>
+  )
+}
+
 export default function App() {
   return (
     <>
+    <KeyPromptBanner />
     <PetWidget />
     <Routes>
       {/* Home */}
@@ -77,9 +115,11 @@ export default function App() {
       {/* Learning System */}
       <Route path="/learn" element={<LearnHub />} />
       <Route path="/learn/word-cards" element={<WordCardPage />} />
+      <Route path="/learn/grammar" element={<GrammarPage />} />
       <Route path="/learn/listening-speaking" element={<ListeningSpeakingPage />} />
       <Route path="/learn/english-daily" element={<EnglishDailyPage />} />
       <Route path="/learn/reading-intensive" element={<ReadingIntensivePage />} />
+      <Route path="/learn/irregular-verbs" element={<IrregularVerbsPage />} />
       <Route path="/learn/classroom" element={<AIClassroomPage />} />
       <Route path="/learn/competitions" element={<LearnCompetitions />} />
       <Route path="/learn/online-classroom" element={<OnlineClassroom />} />
@@ -88,6 +128,9 @@ export default function App() {
       <Route path="/learn/teacher" element={<DigitalTeacherPage />} />
       <Route path="/learn/robot" element={<RobotPage />} />
       <Route path="/learn/garden" element={<GardenPage />} />
+      <Route path="/learn/study-notes" element={<StudyNotesPage />} />
+      <Route path="/learn/textbook-challenge" element={<ErrorBoundary><TextbookChallengePage /></ErrorBoundary>} />
+      <Route path="/learn/story-academy" element={<StoryAcademyPage />} />
 
       {/* WEG Economy */}
       <Route path="/weg" element={<WegHub />} />
@@ -106,9 +149,10 @@ export default function App() {
       {/* Competition Center */}
       <Route path="/competitions" element={<CompetitionHallPage />} />
 
-      <Route path="/competitions/:id" element={<CompetitionDetailPage />} />
+      <Route path="/competitions/:id" element={<ErrorBoundary><CompetitionDetailPage /></ErrorBoundary>} />
       <Route path="/competitions/new" element={<CreateCompetitionPage />} />
       <Route path="/competitions/:id/submit" element={<SubmitPage />} />
+      <Route path="/competitions/:id/challenge" element={<ErrorBoundary><ChallengePage /></ErrorBoundary>} />
 
       {/* 绿草地文学社 */}
       <Route path="/literature" element={<LiteraryClubHall />} />
@@ -120,6 +164,8 @@ export default function App() {
       <Route path="/community/sequence-test" element={<SequenceTestPage />} />
       <Route path="/community/math-speed" element={<MathSpeedTestPage />} />
       <Route path="/community/quiz/:type" element={<QuizChallengePage />} />
+      <Route path="/community/brain-train" element={<BrainTrainPage />} />
+      <Route path="/community/psych-test" element={<PsychologyTestPage />} />
 
       {/* System */}
       <Route path="/announcements" element={<SystemAnnouncementsPage />} />
@@ -166,6 +212,9 @@ export default function App() {
       <Route path="/adopt" element={<AdoptPage />} />
       <Route path="/pet-chat/:petId" element={<PetChatPage />} />
       <Route path="/avatar-chat" element={<AvatarChatPage />} />
+
+      {/* Tools */}
+      <Route path="/tools/translator" element={<TranslatorPage />} />
 
       {/* 404 */}
       <Route path="*" element={<NotFound />} />
