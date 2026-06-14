@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { ArrowLeft, Send, Award, Star, Sparkles, Trophy, Loader2, AlertCircle, CheckCircle, BookOpen, Target, TrendingUp, Clock, Zap, RotateCcw, Map, Medal, Gift, User, Lightbulb, Globe, PenTool, Cpu, HelpCircle } from 'lucide-react';
+import { ArrowLeft, Send, Award, Star, Sparkles, Trophy, Loader2, AlertCircle, CheckCircle, BookOpen, Target, TrendingUp, Clock, Zap, RotateCcw, Map, Medal, Gift, User, Lightbulb } from 'lucide-react';
 import { tasksAPI, supabaseFetch, usersAPI, xpAPI, SUPABASE_KEY, SUPABASE_URL } from '../utils/supabase';
 import { sendToDeepSeekSync } from '../utils/deepseek';
 import { useUser } from '../contexts/UserContext';
