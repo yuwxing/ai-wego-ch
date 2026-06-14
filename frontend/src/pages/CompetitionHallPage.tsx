@@ -1,7 +1,9 @@
-import React, { useState, useEffect } from 'react';
+﻿import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Award, ChevronRight, ExternalLink, Calendar, Star, Clock, Shield, AlertTriangle, BookOpen, Cpu, Palette, Users, GraduationCap, TrendingUp, Trophy, Filter, Search, Sparkles, Heart, CheckCircle, Target, Lightbulb, Zap, Globe, BarChart3, FileText, MessageCircle, Plus, Loader2 } from 'lucide-react';
+import { Award, ChevronRight, ExternalLink, Calendar, Star, Clock, Shield, AlertTriangle, BookOpen, Cpu, Palette, Users, GraduationCap, TrendingUp, Trophy, Filter, Search, Sparkles, Heart, CheckCircle, Target, Lightbulb, Zap, Globe, BarChart3, FileText, MessageCircle, Plus, Loader2, X, Send, User, School, Phone } from 'lucide-react';
 import { getCompetitions } from '../services/competitionService';
+import { useUser } from '../contexts/UserContext';
+import toast from 'react-hot-toast';
 
 type Category = 'all' | 'science' | 'humanity' | 'art';
 type Level = 'all' | 'primary' | 'junior' | 'senior' | 'vocational';
@@ -378,6 +380,8 @@ export default function CompetitionHallPage() {
   const [timeFilter, setTimeFilter] = useState<TimeFilter>('all');
   const [userCompetitions, setUserCompetitions] = useState<any[]>([]);
   const [loadingComp, setLoadingComp] = useState(true);
+  
+  
 
   useEffect(() => {
     getCompetitions().then(list => {
@@ -466,7 +470,7 @@ export default function CompetitionHallPage() {
             {userCompetitions.map((comp) => (
               <div
                 key={comp.id}
-                onClick={() => navigate(`/competitions/${comp.id}`)}
+                onClick={() => { setSelectedComp(comp); setShowRegModal(true); }}
                 className="bg-white rounded-2xl border border-violet-200 p-5 hover:shadow-md transition-shadow cursor-pointer"
               >
                 <div className="flex items-start gap-3">
@@ -790,6 +794,132 @@ export default function CompetitionHallPage() {
           </div>
         </div>
       </div>
+
+      {/* ===== 报名弹窗 ===== */}
+      {showRegModal && selectedComp && (
+        <div style={{
+          position: 'fixed' as const, inset: 0, backgroundColor: 'rgba(0,0,0,0.5)',
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          zIndex: 9999, padding: '16px',
+        }}>
+          <div style={{
+            backgroundColor: 'white', borderRadius: '20px', padding: '24px',
+            maxWidth: '420px', width: '100%', maxHeight: '90vh', overflowY: 'auto' as const,
+            boxShadow: '0 20px 60px rgba(0,0,0,0.3)',
+          }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+              <h2 style={{ fontSize: '18px', fontWeight: 'bold', color: '#1F2937', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <Award className="w-5 h-5 text-violet-500" />
+                竞赛报名
+              </h2>
+              <button onClick={() => setShowRegModal(false)} style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#9CA3AF', padding: '4px' }}>
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <div style={{
+              padding: '12px', background: 'linear-gradient(135deg, #F5F3FF 0%, #EDE9FE 100%)',
+              borderRadius: '12px', marginBottom: '20px', border: '1px solid #DDD6FE',
+            }}>
+              <p style={{ fontSize: '14px', fontWeight: 'bold', color: '#6D28D9', marginBottom: '4px' }}>{selectedComp.title}</p>
+              <div style={{ display: 'flex', gap: '8px', fontSize: '12px', color: '#7C3AED' }}>
+                <span>{selectedComp.category}</span>
+                <span>·</span>
+                <span>{selectedComp.difficulty}</span>
+                <span>·</span>
+                <span>{selectedComp.rewardWEG} 积分</span>
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginBottom: '20px' }}>
+              <div>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', fontWeight: 600, color: '#374151', marginBottom: '6px' }}>
+                  <User className="w-4 h-4 text-violet-500" />
+                  姓名 <span style={{ color: '#EF4444' }}>*</span>
+                </label>
+                <input value={regName} onChange={e => setRegName(e.target.value)}
+                  placeholder="输入真实姓名或昵称"
+                  style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid #E5E7EB', fontSize: '14px', color: '#1F2937', outline: 'none' }}
+                  maxLength={20} />
+              </div>
+              <div>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', fontWeight: 600, color: '#374151', marginBottom: '6px' }}>
+                  <School className="w-4 h-4 text-violet-500" />
+                  学校
+                </label>
+                <input value={regSchool} onChange={e => setRegSchool(e.target.value)}
+                  placeholder="输入你的学校名称"
+                  style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid #E5E7EB', fontSize: '14px', color: '#1F2937', outline: 'none' }}
+                  maxLength={50} />
+              </div>
+              <div>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', fontWeight: 600, color: '#374151', marginBottom: '6px' }}>
+                  <GraduationCap className="w-4 h-4 text-violet-500" />
+                  年级 <span style={{ color: '#EF4444' }}>*</span>
+                </label>
+                <select value={regGrade} onChange={e => setRegGrade(e.target.value)}
+                  style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid #E5E7EB', fontSize: '14px', color: '#1F2937', outline: 'none', background: 'white' }}>
+                  <option value="">请选择年级</option>
+                  <option value="初一">初一</option>
+                  <option value="初二">初二</option>
+                  <option value="初三">初三</option>
+                </select>
+              </div>
+              <div>
+                <label style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '13px', fontWeight: 600, color: '#374151', marginBottom: '6px' }}>
+                  <Phone className="w-4 h-4 text-violet-500" />
+                  联系方式
+                </label>
+                <input value={regPhone} onChange={e => setRegPhone(e.target.value)}
+                  placeholder="微信或手机号（选填）"
+                  style={{ width: '100%', padding: '10px 14px', borderRadius: '10px', border: '1px solid #E5E7EB', fontSize: '14px', color: '#1F2937', outline: 'none' }}
+                  maxLength={20} />
+              </div>
+            </div>
+
+            <div style={{ display: 'flex', gap: '10px' }}>
+              <button onClick={() => setShowRegModal(false)}
+                style={{ flex: 1, padding: '12px', borderRadius: '12px', border: '1px solid #E5E7EB', background: 'white', color: '#6B7280', fontWeight: 600, fontSize: '14px', cursor: 'pointer' }}>
+                取消
+              </button>
+              <button onClick={async () => {
+                if (!regName.trim()) { toast.error('请输入姓名'); return; }
+                if (!regGrade) { toast.error('请选择年级'); return; }
+                setRegSubmitting(true);
+                try {
+                  const regs = JSON.parse(localStorage.getItem('competition_registrations') || '{}');
+                  regs[selectedComp.id] = {
+                    name: regName.trim(),
+                    school: regSchool.trim(),
+                    grade: regGrade,
+                    phone: regPhone.trim(),
+                    registeredAt: new Date().toISOString(),
+                  };
+                  localStorage.setItem('competition_registrations', JSON.stringify(regs));
+                  toast.success('报名成功！');
+                  setShowRegModal(false);
+                  navigate(`/competitions/${selectedComp.id}`);
+                } catch (e) {
+                  toast.error('报名失败，请重试');
+                } finally {
+                  setRegSubmitting(false);
+                }
+              }}
+                disabled={regSubmitting || !regName.trim() || !regGrade}
+                style={{
+                  flex: 1, padding: '12px', borderRadius: '12px',
+                  background: !regName.trim() || !regGrade ? '#E5E7EB' : 'linear-gradient(135deg, #7C3AED 0%, #A855F7 100%)',
+                  color: !regName.trim() || !regGrade ? '#9CA3AF' : 'white',
+                  fontWeight: 600, fontSize: '14px', border: 'none', cursor: !regName.trim() || !regGrade ? 'not-allowed' : 'pointer',
+                  display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px',
+                }}>
+                {regSubmitting ? '提交中...' : <><Send className="w-4 h-4" /> 确认报名</>}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
+
