@@ -380,6 +380,14 @@ export default function CompetitionHallPage() {
   const [timeFilter, setTimeFilter] = useState<TimeFilter>('all');
   const [userCompetitions, setUserCompetitions] = useState<any[]>([]);
   const [loadingComp, setLoadingComp] = useState(true);
+
+  const [showRegModal, setShowRegModal] = useState(false);
+  const [selectedComp, setSelectedComp] = useState<any>(null);
+  const [regName, setRegName] = useState('');
+  const [regSchool, setRegSchool] = useState('');
+  const [regGrade, setRegGrade] = useState('');
+  const [regPhone, setRegPhone] = useState('');
+  const [regSubmitting, setRegSubmitting] = useState(false);
   
   
 
