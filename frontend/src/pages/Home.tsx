@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { BookOpen, Award, Trophy, Sparkles, GraduationCap, Shield, Briefcase, Sun, User, LogIn, UserPlus, Monitor, Wand2, Loader2, Share2, X, Download } from 'lucide-react'
+import { BookOpen, Award, Trophy, Sparkles, GraduationCap, Shield, Briefcase, Sun, User, LogIn, UserPlus, Monitor, Wand2, Loader2, Share2, X, Download, Brain, Users } from 'lucide-react'
 import { useUser } from '../contexts/UserContext'
 import VisitorCounter from '../components/VisitorCounter'
 import { digitalAvatarAPI } from '../utils/supabase'
@@ -22,25 +22,18 @@ const sections = [
     links: [
       { to: '/learn/writing', label: '英语写作', desc: '中考/高考作文 · AI批改 · 二次提交 · 习作榜' },
       { to: '/learn/word-cards', label: '背单词' },
-      { to: '/learn/han-to-eng', label: '汉译英' },
+      { to: '/learn/word-pass', label: '词汇训练营' },
       { to: '/learn/listening-speaking', label: '听说' },
       { to: '/learn/english-daily', label: '每日英语' },
+      { to: '/learn/grammar', label: '语法训练营' },
       { to: '/learn/online-classroom', label: '在线教室' },
       { to: '/learn/classroom', label: 'AI学习助手' },
       { to: '/learn/teacher', label: '数字教师' },
+      { to: '/learn/textbook-challenge', label: '课本闯关' },
+      { to: '/learn/story-academy', label: '故事学院' },
       { to: '/learn/robot', label: '数字校园' },
-      { to: '/learn/reading-intensive', label: '外刊精读' },
-    ]
-  },
-  {
-    title: '积分经济', icon: Award, desc: '赚积分 · 升级 · 兑换奖励',
-    color: 'from-teal-400 to-cyan-500',
-    links: [
-      { to: '/weg', label: '经济总览' },
-      { to: '/weg/xp', label: 'XP系统' },
-      { to: '/weg/levels', label: '等级' },
-      { to: '/weg/balance', label: '余额' },
-      { to: '/weg/rewards', label: '奖励' },
+      { to: '/learn/irregular-verbs', label: '不规则动词' },
+      { to: '/learn/study-notes', label: '学霸笔记' },
     ]
   },
   {
@@ -60,11 +53,20 @@ const sections = [
     ]
   },
   {
+    title: '脑力训练', icon: Brain, desc: '专注力 · 记忆力 · 心理测试',
+    color: 'from-purple-400 to-pink-500',
+    links: [
+      { to: '/community/brain-train', label: '脑力训练', desc: '13种小游戏' },
+      { to: '/community/psych-test', label: '心理测试', desc: '11种测评' },
+    ]
+  },
+  {
     title: '菁华大学', icon: GraduationCap, desc: '高阶成长 · 项目实践',
     color: 'from-violet-400 to-purple-500',
     links: [
       { to: '/jinghua', label: '菁华首页' },
       { to: '/jinghua/projects', label: '科研' },
+      { to: '/learn/reading-intensive', label: '外刊精读' },
     ]
   },
   {
@@ -76,7 +78,7 @@ const sections = [
     ]
   },
   {
-    title: '系统中心', icon: Shield, desc: '公告 · 反馈 · 设置',
+    title: '系统中心', icon: Shield, desc: '公告 · 反馈 · 积分 · 设置',
     color: 'from-sky-400 to-blue-400',
     links: [
       { to: '/announcements', label: '公告' },
@@ -84,6 +86,8 @@ const sections = [
       { to: '/feedback', label: '反馈' },
       { to: '/settings/api-key', label: 'API密钥' },
       { to: '/register', label: '注册/登录' },
+      { to: '/weg', label: '积分中心' },
+      { to: '/tools/translator', label: '翻译器下载' },
     ]
   },
 ]
@@ -347,6 +351,38 @@ export default function HomePageNav() {
                 <span className="text-slate-600"> 24小时在线</span>
               </h1>
               <p className="text-slate-500 text-lg">学习 · 成长 · 竞赛 · 未来</p>
+            </div>
+          </div>
+        </div>
+
+        {/* 多智能体协同办公 */}
+        <div className="mb-6">
+          <div className="glass-card rounded-2xl overflow-hidden">
+            <div className="h-1 bg-gradient-to-r from-violet-400 via-fuchsia-400 to-indigo-400" />
+            <div className="p-5">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-violet-400 to-fuchsia-500 flex items-center justify-center text-white shadow-md shadow-violet-200">
+                  <Users className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-slate-800">多智能体协同办公</h3>
+                  <p className="text-xs text-slate-400">一个AI不够用？现在拥有整个AI团队</p>
+                </div>
+              </div>
+              <p className="text-xs text-slate-500 leading-relaxed mb-4">
+                当你休息时，你的AI团队仍在运转——AI项目经理统筹任务、AI执行官拍板决策、AI分析师深挖数据、AI文案持续输出。你的数字分身团队全天候在线，各司其职，自动协作。
+              </p>
+              <div className="flex flex-wrap gap-2.5">
+                <Link to="/learn/multi-agent-team" className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white text-xs font-semibold hover:from-violet-600 hover:to-fuchsia-600 transition-all shadow-sm hover:shadow-md active:scale-[0.97]">
+                  英语教学AI团队
+                </Link>
+                <a href="https://console.we-aigo.cn" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl border border-slate-200 text-slate-600 text-xs font-semibold hover:bg-slate-50 hover:border-slate-300 transition-all active:scale-[0.97]">
+                  AI学校行政控制台
+                </a>
+                <a href="https://city.we-aigo.cn" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl border border-slate-200 text-slate-600 text-xs font-semibold hover:bg-slate-50 hover:border-slate-300 transition-all active:scale-[0.97]">
+                  平权城市
+                </a>
+              </div>
             </div>
           </div>
         </div>

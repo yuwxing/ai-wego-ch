@@ -33,13 +33,21 @@ const GRADING_PROMPT = `你是一位专业的中学英语教师。请对以下�
 
 注意：分数要严格，不虚高。给出具体修改建议。`;
 
-const MISSIONS = [
+const DEFAULT_MISSIONS = [
   { id: "science", icon: "🧠", label: "AI科学任务", desc: "用英语解释一个简单科学现象", example: "Why do we have day and night?", color: "from-cyan-400 to-blue-500", week: 1 },
   { id: "invention", icon: "🌱", label: "未来发明任务", desc: "设计一个帮助人类的AI工具", example: "An AI robot for cleaning classrooms", color: "from-green-400 to-emerald-500", week: 2 },
   { id: "life", icon: "🌍", label: "生活问题任务", desc: "用英语提出解决方案", example: "How to reduce plastic waste in school?", color: "from-amber-400 to-orange-500", week: 3 },
   { id: "story", icon: "🎨", label: "创意故事任务", desc: "用英语写一个短故事", example: "A day when animals can talk", color: "from-pink-400 to-rose-500", week: 4 },
   { id: "ai", icon: "🤖", label: "AI协作任务", desc: "用一句英语提示词让AI帮你生成内容", example: "Create a smart school in the future", color: "from-violet-400 to-fuchsia-500", week: 5 },
 ];
+
+function getMissionsFromTask(task: any) {
+  if (Array.isArray(task?.requirements)) {
+    const found = task.requirements.find((r: any) => r?._missions);
+    if (found?.missions?.length > 0) return found.missions;
+  }
+  return null;
+}
 
 interface GradingResult {
   grammar: { score: number; comment: string };
@@ -79,6 +87,7 @@ export default function ChallengePage() {
   const [badgeAwarded, setBadgeAwarded] = useState<string | null>(null);
   const [mapUnlocked, setMapUnlocked] = useState(false);
   const [pastSubmissions, setPastSubmissions] = useState<any[]>([]);
+  const [missions, setMissions] = useState<any[] | null>(null);
 
   useEffect(() => {
     if (id) fetchTask(parseInt(id));
@@ -89,6 +98,7 @@ export default function ChallengePage() {
       const data = await tasksAPI.getTask(taskId);
       if (!data) { setError("竞赛不存在"); return; }
       setTask(data);
+      setMissions(getMissionsFromTask(data));
       if (data?.source !== "competition") { setError("这不是一个竞赛任务"); return; }
       if (user?.id) {
         const subs = await supabaseFetch(`deliveries?task_id=eq.${taskId}&agent_id=eq.${user.id}&order=id.desc`);
@@ -111,7 +121,7 @@ export default function ChallengePage() {
     setResult(null);
     setSubmitted(false);
 
-    const mission = MISSIONS.find(m => m.id === selectedMission);
+    const mission = missions.find(m => m.id === selectedMission);
     const missionPrompt = mission
       ? `周${mission.week} - ${mission.label}\n任务说明：${mission.desc}\n示例问题：${mission.example}`
       : "";
@@ -360,6 +370,25 @@ export default function ChallengePage() {
     );
   }
 
+  // === NO MISSIONS ===
+  if (!missions) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-violet-50 to-indigo-50 flex items-center justify-center p-4">
+        <div className="bg-white rounded-2xl shadow-xl p-8 max-w-md w-full text-center">
+          <div className="w-16 h-16 mx-auto mb-4 rounded-2xl bg-slate-100 flex items-center justify-center">
+            <BookOpen className="w-8 h-8 text-slate-400" />
+          </div>
+          <h2 className="text-xl font-bold text-slate-800 mb-2">暂未设置挑战任务</h2>
+          <p className="text-slate-500 text-sm mb-6">该竞赛发布者还未配置挑战内容，请稍后再来</p>
+          <div className="flex gap-3 justify-center">
+            <button onClick={() => navigate(-1)} className="px-5 py-2.5 rounded-xl bg-slate-100 text-slate-700 font-medium text-sm hover:bg-slate-200 transition-colors">返回</button>
+            <Link to="/competitions" className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-violet-500 to-fuchsia-600 text-white font-medium text-sm hover:opacity-90 transition-opacity">返回竞赛大厅</Link>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   // === MAIN CHALLENGE VIEW ===
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-violet-50 to-indigo-50">
@@ -400,7 +429,7 @@ export default function ChallengePage() {
             🎯 选择探险任务（五周挑战） <span className="text-red-400">*</span>
           </label>
           <div className="grid grid-cols-1 gap-2.5">
-            {MISSIONS.map((mission) => (
+            {missions.map((mission) => (
               <button key={mission.id} onClick={() => setSelectedMission(mission.id)}
                 className={`relative flex items-start gap-3 p-3.5 rounded-xl border-2 text-left transition-all ${
                   selectedMission === mission.id
@@ -487,7 +516,7 @@ export default function ChallengePage() {
                 let subContent: any = {};
                 try { subContent = typeof sub.content === "string" ? JSON.parse(sub.content) : sub.content; }
                 catch { subContent = {}; }
-                const missionLabel = MISSIONS.find(m => m.id === subContent.mission)?.label || subContent.mission;
+                const missionLabel = missions.find(m => m.id === subContent.mission)?.label || subContent.mission;
                 return (
                   <div key={i} className="flex items-center justify-between py-2 px-3 bg-slate-50 rounded-xl text-sm">
                     <span className="text-slate-600 truncate">{missionLabel}</span>

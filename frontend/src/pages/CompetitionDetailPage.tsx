@@ -1,6 +1,6 @@
 import React, { useState, useEffect, Component, ReactNode } from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
-import { ArrowLeft, Bot, User, Clock, CheckCircle, Play, AlertCircle, Target, Users, Sparkles, Star, Award, Trophy, Package, Send, ThumbsUp, ThumbsDown, ExternalLink, RotateCcw, Map, Medal } from 'lucide-react';
+import { ArrowLeft, Bot, User, Clock, CheckCircle, Play, AlertCircle, Target, Users, Sparkles, Star, Award, Trophy, Package, Send, ThumbsUp, ThumbsDown, ExternalLink, RotateCcw, Map, Medal, Edit3, Save, X, BookOpen, Loader2 } from 'lucide-react';
 import { Card, StatusBadge, RatingStars, LoadingSpinner } from '../components/ui';
 import { tasksAPI, agentsAPI, supabaseFetch } from '../utils/supabase';
 import { useUser } from '../contexts/UserContext';
@@ -83,6 +83,22 @@ function getBadges(): string[] {
     });
     return [...new Set(badges)];
   } catch { return [] }
+}
+
+const DEFAULT_MISSIONS_TEMPLATE = [
+  { id: "science", icon: "🧠", label: "AI科学任务", desc: "用英语解释一个简单科学现象", example: "Why do we have day and night?", color: "from-cyan-400 to-blue-500", week: 1 },
+  { id: "invention", icon: "🌱", label: "未来发明任务", desc: "设计一个帮助人类的AI工具", example: "An AI robot for cleaning classrooms", color: "from-green-400 to-emerald-500", week: 2 },
+  { id: "life", icon: "🌍", label: "生活问题任务", desc: "用英语提出解决方案", example: "How to reduce plastic waste in school?", color: "from-amber-400 to-orange-500", week: 3 },
+  { id: "story", icon: "🎨", label: "创意故事任务", desc: "用英语写一个短故事", example: "A day when animals can talk", color: "from-pink-400 to-rose-500", week: 4 },
+  { id: "ai", icon: "🤖", label: "AI协作任务", desc: "用一句英语提示词让AI帮你生成内容", example: "Create a smart school in the future", color: "from-violet-400 to-fuchsia-500", week: 5 },
+];
+
+function getMissions(task: any) {
+  if (Array.isArray(task?.requirements)) {
+    const found = task.requirements.find((r: any) => r?._missions);
+    if (found?.missions?.length > 0) return found.missions;
+  }
+  return [];
 }
 
 // 交付状态标签颜色映射
@@ -404,6 +420,11 @@ export const TaskDetailPage: React.FC = () => {
   const [taskLogs, setTaskLogs] = useState<TaskLogItem[]>([]);
   const [showCancelConfirm, setShowCancelConfirm] = useState(false);
   const [cancelRefund, setCancelRefund] = useState<number>(0);
+
+  // 竞赛任务编辑
+  const [showMissionEditor, setShowMissionEditor] = useState(false);
+  const [editMissions, setEditMissions] = useState<any[]>([]);
+  const [savingMissions, setSavingMissions] = useState(false);
 
   // 从UserContext获取当前用户
   const { user } = useUser();
@@ -945,7 +966,16 @@ export const TaskDetailPage: React.FC = () => {
               <Award className="w-7 h-7 text-white" />
             </div>
             <div className="flex-1">
-              <h1 className="text-2xl font-bold text-slate-900">{task.title}</h1>
+              <div className="flex items-center gap-2">
+                <h1 className="text-2xl font-bold text-slate-900">{task.title}</h1>
+                {isTaskCreator && (
+                  <button onClick={() => { setEditMissions(getMissions(task)); setShowMissionEditor(true); }}
+                    className="p-1.5 rounded-lg text-slate-400 hover:text-violet-600 hover:bg-violet-50 transition-colors"
+                    title="编辑挑战任务">
+                    <Edit3 className="w-4 h-4" />
+                  </button>
+                )}
+              </div>
               <p className="text-slate-500 text-sm mt-1">
                 {meta.organizer || 'AI-WEGO'} · {meta.category || ''} · {meta.difficulty || ''}
               </p>
@@ -1069,6 +1099,109 @@ export const TaskDetailPage: React.FC = () => {
               ))}
             </div>
           </Card>
+        )}
+
+        {/* 编辑任务弹窗 */}
+        {showMissionEditor && (
+          <div className="fixed inset-0 z-50 flex items-start justify-center bg-black/40 p-4 pt-12 overflow-y-auto" onClick={() => setShowMissionEditor(false)}>
+            <div className="bg-white rounded-2xl shadow-2xl max-w-lg w-full p-6" onClick={e => e.stopPropagation()}>
+              <div className="flex items-center justify-between mb-5">
+                <h2 className="text-lg font-bold text-slate-800 flex items-center gap-2">
+                  <BookOpen className="w-5 h-5 text-violet-500" />
+                  编辑挑战任务
+                </h2>
+                <div className="flex items-center gap-2">
+                  {editMissions.length === 0 && (
+                    <button onClick={() => setEditMissions(DEFAULT_MISSIONS_TEMPLATE)}
+                      className="text-xs px-3 py-1.5 rounded-lg bg-amber-50 text-amber-700 border border-amber-200 hover:bg-amber-100 transition-colors">
+                      加载默认模板
+                    </button>
+                  )}
+                  <button onClick={() => setShowMissionEditor(false)} className="p-1.5 rounded-lg hover:bg-slate-100 text-slate-400 transition-colors">
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+              </div>
+              <p className="text-xs text-slate-400 mb-4">自定义每周挑战任务的名称、描述和示例问题</p>
+              {editMissions.length === 0 ? (
+                <div className="text-center py-8 text-slate-400">
+                  <p className="text-sm mb-3">暂无挑战任务，点击上方按钮加载默认模板</p>
+                  <button onClick={() => setEditMissions(DEFAULT_MISSIONS_TEMPLATE)}
+                    className="px-4 py-2 rounded-xl bg-amber-50 text-amber-700 border border-amber-200 text-sm font-medium hover:bg-amber-100 transition-colors">
+                    加载默认模板（5周英语挑战）
+                  </button>
+                </div>
+              ) : (
+              <div className="space-y-4 max-h-[60vh] overflow-y-auto pr-1">
+                {editMissions.map((m, i) => (
+                  <div key={m.id} className="bg-slate-50 rounded-xl p-4 border border-slate-200">
+                    <div className="flex items-center justify-between mb-2">
+                      <span className="text-sm font-semibold text-slate-600">第{m.week}周 {m.icon}</span>
+                    </div>
+                    <div className="space-y-2">
+                      <div>
+                        <label className="text-[11px] text-slate-400 font-medium">任务名称</label>
+                        <input type="text" value={m.label} onChange={e => {
+                          const next = [...editMissions];
+                          next[i] = { ...next[i], label: e.target.value };
+                          setEditMissions(next);
+                        }} className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm outline-none focus:border-violet-300" />
+                      </div>
+                      <div>
+                        <label className="text-[11px] text-slate-400 font-medium">描述</label>
+                        <input type="text" value={m.desc} onChange={e => {
+                          const next = [...editMissions];
+                          next[i] = { ...next[i], desc: e.target.value };
+                          setEditMissions(next);
+                        }} className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm outline-none focus:border-violet-300" />
+                      </div>
+                      <div>
+                        <label className="text-[11px] text-slate-400 font-medium">示例问题</label>
+                        <input type="text" value={m.example} onChange={e => {
+                          const next = [...editMissions];
+                          next[i] = { ...next[i], example: e.target.value };
+                          setEditMissions(next);
+                        }} className="w-full px-3 py-2 bg-white border border-slate-200 rounded-lg text-sm outline-none focus:border-violet-300" />
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              )}
+              <div className="flex gap-3 mt-5">
+                <button onClick={() => setShowMissionEditor(false)}
+                  className="flex-1 py-2.5 rounded-xl border border-slate-200 text-slate-600 font-medium text-sm hover:bg-slate-50 transition-colors">
+                  取消
+                </button>
+                <button onClick={async () => {
+                  setSavingMissions(true);
+                  try {
+                    const currentReqs = Array.isArray(task?.requirements) ? [...task.requirements] : [];
+                    const existingIdx = currentReqs.findIndex((r: any) => r?._missions);
+                    const newMissionsObj = { _missions: true, missions: editMissions };
+                    if (existingIdx >= 0) {
+                      currentReqs[existingIdx] = newMissionsObj;
+                    } else {
+                      currentReqs.push(newMissionsObj);
+                    }
+                    await tasksAPI.updateTask(task!.id, { requirements: currentReqs });
+                    setTask({ ...task, requirements: currentReqs } as any);
+                    setShowMissionEditor(false);
+                    setNotification({ type: 'success', message: '挑战任务已更新' });
+                  } catch (err) {
+                    setNotification({ type: 'warning', message: '保存失败' });
+                  } finally {
+                    setSavingMissions(false);
+                  }
+                }}
+                  disabled={savingMissions}
+                  className="flex-1 py-2.5 rounded-xl bg-gradient-to-r from-violet-500 to-fuchsia-500 text-white font-medium text-sm hover:opacity-90 transition-all disabled:opacity-50 flex items-center justify-center gap-2">
+                  {savingMissions ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+                  {savingMissions ? '保存中...' : '保存'}
+                </button>
+              </div>
+            </div>
+          </div>
         )}
       </div>
     );

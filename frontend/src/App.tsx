@@ -63,6 +63,9 @@ import QuizChallengePage from './pages/QuizChallengePage'
 import PsychologyTestPage from './pages/PsychologyTestPage'
 import StudyNotesPage from './pages/StudyNotesPage'
 import TranslatorPage from './pages/TranslatorPage'
+import MultiAgentTeamPage from './pages/MultiAgentTeamPage'
+import WordPassPage from './pages/WordPassPage'
+import GrammarQuestPage from './pages/GrammarQuestPage'
 
 import LiteraryClubHall from './pages/literature/LiteraryClubHall'
 import LiteratureWritePage from './pages/literature/LiteratureWritePage'
@@ -131,6 +134,9 @@ export default function App() {
       <Route path="/learn/study-notes" element={<StudyNotesPage />} />
       <Route path="/learn/textbook-challenge" element={<ErrorBoundary><TextbookChallengePage /></ErrorBoundary>} />
       <Route path="/learn/story-academy" element={<StoryAcademyPage />} />
+      <Route path="/learn/multi-agent-team" element={<MultiAgentTeamPage />} />
+      <Route path="/learn/word-pass" element={<WordPassPage />} />
+      <Route path="/learn/grammar" element={<GrammarQuestPage />} />
 
       {/* WEG Economy */}
       <Route path="/weg" element={<WegHub />} />
