@@ -11,6 +11,7 @@ interface Props {
   animSpeed?: number
   visible?: boolean
   walkDir?: [number, number]
+  posRef?: React.MutableRefObject<THREE.Vector3>
 }
 
 let loader: GLTFLoader | null = null
@@ -19,7 +20,7 @@ function getLoader() {
   return loader
 }
 
-export default function TeacherGLB({ modelUrl, animation = 'idle', animSpeed = 1, visible = true, walkDir }: Props) {
+export default function TeacherGLB({ modelUrl, animation = 'idle', animSpeed = 1, visible = true, walkDir, posRef }: Props) {
   const groupRef = useRef<THREE.Group>(null!)
   const mixerRef = useRef<THREE.AnimationMixer | null>(null)
   const morphMeshes = useRef<THREE.Mesh[]>([])
@@ -91,6 +92,11 @@ export default function TeacherGLB({ modelUrl, animation = 'idle', animSpeed = 1
         while (diff < -Math.PI) diff += Math.PI * 2
         g.rotation.y += diff * 6 * dt
       }
+    }
+
+    // Update position ref for the chat button
+    if (posRef && model) {
+      posRef.current.copy(model.scene.position)
     }
 
     if (animation === 'talk') {

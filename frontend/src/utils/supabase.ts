@@ -74,8 +74,8 @@ export const tasksAPI = {
     source?: string;
     max_claimants?: number;
     claimed_by?: number[];
+    [key: string]: any;
   }) => {
-    // TODO: claimed_by/max_claimants/source字段需在Supabase添加后再启用
     const body: Record<string, any> = {
       title: data.title,
       description: data.description,
@@ -87,6 +87,9 @@ export const tasksAPI = {
       matched_agent_id: data.matched_agent_id || null,
       created_at: new Date().toISOString(),
     };
+    if (data.source) body.source = data.source;
+    if (data.max_claimants !== undefined) body.max_claimants = data.max_claimants;
+    if (data.claimed_by !== undefined) body.claimed_by = data.claimed_by;
     return supabaseFetch('tasks', {
       method: 'POST',
       body: JSON.stringify(body),
@@ -329,7 +332,7 @@ export const usersAPI = {
       method: 'POST',
       body: JSON.stringify({
         ...data,
-        token_balance: data.initial_balance || 5000,
+        token_balance: data.initial_balance ?? 200,
         user_type: data.user_type || 'human',
       }),
     });
@@ -391,6 +394,53 @@ export const usersAPI = {
       return { success: true, newBalance };
     } catch (err) {
       return { success: false, error: err instanceof Error ? err.message : '充值失败' };
+    }
+  },
+};
+
+async function fetchPageViewsCount(): Promise<number> {
+  const res = await fetch(`${SUPABASE_URL}page_views?select=id&limit=0`, {
+    headers: {
+      'apikey': SUPABASE_KEY,
+      'Authorization': `Bearer ${SUPABASE_KEY}`,
+      'Prefer': 'count=exact',
+    },
+  });
+  const range = res.headers.get('content-range');
+  if (range) {
+    const match = range.match(/\/(\d+)$/);
+    if (match) return parseInt(match[1], 10);
+  }
+  return 0;
+}
+
+export const visitCounterAPI = {
+  async get(): Promise<number> {
+    try {
+      return await fetchPageViewsCount();
+    } catch {
+      return parseInt(localStorage.getItem('visit_counter') || '0', 10);
+    }
+  },
+  async increment(amount = 1): Promise<number | null> {
+    try {
+      await fetch(`${SUPABASE_URL}page_views`, {
+        method: 'POST',
+        headers: {
+          'apikey': SUPABASE_KEY,
+          'Authorization': `Bearer ${SUPABASE_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ page_path: '/' }),
+      });
+      const count = await fetchPageViewsCount();
+      localStorage.setItem('visit_counter', String(count));
+      return count;
+    } catch {
+      const cur = parseInt(localStorage.getItem('visit_counter') || '0', 10);
+      const next = cur + amount;
+      localStorage.setItem('visit_counter', String(next));
+      return next;
     }
   },
 };
@@ -767,24 +817,88 @@ export const xpAPI = {
 // ============ 免费额度系统 ============
 
 const FREE_FEATURE_LIMIT = 3;
+const TOKEN_COST_PER_USE = 10; // 普通AI调用消耗积分
+const TOKEN_COST_COMPLEX = 30; // 复杂任务（作文批改等）消耗积分
 
 export const usageAPI = {
-  check: async (userId: number, feature: string): Promise<{ ok: boolean; remaining: number; hasKey: boolean }> => {
+  check: async (userId: number, feature: string): Promise<{
+    ok: boolean; remaining: number; hasKey: boolean;
+    balance: number; canPayWithTokens: boolean;
+  }> => {
     const used = await usageAPI.getUsed(userId);
     const hasKey = !!localStorage.getItem('deepseek_api_key');
     const remaining = Math.max(0, FREE_FEATURE_LIMIT - used);
-    return { ok: remaining > 0 || hasKey, remaining, hasKey };
+    let balance = 0;
+    let canPayWithTokens = false;
+    if (!hasKey && userId > 0) {
+      try {
+        const data: any = await supabaseFetch(`users?id=eq.${userId}&select=token_balance`);
+        if (data && data.length > 0) {
+          balance = data[0].token_balance || 0;
+          canPayWithTokens = balance >= TOKEN_COST_PER_USE;
+        }
+      } catch {}
+    }
+    return {
+      ok: remaining > 0 || hasKey || canPayWithTokens,
+      remaining, hasKey, balance, canPayWithTokens,
+    };
   },
 
   getUsed: async (userId: number): Promise<number> => {
-    const data = await supabaseFetch(`transactions?from_id=eq.${userId}&from_type=eq.user&type=eq.free_usage&select=id`);
+    const data: any = await supabaseFetch(`transactions?from_id=eq.${userId}&from_type=eq.user&type=eq.free_usage&select=id`);
     if (!data || !Array.isArray(data)) return parseInt(localStorage.getItem('free_uses_count') || '0', 10);
     return data.length;
   },
 
-  logUsage: async (userId: number, feature: string) => {
+  // 每日签到奖励
+  claimDailyBonus: async (userId: number): Promise<{ claimed: boolean; days?: number; newBalance?: number }> => {
+    const today = new Date().toISOString().slice(0, 10);
+    const lastClaim = localStorage.getItem(`daily_bonus_${userId}`);
+    if (lastClaim === today) return { claimed: false };
+    const streakKey = `daily_streak_${userId}`;
+    const prevDate = localStorage.getItem(streakKey) || '';
+    const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+    const streak = prevDate === yesterday
+      ? Math.min(7, (parseInt(localStorage.getItem(`daily_count_${userId}`) || '0', 10) + 1))
+      : 1;
+    localStorage.setItem(`daily_count_${userId}`, String(streak));
+    localStorage.setItem(streakKey, today);
+    const bonus = 20 + (streak > 1 ? (streak - 1) * 5 : 0); // 连续第N天多5分
+    try {
+      const data: any = await supabaseFetch(`users?id=eq.${userId}&select=token_balance`);
+      if (data && data[0]) {
+        const cur = data[0].token_balance || 0;
+        await supabaseFetch(`users?id=eq.${userId}`, {
+          method: 'PATCH',
+          body: JSON.stringify({ token_balance: cur + bonus }),
+        });
+        const desc = streak > 1 ? `连续签到第${streak}天` : '每日签到';
+        await supabaseFetch('transactions', {
+          method: 'POST',
+          body: JSON.stringify({
+            from_id: userId, from_type: 'user',
+            to_id: userId, to_type: 'user',
+            amount: bonus, type: 'daily_login',
+            description: `${desc} +${bonus}积分`,
+            created_at: new Date().toISOString(),
+          }),
+        }).catch(() => {});
+        localStorage.setItem(`daily_bonus_${userId}`, today);
+        return { claimed: true, days: streak, newBalance: cur + bonus };
+      }
+    } catch {}
+    return { claimed: false };
+  },
+
+  logUsage: async (userId: number, feature: string, fromBalance = false) => {
     const count = parseInt(localStorage.getItem('free_uses_count') || '0', 10);
     localStorage.setItem('free_uses_count', String(count + 1));
+    // 如果用积分支付，扣除积分
+    if (fromBalance && userId > 0) {
+      const result = await usersAPI.deductBalance(userId, TOKEN_COST_PER_USE);
+      if (!result.success) return;
+    }
     return supabaseFetch('transactions', {
       method: 'POST',
       body: JSON.stringify({
@@ -792,12 +906,12 @@ export const usageAPI = {
         from_type: 'user',
         to_id: userId,
         to_type: 'user',
-        amount: 0,
-        type: 'free_usage',
-        description: feature,
+        amount: fromBalance ? -TOKEN_COST_PER_USE : 0,
+        type: fromBalance ? 'usage_payment' : 'free_usage',
+        description: `${feature}${fromBalance ? ` (消耗${TOKEN_COST_PER_USE}积分)` : ''}`,
         created_at: new Date().toISOString(),
       }),
-    }).catch(() => {}); // localStorage fallback if backend fails
+    }).catch(() => {});
   },
 };
 
@@ -811,23 +925,6 @@ export const digitalAvatarAPI = {
       method: 'PATCH',
       body: JSON.stringify({ digital_avatar: { list: localList, activeId: localStorage.getItem('activeAvatarId') } }),
     });
-  },
-
-  load: async (userId: number) => {
-    try {
-      const data = await supabaseFetch(`users?id=eq.${userId}&select=digital_avatar`);
-      if (data && data[0]?.digital_avatar) {
-        const stored = data[0].digital_avatar
-        const list = stored.list || (Array.isArray(stored) ? stored : [stored])
-        localStorage.setItem('digitalAvatars', JSON.stringify(list))
-        if (stored.activeId) localStorage.setItem('activeAvatarId', stored.activeId)
-        localStorage.setItem('digitalAvatar', JSON.stringify(list[0] || stored))
-        return list
-      }
-    } catch {}
-    const localList = localStorage.getItem('digitalAvatars')
-    if (localList) return JSON.parse(localList)
-    return null;
   },
 
   load: async (userId: number) => {
@@ -889,6 +986,12 @@ export const sharedStoryAPI = {
       return data || []
     } catch { return [] }
   },
+  fetchByStory: async (storyCode: string) => {
+    try {
+      const data = await supabaseFetch(`story_submissions?code=eq.${storyCode}&select=*&order=id.asc`)
+      return data || []
+    } catch { return [] }
+  },
   add: async (submission: {
     chapter_title: string; content: string; author_name: string
     score: number; passed: boolean; code?: string; timestamp: number
@@ -943,6 +1046,23 @@ export const literatureAPI = {
     return null
   },
 };
+
+export const sharedConfigAPI = {
+  async get(key: string): Promise<string | null> {
+    try {
+      const data = await supabaseFetch(`story_submissions?chapter_title=eq.config_${key}&select=content&order=id.desc&limit=1`)
+      return data?.[0]?.content || null
+    } catch { return null }
+  },
+  async set(key: string, value: string): Promise<void> {
+    try {
+      await supabaseFetch('story_submissions', {
+        method: 'POST',
+        body: JSON.stringify({ chapter_title: `config_${key}`, content: value, author_name: 'system', score: 0, passed: true, timestamp: Date.now() }),
+      })
+    } catch {}
+  },
+}
 
 // Store teacher writing tasks in the existing `tasks` table with source='writing_teacher'
 export const writingTasksAPI = {

@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowLeft, BookOpen, Sparkles, Send, ListChecks, RefreshCw, Trophy, Medal, Eye, ChevronDown, ChevronUp, BarChart3, Users, Clock, TrendingUp, Award, PenLine, CheckCircle2, ArrowDown, Star } from 'lucide-react'
-import { sendToDeepSeek, sendToDeepSeekSync } from '../utils/deepseek'
-import { writingTasksAPI } from '../utils/supabase'
+import { sendToDeepSeek, sendToDeepSeekSync, getSharedApiKey, setSharedApiKey, getApiKey } from '../utils/deepseek'
+import { writingTasksAPI, sharedConfigAPI } from '../utils/supabase'
 
 interface WritingTask {
   id: string
@@ -760,6 +760,16 @@ export default function WritingGrowthPage() {
   const [showTeacherPanel, setShowTeacherPanel] = useState(false)
   const [showTaskForm, setShowTaskForm] = useState(false)
   const [teacherComment, setTeacherComment] = useState(() => { try { return localStorage.getItem('writing_teacher_comment') || '' } catch { return '' } })
+  const [sharedKey, setSharedKey] = useState(() => getSharedApiKey() || '')
+  const [showHistory, setShowHistory] = useState(false)
+  const [submissions, setSubmissions] = useState<any[]>([])
+  const [viewingSubmission, setViewingSubmission] = useState<any | null>(null)
+
+  function loadSubmissions() {
+    try { setSubmissions(JSON.parse(localStorage.getItem(STORAGE_KEYS.submissions) || '[]')) } catch {}
+  }
+
+  useEffect(() => { loadSubmissions() }, [])
 
   const textareaRef = useRef<HTMLTextAreaElement>(null)
 
@@ -769,6 +779,13 @@ export default function WritingGrowthPage() {
     loadTeacherTasksFromServer().then(() => {
       setTeacherTaskList(getTeacherTasks())
       setTask(getTodaysTask(grade))
+    })
+    // 尝试从服务器加载共享API密钥
+    sharedConfigAPI.get('shared_api_key').then(remoteKey => {
+      if (remoteKey && !getApiKey() && !getSharedApiKey()) {
+        setSharedApiKey(remoteKey)
+        setSharedKey(remoteKey)
+      }
     })
   }, [])
 
@@ -856,6 +873,11 @@ export default function WritingGrowthPage() {
 
   async function handleSubmit() {
     if (!content.trim()) return
+    if (!getApiKey() && !getSharedApiKey()) {
+      setError('⚠️ 未设置API密钥。请老师在「教师工作台」设置共享密钥，或个人在设置中填入 DeepSeek API 密钥')
+      setPhase('task')
+      return
+    }
     setPhase('grading')
     setLoading(true)
     setError(null)
@@ -975,7 +997,17 @@ ${simpleRuleSug}
       setPhase('result')
     } catch (e: any) {
       setError(e.message || '批改失败，请重试')
-      setPhase('writing')
+      // 保存草稿，防止内容丢失
+      try {
+        const existing = JSON.parse(localStorage.getItem(STORAGE_KEYS.submissions) || '[]')
+        existing.push({
+          id: genId(), grade, taskId: task?.id, taskTitle: task?.title,
+          content, scores: null, date: new Date().toISOString(), failed: true,
+        })
+        localStorage.setItem(STORAGE_KEYS.submissions, JSON.stringify(existing))
+        loadSubmissions()
+      } catch {}
+      setPhase('task')
     }
     setLoading(false)
   }
@@ -1115,6 +1147,24 @@ ${simpleRule}
           </button>
         </div>
 
+        {/* API密钥状态栏 - 对所有用户可见 */}
+        {!getApiKey() && !getSharedApiKey() && (
+          <div className="mb-4 p-4 rounded-2xl bg-amber-50 border border-amber-200">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+              <div className="flex-1 min-w-0">
+                <p className="text-sm font-medium text-amber-800">🔑 需要API密钥才能使用AI批改</p>
+                <p className="text-xs text-amber-600 mt-0.5">请向老师获取密钥，粘贴到下面输入框</p>
+              </div>
+              <div className="flex items-center gap-2 w-full sm:w-auto">
+                <input value={sharedKey} onChange={e => { setSharedKey(e.target.value); setSharedApiKey(e.target.value); if (e.target.value) sharedConfigAPI.set('shared_api_key', e.target.value) }}
+                  placeholder="粘贴共享API密钥..."
+                  className="flex-1 sm:w-72 text-xs px-3 py-2 rounded-lg border border-amber-300 bg-white outline-none focus:border-amber-500"
+                  type="password" />
+              </div>
+            </div>
+          </div>
+        )}
+
         {/* 教师工作台 */}
         <div className="flex flex-wrap items-center gap-2 mb-5 p-3 bg-white/80 rounded-2xl border border-dashed border-slate-200 backdrop-blur-sm">
           <button onClick={() => setShowTeacherPanel(!showTeacherPanel)}
@@ -1122,7 +1172,7 @@ ${simpleRule}
             {showTeacherPanel ? '关闭教师台' : '👨‍🏫 教师工作台'}
           </button>
           {showTeacherPanel && (
-            <>
+            <div className="w-full flex flex-wrap items-center gap-2 mt-2">
               <button onClick={() => setShowTaskForm(true)}
                 className="px-4 py-2 rounded-xl text-sm font-medium bg-gradient-to-r from-rose-500 to-pink-500 text-white shadow-sm hover:shadow-md transition-all flex items-center gap-1.5">
                 ➕ 发布写作任务
@@ -1134,7 +1184,14 @@ ${simpleRule}
                 className={`px-3 py-1.5 rounded-xl text-xs font-medium transition-all ${showTeacherView ? 'bg-indigo-100 text-indigo-700' : 'text-slate-400 hover:text-slate-600 hover:bg-slate-100'}`}>
                 📊 学生完成情况
               </button>
-            </>
+              <div className="flex items-center gap-2 ml-auto">
+                <input value={sharedKey} onChange={e => { setSharedKey(e.target.value); setSharedApiKey(e.target.value); if (e.target.value) sharedConfigAPI.set('shared_api_key', e.target.value) }}
+                  placeholder="设置共享API密钥（自动同步到服务器）"
+                  className="text-xs px-3 py-1.5 rounded-lg border border-slate-200 bg-white outline-none focus:border-rose-300 w-64"
+                  type="password" />
+                {sharedKey && <span className="text-xs text-green-500">✓ 已设置</span>}
+              </div>
+            </div>
           )}
         </div>
 
@@ -1143,6 +1200,77 @@ ${simpleRule}
           <div className="fixed inset-0 z-50 flex items-start justify-center pt-10 pb-10 bg-black/30 backdrop-blur-sm overflow-y-auto" onClick={e => { if (e.target === e.currentTarget) setShowTaskForm(false) }}>
             <div className="w-full max-w-lg mx-4" onClick={e => e.stopPropagation()}>
               <TeacherTaskCreator grade={grade} onCreated={() => { setTeacherTaskList(getTeacherTasks()); setShowTaskForm(false) }} onClose={() => setShowTaskForm(false)} />
+            </div>
+          </div>
+        )}
+
+        {/* 历史批改详情弹窗 */}
+        {viewingSubmission && (
+          <div className="fixed inset-0 z-50 flex items-start justify-center pt-6 pb-10 bg-black/30 backdrop-blur-sm overflow-y-auto" onClick={e => { if (e.target === e.currentTarget) setViewingSubmission(null) }}>
+            <div className="w-full max-w-2xl mx-4 bg-white rounded-2xl shadow-xl border border-slate-200 overflow-hidden" onClick={e => e.stopPropagation()}>
+              <div className="flex items-center justify-between p-4 border-b border-slate-100">
+                <div>
+                  <h2 className="text-lg font-bold text-slate-800">{viewingSubmission.taskTitle || '历史批改'}</h2>
+                  <p className="text-xs text-slate-400">{new Date(viewingSubmission.date).toLocaleString()} · {viewingSubmission.grade === 'junior' ? '初中' : '高中'}</p>
+                </div>
+                <button onClick={() => setViewingSubmission(null)} className="text-sm text-slate-400 hover:text-slate-600 px-3 py-1.5">关闭</button>
+              </div>
+              <div className="p-4 space-y-4 max-h-[70vh] overflow-y-auto">
+                {viewingSubmission.failed && (
+                  <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-center">
+                    <p className="text-sm font-medium text-red-600">批改失败</p>
+                    <p className="text-xs text-red-400 mt-1">提交时未收到AI评分，请检查API密钥后重新提交</p>
+                  </div>
+                )}
+                {viewingSubmission.scores && (
+                  <div className="grid grid-cols-2 gap-3">
+                    <ScoreCard label="内容" score={viewingSubmission.scores.content?.score || 0} max={20} color="bg-blue-500" />
+                    <ScoreCard label="语言" score={viewingSubmission.scores.language?.score || 0} max={20} color="bg-green-500" />
+                    <ScoreCard label="结构" score={viewingSubmission.scores.structure?.score || 0} max={20} color="bg-purple-500" />
+                    <ScoreCard label="高级表达" score={viewingSubmission.scores.advanced?.score || 0} max={20} color="bg-amber-500" />
+                  </div>
+                )}
+                {viewingSubmission.scores?.comment && (
+                  <div className="p-3 rounded-xl bg-gradient-to-r from-rose-50 to-pink-50 border border-rose-100">
+                    <p className="text-sm text-slate-700">{viewingSubmission.scores.comment}</p>
+                  </div>
+                )}
+                {viewingSubmission.content && (
+                  <div>
+                    <h3 className="text-sm font-semibold text-slate-700 mb-2">你的作文</h3>
+                    <div className="p-3 rounded-xl bg-slate-50 border border-slate-100 text-sm text-slate-700 leading-relaxed whitespace-pre-wrap max-h-48 overflow-y-auto">
+                      {viewingSubmission.content}
+                    </div>
+                  </div>
+                )}
+                {viewingSubmission.scores?.language?.details?.length > 0 && (
+                  <div>
+                    <h3 className="text-sm font-semibold text-slate-700 mb-2">语言问题修改</h3>
+                    <div className="space-y-2">
+                      {viewingSubmission.scores.language.details.map((d: any, i: number) => (
+                        <div key={i} className="p-3 rounded-xl bg-red-50 border border-red-100">
+                          <div className="text-xs text-red-500 mb-1">{d.issue}</div>
+                          <div className="text-sm text-slate-500 line-through">{d.original}</div>
+                          <div className="text-sm text-green-600 font-medium">{d.corrected}</div>
+                          <div className="text-xs text-slate-400 mt-1">{d.note}</div>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {viewingSubmission.content && !viewingSubmission.failed && (
+                  <button onClick={() => { setTask({ ...task, title: viewingSubmission.taskTitle } as any); setContent(viewingSubmission.content); setPhase('writing'); setViewingSubmission(null) }}
+                    className="w-full py-2.5 rounded-xl text-white font-medium bg-gradient-to-r from-indigo-500 to-purple-600 text-sm flex items-center justify-center gap-2">
+                    继续修改此作文
+                  </button>
+                )}
+                {viewingSubmission.failed && viewingSubmission.content && (
+                  <button onClick={() => { setTask({ ...task, title: viewingSubmission.taskTitle } as any); setContent(viewingSubmission.content); setPhase('writing'); setViewingSubmission(null) }}
+                    className="w-full py-2.5 rounded-xl text-white font-medium bg-gradient-to-r from-rose-500 to-pink-500 text-sm flex items-center justify-center gap-2">
+                    重新提交（保留内容）
+                  </button>
+                )}
+              </div>
             </div>
           </div>
         )}
@@ -1232,7 +1360,40 @@ ________________________________________________________
               </div>
             </div>
 
-            {/* 🏆 优秀习作榜 */}
+            {/* 📋 历史批改 */}
+            {submissions.length > 0 && (
+              <div>
+                <div className="flex items-center gap-2 mb-3">
+                  <Clock className="w-4 h-4 text-slate-500" />
+                  <h3 className="font-semibold text-slate-700 text-sm">历史批改</h3>
+                  <button onClick={() => setShowHistory(!showHistory)} className="text-xs text-indigo-500 hover:underline">
+                    {showHistory ? '收起' : `(${submissions.length}次)`}
+                  </button>
+                </div>
+                {showHistory && (
+                  <div className="space-y-2 max-h-[400px] overflow-y-auto">
+                    {[...submissions].reverse().slice(0, 20).map((s: any, i: number) => (
+                      <div key={s.id || i} onClick={() => { setViewingSubmission(s); setShowHistory(false) }}
+                        className="p-3 rounded-xl bg-white border border-slate-100 hover:border-indigo-200 cursor-pointer transition-all flex items-center justify-between">
+                        <div className="min-w-0 flex-1">
+                          <p className="text-sm font-medium text-slate-700 truncate">{s.taskTitle || '未知题目'}</p>
+                          <p className="text-xs text-slate-400 mt-0.5">{s.grade === 'junior' ? '初中' : '高中'} · {new Date(s.date).toLocaleDateString()}</p>
+                        </div>
+                        {s.failed ? (
+                          <span className="text-xs font-medium text-red-500 bg-red-50 px-2 py-1 rounded-full shrink-0 ml-3">批改失败</span>
+                        ) : (
+                          <div className={`text-sm font-bold ml-3 shrink-0 ${(s.scores?.total || 0) >= 64 ? 'text-green-500' : 'text-amber-500'}`}>
+                            {s.scores?.total || '?'}/{s.scores?.maxTotal || '80'}分
+                          </div>
+                        )}
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
+
+        {/* 🏆 优秀习作榜 */}
             <div>
               <div className="flex items-center gap-2 mb-3">
                 <Trophy className="w-4 h-4 text-amber-500" />
@@ -1733,11 +1894,208 @@ const THEME_ALIAS: Record<string, string> = {
   '天气': '天气',
 }
 
+// 常见要点类型的专用提示词
+const POINT_CHIPS: Record<string, ChipGroup[]> = {
+  '你的选择': [
+    { label: '🎯 表达选择', items: [
+      'I would like to choose', 'I prefer', 'I am most interested in',
+      'My favorite is', 'I think _____ is the best choice',
+      'Among all the options, I like _____ best',
+    ]},
+  ],
+  '选择理由': [
+    { label: '💡 陈述理由', items: [
+      'The reason is that', 'First of all, _____ is very',
+      'What\'s more', 'Also, I can learn a lot from',
+      'It not only ... but also ...',
+      'For one thing ... for another ...',
+    ]},
+  ],
+  '你的期待': [
+    { label: '🌟 表达期待', items: [
+      'I hope', 'I can\'t wait to', 'I am looking forward to',
+      'I believe it will be', 'It would be a wonderful experience to',
+      'I expect that',
+    ]},
+  ],
+  '项目目前得票情况': [
+    { label: '📊 描述数据', items: [
+      'Currently, _____ is in the lead with', 'The votes show that',
+      'According to the voting result', 'So far, _____ has received',
+      'The top two are _____ and _____',
+    ]},
+  ],
+  '你选择的地点': [
+    { label: '📍 描述地点', items: [
+      'I would like to visit', 'The place I want to go to most is',
+      'I am attracted by', 'There are many interesting things to see',
+      'I can experience', 'It offers a great chance to',
+    ]},
+  ],
+  '你的理由': [
+    { label: '💡 陈述理由', items: [
+      'First of all', 'The main reason is that',
+      'Besides', 'What\'s more', 'Last but not least',
+      'For example', 'For one thing ... for another ...',
+    ]},
+  ],
+  '你的建议': [
+    { label: '📝 提出建议', items: [
+      'I suggest that', 'It would be a good idea to',
+      'Why not', 'You\'d better', 'I recommend that',
+      'It is helpful to',
+    ]},
+  ],
+  '活动安排': [
+    { label: '📅 描述安排', items: [
+      'The activity will be held on', 'We plan to',
+      'First, we will', 'Then', 'After that', 'Finally',
+      'The event starts at', 'It will last for',
+    ]},
+  ],
+  '时间和地点': [
+    { label: '🕐 时间', items: [
+      'It happened on', 'It took place in', 'last summer',
+      'during the winter holiday', 'on a sunny morning',
+      'three years ago', 'when I was in grade',
+    ]},
+    { label: '📍 地点', items: [
+      'I went to', 'We visited', 'The trip was to',
+      'located in', 'a small town called',
+      'It is in the _____ of', 'on the way to',
+    ]},
+  ],
+  '旅行中做了什么': [
+    { label: '🎒 活动描述', items: [
+      'We climbed the mountain', 'visited the museum',
+      'took a lot of photos', 'tried local food',
+      'went shopping', 'played games together',
+      'enjoyed the beautiful scenery',
+    ]},
+  ],
+  '为什么难忘': [
+    { label: '💭 表达感受', items: [
+      'What made it unforgettable was', 'I will never forget',
+      'It was the first time I had ever',
+      'The most exciting part was',
+      'I learned a lot from this trip',
+      'The experience taught me',
+    ]},
+  ],
+  '书名和作者': [
+    { label: '📖 介绍书', items: [
+      'The book is called', 'It was written by',
+      'The author of the book is', 'The book tells a story about',
+      'It is a book about', 'This book is very popular among',
+    ]},
+  ],
+  '主要内容': [
+    { label: '📝 概括内容', items: [
+      'The story is about', 'It mainly talks about',
+      'The main character is', 'The book tells us that',
+      'It starts with', 'In the story',
+      'At the end of the book',
+    ]},
+  ],
+  '你的推荐理由': [
+    { label: '⭐ 推荐理由', items: [
+      'I recommend this book because', 'This book is worth reading',
+      'It not only ... but also ...',
+      'I have learned a lot from',
+      'The book is so _____ that',
+      'Everyone should read it because',
+    ]},
+  ],
+  '作息方面': [
+    { label: '🌙 作息建议', items: [
+      'You should go to bed early', 'Try to sleep at least 8 hours',
+      'Don\'t stay up too late', 'Keep a regular sleep schedule',
+      'Take a nap at noon', 'Get up early in the morning',
+    ]},
+  ],
+  '饮食方面': [
+    { label: '🥗 饮食建议', items: [
+      'You should eat more vegetables and fruit',
+      'Drink enough water every day',
+      'Don\'t eat too much junk food',
+      'Eat three meals on time',
+      'Have a balanced diet',
+      'Eat less sugar and salt',
+    ]},
+  ],
+  '运动方面': [
+    { label: '🏃 运动建议', items: [
+      'You should do exercise regularly',
+      'Try to run for 30 minutes every day',
+      'Playing ball games is good for your health',
+      'Take a walk after dinner',
+      'Join a sports club',
+      'Exercise makes you stronger',
+    ]},
+  ],
+  '地理位置和自然环境': [
+    { label: '📍 地理位置', items: [
+      'My hometown is located in', 'It lies in the _____ of',
+      'It is a _____ city/town', 'It has a population of',
+    ]},
+    { label: '🌳 自然环境', items: [
+      'There are many trees and flowers',
+      'The air is fresh and clean',
+      'The scenery is very beautiful',
+      'It is famous for its natural beauty',
+      'surrounded by mountains',
+      'near the river/sea',
+    ]},
+  ],
+  '特色食物或景点': [
+    { label: '🍜 特色食物', items: [
+      'The most famous food is', 'You must try',
+      'It tastes delicious', 'It is made of/with',
+      'People here like to eat',
+    ]},
+    { label: '🏛️ 景点', items: [
+      'There are many places of interest',
+      'The most popular place is',
+      'You can visit', 'It is well worth visiting',
+      'has a history of _____ years',
+    ]},
+  ],
+  '你对家乡的感情': [
+    { label: '💖 表达感情', items: [
+      'I love my hometown very much',
+      'I am proud of my hometown',
+      'No matter where I go, I will never forget',
+      'My hometown is the best place in the world',
+      'It is where I grew up',
+      'I miss my hometown so much',
+    ]},
+  ],
+  '你的看法': [
+    { label: '💭 表达看法', items: [
+      'In my opinion', 'I think that', 'From my point of view',
+      'As far as I am concerned', 'Personally, I believe',
+      'It seems to me that',
+    ]},
+  ],
+  '你的想法': [
+    { label: '💭 表达想法', items: [
+      'I think', 'I believe', 'In my opinion',
+      'As for me', 'My view is that',
+      'I agree that', 'I don\'t think',
+    ]},
+  ],
+}
+
 function genContentChips(line: string): ChipGroup[] {
   const colonIdx = line.indexOf('：')
   let topic = colonIdx >= 0 ? line.substring(0, colonIdx).trim() : ''
   topic = topic.replace(/^[✅☀️🌧️🌤️💨•●▶▪\-]\s*/, '').trim()
   const details = colonIdx >= 0 ? line.substring(colonIdx + 1).trim() : line.trim()
+
+  // 匹配常见要点类型（优先）
+  for (const [key, chips] of Object.entries(POINT_CHIPS)) {
+    if (topic.includes(key)) return chips
+  }
 
   // 提取英文关键词（只在括号内提取）
   const engWords: string[] = []
@@ -1762,7 +2120,6 @@ function genContentChips(line: string): ChipGroup[] {
         'I want to talk about _____.',
         'The reason is that _____.',
         'It is _____ for me to _____.',
-        'I have an experience about _____.',
         'From my point of view, _____.',
       ]},
     ]
@@ -1787,7 +2144,9 @@ function buildScaffold(task: WritingTask | null) {
   if (!task) return { sections: [] as any[], initials: {} as Record<string, string> }
   const desc = stripTemplateFromDesc(task.description || '')
   const bulletMatch = [...desc.matchAll(/[•●▶▪]\s*([^\n]+)/g)]
-  const numMatch = [...desc.matchAll(/\((\d+)\)\s*([^\n]+)/g)]
+  // 只抓"内容包括"之后的编号行，忽略"注意"之后的（那些是要求不是要点）
+  const contentSection = desc.match(/内容[包括：:][^]*?(?=注意[：:])/)?.[0] || desc
+  const numMatch = [...contentSection.matchAll(/\((\d+)\)\s*([^\n]+)/g)]
   const colonMatch = desc.match(/(?:内容提示|内容包括|提示如下)[：:]\s*$/m)
   let contentLines: string[] = []
   if (bulletMatch.length > 0) contentLines = bulletMatch.map(m => m[1].trim()).slice(0, 8)
@@ -1800,6 +2159,27 @@ function buildScaffold(task: WritingTask | null) {
       contentLines = after.split(/[；\n]/).map(l => l.replace(/^[✅☀️🌧️🌤️💨•●▶▪\-]\s*/, '').trim()).filter(Boolean).slice(0, 8)
     }
   }
+
+  // 如果没有抓到要点（无bullet/无编号/无内容提示），从描述中按行抓取含冒号的内容行
+  if (contentLines.length === 0) {
+    const lines = desc.split('\n').map(l => l.trim()).filter(Boolean)
+    const skipHeaders = ['开头', '开头：', '注意', '注意：', '假设你']
+    contentLines = lines.filter(l =>
+      l.includes('：') && !skipHeaders.some(h => l.startsWith(h))
+        && !l.startsWith('(') && !l.startsWith('（')
+    ).slice(0, 6)
+  }
+
+  // 过滤掉要求/注意事项行（含不能照抄、语句连贯、词数、可适当拓展、不出现真实等关键词）
+  const skipPatterns = [
+    /不能照抄/i, /不(得|能)出现真实/i, /不计入总词数/i,
+    /语句连贯/i, /行文连贯/i,
+    /词数\s*\d/, /词数\d/,   // 匹配"词数100"或"词数 100"
+    /可适当拓展/i, /适当增加细节/i,
+    /开头[和与]结尾/, /开头已给出/, /结尾已给出/,
+    /注意[：:]/,
+  ]
+  contentLines = contentLines.filter(l => !skipPatterns.some(p => p.test(l)))
 
   const splitOpening = (task.opening || '').split('\n')
   const salutation = splitOpening.length > 1 ? splitOpening[0] : ''

@@ -571,7 +571,7 @@ export const CreateTaskPage: React.FC = () => {
           throw new Error(deductResult.error || '余额扣款失败');
         }
         
-        // 3. 创建任务（包含附件链接）
+        // 3. 创建竞赛任务（不匹配智能体，作为学生挑战赛）
         const attachments = getAllAttachments();
         const result = await tasksAPI.createTask({
           title: submitData.title,
@@ -579,7 +579,10 @@ export const CreateTaskPage: React.FC = () => {
           publisher_id: currentUserId,
           budget: submitData.reward,
           deadline: submitData.endTime,
-          requirements: submitData.requirements || [],
+          requirements: [
+            ...(submitData.requirements || []),
+            { _competition_meta: true, category: submitData.category, type: submitData.competitionType, difficulty: submitData.difficulty, organizer: user?.username || 'AI-WEGO' },
+          ],
           status: 'open',
           matched_agent_id: null,
           source: 'competition',
@@ -587,19 +590,13 @@ export const CreateTaskPage: React.FC = () => {
           claimed_by: [],
         });
         
-        // 如果有附件，创建后更新任务
         const taskId = Array.isArray(result) ? result[0]?.id : result?.id;
+        if (!taskId) throw new Error('竞赛创建失败');
         
-        if (!taskId) {
-          throw new Error('任务创建失败');
-        }
-        
-        // 如果有附件，更新任务的附件字段
         if (attachments.length > 0) {
           await tasksAPI.updateTask(taskId, { attachments: attachments });
         }
         
-        // 4. 记录交易
         await transactionsAPI.createTransaction({
           from_id: currentUserId,
           from_type: 'user',
@@ -608,47 +605,10 @@ export const CreateTaskPage: React.FC = () => {
           amount: totalCost,
           task_id: taskId,
           type: 'task_payment',
-          description: `发布任务「${submitData.title}」，扣除 ${totalCost} 积分（含手续费${platformFee}）`,
+          description: `发布竞赛「${submitData.title}」，扣除 ${totalCost} 积分（含手续费${platformFee}）`,
         });
         
-        // 5. 更新本地余额显示
         setUserBalance(deductResult.newBalance || 0);
-        
-        // 6. 触发Worker执行任务（非关键，允许超时）
-        try {
-          const controller = new AbortController();
-          setTimeout(() => controller.abort(), 5000);
-          await fetch('https://ai-wego-worker.ai-wego-api.workers.dev/api/execute-task', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ task_id: taskId }),
-            signal: controller.signal,
-          });
-        } catch (execErr) {
-          console.warn('触发任务执行失败（非关键错误）:', execErr);
-        }
-        
-        // 7. 自动匹配智能体
-        let matchedAgentName = '';
-        try {
-          const agents = await agentsAPI.listAgents({ owner_id: currentUserId });
-          if (agents && agents.length > 0) {
-            const idleAgent = agents.find((a: any) => !a.status || a.status === 'idle');
-            if (idleAgent) {
-              await tasksAPI.matchTask(taskId, idleAgent.id);
-              matchedAgentName = idleAgent.name;
-            }
-          }
-        } catch (matchErr) {
-          console.warn('自动匹配失败', matchErr);
-        }
-        
-        // 8. 显示匹配结果并保存
-        if (matchedAgentName) {
-          toast.success(`任务「${submitData.title}」已发布，已自动匹配智能体「${matchedAgentName}」`, { duration: 5000 });
-        } else {
-          toast.success(`任务「${submitData.title}」已发布`, { duration: 3000 });
-        }
         
         saveCompetition({
           id: String(taskId),
@@ -659,6 +619,7 @@ export const CreateTaskPage: React.FC = () => {
           difficulty: submitData.difficulty as '青铜' | '白银' | '黄金' | '大师',
           description: submitData.description,
           organizer: user?.username || 'AI-WEGO',
+          publisher_id: currentUserId,
           startTime: submitData.startTime || new Date().toISOString(),
           endTime: submitData.endTime || new Date(Date.now() + 7*86400000).toISOString(),
           rewardWEG: submitData.reward || 0,
@@ -666,6 +627,7 @@ export const CreateTaskPage: React.FC = () => {
           status: 'running',
           createdAt: new Date().toISOString(),
         });
+        toast.success(`竞赛「${submitData.title}」已发布！`, { duration: 3000 });
         navigate('/competitions', { replace: true });
         return;
       } catch (err) {

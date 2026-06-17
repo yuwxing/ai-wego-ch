@@ -1,39 +1,41 @@
 import React, { useState, useCallback, useEffect, useRef } from 'react'
 import TeacherScene from '../components/digital-teacher/TeacherScene'
-import { TeacherAI } from '../components/digital-teacher/TeacherAI'
-import { getTeacherMemory } from '../components/digital-teacher/TeacherMemory'
-import { speak, listen } from '../components/digital-teacher/TeacherVoice'
-import { TeachingWorkflow } from '../components/digital-teacher/TeacherWorkflow'
-import TeachingBlackboard from '../components/digital-teacher/TeachingBlackboard'
+import GrammarDanmaku from '../components/digital-teacher/GrammarDanmaku'
+import GrammarPanels from '../components/digital-teacher/GrammarPanels'
 import VirtualJoystick from '../components/digital-teacher/VirtualJoystick'
+import NatureSounds from '../components/digital-teacher/NatureSounds'
+import { sendToDeepSeekSync, getApiKey, getSharedApiKey } from '../utils/deepseek'
+import { Loader2, X, Send, AlertTriangle } from 'lucide-react'
 
-type State = 'IDLE' | 'LISTENING' | 'THINKING' | 'TALKING' | 'TEACHING'
-const STATE_LABEL: Record<State, string> = {
-  IDLE: '待机', LISTENING: '聆听中', THINKING: '思考中', TALKING: '说话中', TEACHING: '教学中',
+const COLORS = ['#a78bfa', '#60a5fa', '#34d399', '#f472b6', '#fbbf24', '#fb923c', '#22d3ee']
+
+const FALLBACK_DANMAKU: Record<string, { text: string; color: string }[]> = {
+  default: [
+    { text: '💡 名词单复数要分清', color: '#60a5fa' },
+    { text: '💬 动词时态是核心', color: '#a78bfa' },
+    { text: '📌 形容词比较级 -er/-est', color: '#34d399' },
+    { text: '⭐ 被动语态 be+done', color: '#f472b6' },
+    { text: '💬 定语从句 who/which/that', color: '#fbbf24' },
+    { text: '📌 宾语从句陈述语序', color: '#fb923c' },
+    { text: '💡 条件状语从句主将从现', color: '#22d3ee' },
+    { text: '⭐ 现在完成时 have/has+done', color: '#a78bfa' },
+    { text: '💬 不定式 to do 作目的状语', color: '#60a5fa' },
+    { text: '📌 动名词作主语谓语用单数', color: '#34d399' },
+  ],
 }
 
-const TEACHING_TOPICS = [
-  '定语从句', '虚拟语气', '被动语态', '现在完成时', '阅读理解技巧', '作文结构分析',
-]
-
 export default function DigitalTeacherPage() {
-  const [state, setState] = useState<State>('IDLE')
   const [mode, setMode] = useState<'idle' | 'walk' | 'talk'>('idle')
   const [walkDir, setWalkDir] = useState<[number, number]>([0, 0])
-  const teacherAIRef = useRef(new TeacherAI())
-  const memoryRef = useRef(getTeacherMemory())
-  const workflowRef = useRef(new TeachingWorkflow(teacherAIRef.current))
-  const [messages, setMessages] = useState<{ text: string; user: boolean }[]>([
-    { text: '同学们好，我是你的数字教师。点击麦克风或输入问题。', user: false },
-  ])
-  const [input, setInput] = useState('')
-  const [topic, setTopic] = useState('')
-  const [blackboardContent, setBlackboardContent] = useState('')
   const keysRef = useRef<Set<string>>(new Set())
-  const msgEndRef = useRef<HTMLDivElement>(null)
   const joystickDirRef = useRef<[number, number]>([0, 0])
-
-  useEffect(() => { msgEndRef.current?.scrollIntoView({ behavior: 'smooth' }) }, [messages])
+  const [showTopicInput, setShowTopicInput] = useState(false)
+  const [topic, setTopic] = useState('')
+  const [isGenerating, setIsGenerating] = useState(false)
+  const [danmakuItems, setDanmakuItems] = useState<{ text: string; color: string }[] | undefined>(undefined)
+  const [danmakuMode, setDanmakuMode] = useState<'grammar' | 'proverb'>('grammar')
+  const [noKeyMessage, setNoKeyMessage] = useState(false)
+  const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     const down = (e: KeyboardEvent) => keysRef.current.add(e.key.toLowerCase())
@@ -62,161 +64,202 @@ export default function DigitalTeacherPage() {
     joystickDirRef.current = dir
   }, [])
 
-  const handleSend = useCallback(async (text: string) => {
-    if (!text.trim()) return
-    setMessages(prev => [...prev, { text, user: true }])
-    setState('THINKING')
-    setInput('')
+  const handleTeacherClick = useCallback(() => {
+    setShowTopicInput(true)
     setMode('talk')
-    try {
-      const ai = teacherAIRef.current
-      memoryRef.current.add('interaction', `学生问: ${text}`)
-      const reply = await ai.send(text)
-      if (reply) {
-        memoryRef.current.add('interaction', `教师答: ${reply.slice(0, 100)}`)
-        setState('TALKING')
-        setMessages(prev => [...prev, { text: reply, user: false }])
-        speak(reply).then(() => setState('IDLE'))
-      }
-    } catch (err: any) {
-      setMessages(prev => [...prev, { text: `⚠️ ${err.message}`, user: false }])
-    }
-    setMode('idle')
+    setTimeout(() => inputRef.current?.focus(), 100)
   }, [])
 
-  const handleVoice = useCallback(async () => {
-    setState('LISTENING')
-    try {
-      const text = await listen()
-      handleSend(text)
-    } catch { setState('IDLE') }
-  }, [handleSend])
+  const handleGenerate = useCallback(async () => {
+    if (!topic.trim()) return
 
-  const startTeaching = useCallback(async () => {
-    if (!topic) return
-    setState('TEACHING')
-    setMode('talk')
-    memoryRef.current.add('lesson', `开始讲解主题: ${topic}`)
-    setMessages(prev => [...prev, { text: `📚 开始讲解「${topic}」...`, user: false }])
-    const lesson = await workflowRef.current.createLesson(topic)
-    if (lesson) {
-      const step = lesson.steps[0]
-      setMessages(prev => [...prev, { text: `📖 ${step.title}\n${step.content.slice(0, 200)}`, user: false }])
-      setBlackboardContent(`${lesson.topic}\n\n${step.title}\n${step.content}`)
-      await speak(step.content.slice(0, 150))
+    const hasKey = getApiKey() || getSharedApiKey()
+    if (!hasKey) {
+      setShowTopicInput(false)
+      setNoKeyMessage(true)
+      await new Promise(r => setTimeout(r, 2000))
+      setNoKeyMessage(false)
+      return
     }
-    setState('IDLE')
-    setMode('idle')
+
+    setIsGenerating(true)
+    setShowTopicInput(false)
+    try {
+      const prompt = `你是初中英语语法专家。用户正在复习"${topic}"这个语法点。
+请直接输出12条中考英语语法知识弹幕，每条必须包含具体的英语例子和中文解释。
+
+格式要求（严格按此格式）：
+- 每条一行，不要编号，不要空行
+- 每条必须包含：一个英语例句片段 + 中文说明
+- 每条10-30个字
+- 可用💡💬📌⭐等符号开头
+
+内容要求：
+- 必须针对"${topic}"这个语法点
+- 包含具体的中考高频考点
+- 必须给出英语例子
+
+示例格式：
+💡 remember doing 记得做过 vs remember to do 记得要做
+💬 It's + adj + to do 句型：It's important to study
+📌 不定式作主语：To learn English is important
+
+直接输出12条，不要任何说明文字。`
+      const result = await sendToDeepSeekSync([
+        { role: 'system', content: '你是一个专门生成英语语法弹幕的助手。只输出弹幕内容，不要任何说明文字。每条必须包含英语例子。' },
+        { role: 'user', content: prompt }
+      ])
+      const lines = result.split('\n').filter(l => {
+        const t = l.trim()
+        return t.length > 5 && t.length < 60 && /[a-zA-Z]/.test(t)
+      }).slice(0, 15)
+      if (lines.length > 0) {
+        const items = lines.map(text => ({
+          text: text.trim(),
+          color: COLORS[Math.floor(Math.random() * COLORS.length)]
+        }))
+        setDanmakuItems(items)
+      } else {
+        setDanmakuItems(FALLBACK_DANMAKU.default)
+      }
+    } catch {
+      setDanmakuItems(FALLBACK_DANMAKU.default)
+    } finally {
+      setIsGenerating(false)
+      setMode('idle')
+      setTopic('')
+    }
   }, [topic])
 
-  const nextStep = useCallback(() => {
-    const step = workflowRef.current.nextStep()
-    if (step) {
-      const lesson = workflowRef.current.getCurrentLesson()
-      setBlackboardContent(`${lesson?.topic}\n\n${step.title}\n${step.content}`)
-      setMessages(prev => [...prev, { text: `📖 ${step.title}\n${step.content.slice(0, 200)}`, user: false }])
-      speak(step.content.slice(0, 150))
-    } else setBlackboardContent('✅ 本节课到这里，有问题可以提问！')
-  }, [])
-
-  const prevStep = useCallback(() => {
-    const step = workflowRef.current.prevStep()
-    if (step) {
-      const lesson = workflowRef.current.getCurrentLesson()
-      setBlackboardContent(`${lesson?.topic}\n\n${step.title}\n${step.content}`)
-    }
-  }, [])
+  const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
+    if (e.key === 'Enter') handleGenerate()
+  }, [handleGenerate])
 
   return (
     <div style={{ width: '100vw', height: '100vh', position: 'relative', overflow: 'hidden', background: '#0a0a12' }}>
       <div style={{ position: 'absolute', inset: 0 }}>
-        <TeacherScene mode={mode} walkDir={walkDir} blackboard={blackboardContent} />
+        <TeacherScene mode={mode} walkDir={walkDir} onTeacherClick={handleTeacherClick}>
+          <GrammarPanels />
+        </TeacherScene>
       </div>
+
+      <GrammarDanmaku items={danmakuItems} mode={danmakuMode} key={danmakuMode} />
 
       <VirtualJoystick onMove={handleJoystick} />
 
-      {/* Top bar */}
+      <NatureSounds />
+
       <div style={{
         position: 'absolute', top: 16, left: '50%', transform: 'translateX(-50%)',
         background: 'rgba(19,19,26,0.88)', backdropFilter: 'blur(12px)',
         padding: '10px 24px', borderRadius: 16, border: '1px solid #4a4a8a',
-        display: 'flex', gap: 16, alignItems: 'center', zIndex: 100,
+        display: 'flex', gap: 12, alignItems: 'center', zIndex: 100,
       }}>
         <b style={{ color: '#e2e8f0' }}>数字教师</b>
-        <span style={{ color: '#a78bfa', fontSize: 13 }}>{STATE_LABEL[state]}</span>
-        <button onClick={handleVoice}
-          style={{ background: '#7c3aed', border: 'none', color: 'white', padding: '4px 14px', borderRadius: 8, cursor: 'pointer', fontSize: 14 }}>
-          🎤 语音
-        </button>
+        <span style={{ color: '#94a3b8', fontSize: 12 }}>中考语法总复习</span>
+        <button onClick={handleTeacherClick} style={{
+          background: 'rgba(34,211,238,0.15)', border: '1px solid rgba(34,211,238,0.3)',
+          color: '#22d3ee', padding: '4px 12px', borderRadius: 8, cursor: 'pointer',
+          fontSize: 11, fontWeight: 600, fontFamily: '"PingFang SC", sans-serif',
+        }}>💬 提问</button>
+        <button onClick={() => setDanmakuMode(m => m === 'grammar' ? 'proverb' : 'grammar')} style={{
+          background: danmakuMode === 'proverb' ? 'rgba(251,191,36,0.2)' : 'rgba(255,255,255,0.05)',
+          border: `1px solid ${danmakuMode === 'proverb' ? 'rgba(251,191,36,0.4)' : 'rgba(255,255,255,0.1)'}`,
+          color: danmakuMode === 'proverb' ? '#fbbf24' : '#64748b',
+          padding: '4px 12px', borderRadius: 8, cursor: 'pointer',
+          fontSize: 11, fontWeight: 600, fontFamily: '"PingFang SC", sans-serif',
+        }}>📜 谚语</button>
       </div>
 
-      {/* Teaching toolbar */}
-      <div style={{
-        position: 'absolute', top: 80, left: 20, zIndex: 100,
-        background: 'rgba(19,19,26,0.88)', backdropFilter: 'blur(12px)',
-        padding: 12, borderRadius: 12, display: 'flex', gap: 8, alignItems: 'center', flexWrap: 'wrap',
-      }}>
-        <select value={topic} onChange={e => setTopic(e.target.value)}
-          style={{ background: '#252540', color: '#e2e8f0', border: 'none', borderRadius: 6, padding: '6px 10px', fontSize: 12 }}>
-          <option value="">选择讲解主题</option>
-          {TEACHING_TOPICS.map(t => <option key={t} value={t}>{t}</option>)}
-        </select>
-        <button onClick={startTeaching} disabled={!topic}
-          style={{
-            background: topic ? '#7c3aed' : '#252540', border: 'none', color: 'white',
-            padding: '6px 14px', borderRadius: 6, cursor: topic ? 'pointer' : 'default', fontSize: 12,
-          }}>开始教学</button>
-        {workflowRef.current.getCurrentLesson() && workflowRef.current.getCurrentStep() >= 0 && (
-          <>
-            <button onClick={prevStep}
-              style={{ background: '#252540', border: 'none', color: '#c4b5fd', padding: '4px 10px', borderRadius: 6, cursor: 'pointer', fontSize: 12 }}>
-              ◀ 上一步
-            </button>
-            <button onClick={nextStep}
-              style={{ background: '#7c3aed', border: 'none', color: 'white', padding: '4px 10px', borderRadius: 6, cursor: 'pointer', fontSize: 12 }}>
-              下一步 ▶
-            </button>
-          </>
-        )}
-      </div>
-
-      <div style={{ position: 'absolute', bottom: 240, left: 20, zIndex: 80, color: '#94a3b8', fontSize: 11 }}>
-        WASD/摇杆移动 · 🎤 语音对话
-      </div>
-
-      {/* Chat panel */}
-      <div style={{
-        position: 'absolute', bottom: 20, left: 20, right: 20, height: 220, zIndex: 100,
-        background: 'rgba(19,19,26,0.88)', backdropFilter: 'blur(12px)',
-        borderRadius: 16, border: '1px solid #252540', display: 'flex', flexDirection: 'column',
-      }}>
-        <div style={{ flex: 1, overflow: 'auto', padding: '12px 16px', fontSize: 13, lineHeight: 1.6 }}>
-          {messages.map((msg, i) => (
-            <div key={i} style={{ margin: '4px 0', textAlign: msg.user ? 'right' : 'left' }}>
-              <span style={{
-                background: msg.user ? '#7c3aed' : '#334155',
-                padding: '8px 12px', borderRadius: 10,
-                display: 'inline-block', maxWidth: '75%', color: '#e2e8f0',
-              }}>{msg.text}</span>
+      {/* Topic input dialog */}
+      {showTopicInput && (
+        <div style={{
+          position: 'absolute', inset: 0, zIndex: 200,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)',
+        }} onClick={() => { setShowTopicInput(false); setMode('idle') }}>
+          <div style={{
+            background: '#1a1a2e', border: '1px solid #4a4a8a', borderRadius: 16,
+            padding: '24px 28px', width: '90%', maxWidth: 400,
+            boxShadow: '0 0 40px rgba(34,211,238,0.15)',
+          }} onClick={e => e.stopPropagation()}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 16 }}>
+              <span style={{ color: '#e2e8f0', fontSize: 16, fontWeight: 600 }}>📚 向老师提问</span>
+              <button onClick={() => { setShowTopicInput(false); setMode('idle') }} style={{
+                background: 'none', border: 'none', color: '#64748b', cursor: 'pointer', padding: 4,
+              }}><X className="w-5 h-5" /></button>
             </div>
-          ))}
-          {state === 'THINKING' && <div style={{ color: '#94a3b8', fontSize: 12, margin: 4 }}>思考中...</div>}
-          <div ref={msgEndRef} />
+            <p style={{ color: '#94a3b8', fontSize: 13, marginBottom: 12 }}>
+              输入你想学习的语法课题，老师会生成对应的知识弹幕
+            </p>
+            <div style={{ display: 'flex', gap: 8 }}>
+              <input
+                ref={inputRef}
+                value={topic}
+                onChange={e => setTopic(e.target.value)}
+                onKeyDown={handleKeyDown}
+                placeholder="例如：现在完成时、被动语态、定语从句..."
+                style={{
+                  flex: 1, padding: '10px 14px', borderRadius: 10, border: '1px solid #4a4a8a',
+                  background: '#0f0f23', color: '#e2e8f0', fontSize: 14,
+                  outline: 'none', fontFamily: '"PingFang SC", sans-serif',
+                }}
+              />
+              <button onClick={handleGenerate} disabled={!topic.trim() || isGenerating} style={{
+                background: !topic.trim() ? '#334155' : 'linear-gradient(135deg, #22d3ee, #06b6d4)',
+                border: 'none', color: 'white', padding: '10px 16px', borderRadius: 10,
+                cursor: !topic.trim() ? 'not-allowed' : 'pointer', opacity: !topic.trim() ? 0.5 : 1,
+              }}>
+                <Send className="w-4 h-4" />
+              </button>
+            </div>
+          </div>
         </div>
-        <div style={{ display: 'flex', padding: '10px 12px', gap: 8, background: '#1a1a2e' }}>
-          <input value={input} onChange={e => setInput(e.target.value)}
-            onKeyDown={e => e.key === 'Enter' && handleSend(input)}
-            placeholder="输入问题..."
-            style={{
-              flex: 1, background: '#252540', border: 'none', borderRadius: 10,
-              padding: '10px 14px', color: '#e2e8f0', outline: 'none', fontSize: 13,
-            }}
-          />
-          <button onClick={() => handleSend(input)}
-            style={{ background: '#7c3aed', border: 'none', color: 'white', padding: '0 20px', borderRadius: 10, cursor: 'pointer' }}>
-            发送
-          </button>
+      )}
+
+      {/* No API key message */}
+      {noKeyMessage && (
+        <div style={{
+          position: 'absolute', inset: 0, zIndex: 200,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          background: 'rgba(0,0,0,0.6)', backdropFilter: 'blur(4px)',
+        }}>
+          <div style={{
+            background: '#1a1a2e', border: '1px solid #f59e0b', borderRadius: 16,
+            padding: '24px 28px', width: '90%', maxWidth: 360, textAlign: 'center',
+          }}>
+            <AlertTriangle className="w-10 h-10" style={{ color: '#f59e0b', margin: '0 auto 12px' }} />
+            <p style={{ color: '#fbbf24', fontSize: 15, fontWeight: 600, marginBottom: 8 }}>未配置 API 密钥</p>
+            <p style={{ color: '#94a3b8', fontSize: 13, lineHeight: 1.6 }}>
+              请先在「系统中心 → API密钥」中配置 DeepSeek 密钥，<br />或使用默认密钥（共享额度有限）。
+            </p>
+          </div>
         </div>
+      )}
+
+      {/* Generating overlay */}
+      {isGenerating && (
+        <div style={{
+          position: 'absolute', inset: 0, zIndex: 200,
+          display: 'flex', alignItems: 'center', justifyContent: 'center',
+          background: 'rgba(0,0,0,0.5)', backdropFilter: 'blur(4px)',
+        }}>
+          <div style={{
+            background: '#1a1a2e', border: '1px solid #4a4a8a', borderRadius: 16,
+            padding: '24px 32px', textAlign: 'center',
+          }}>
+            <Loader2 className="w-8 h-8 animate-spin" style={{ color: '#22d3ee', margin: '0 auto 12px' }} />
+            <p style={{ color: '#94a3b8', fontSize: 14 }}>老师正在备课...</p>
+          </div>
+        </div>
+      )}
+
+      <div style={{
+        position: 'absolute', bottom: 90, left: '50%', transform: 'translateX(-50%)',
+        zIndex: 80, color: '#64748b', fontSize: 11, textAlign: 'center',
+        background: 'rgba(0,0,0,0.5)', padding: '6px 16px', borderRadius: 8,
+      }}>
+        鼠标拖拽旋转视角 · 不同角度查看不同语法模块 · WASD/摇杆移动
       </div>
     </div>
   )

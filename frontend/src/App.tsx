@@ -3,7 +3,6 @@ import { Routes, Route, Navigate, useParams } from 'react-router-dom'
 import Home from './pages/Home'
 import LearnHub from './pages/LearnHub'
 import WordCardPage from './pages/WordCardPage'
-import GrammarPage from './pages/GrammarPage'
 import ListeningSpeakingPage from './pages/ListeningSpeakingPage'
 import EnglishDailyPage from './pages/EnglishDailyPage'
 import ReadingIntensivePage from './pages/ReadingIntensivePage'
@@ -12,6 +11,7 @@ import AIClassroomPage from './pages/AIClassroomPage'
 import LearnCompetitions from './pages/LearnCompetitions'
 
 import CompetitionHallPage from './pages/CompetitionHallPage'
+import HanToEngPage from './pages/HanToEngPage'
 import CompetitionDetailPage from './pages/CompetitionDetailPage'
 import CreateCompetitionPage from './pages/CreateCompetitionPage'
 
@@ -115,7 +115,7 @@ export default function App() {
       {/* Learning System */}
       <Route path="/learn" element={<LearnHub />} />
       <Route path="/learn/word-cards" element={<WordCardPage />} />
-      <Route path="/learn/grammar" element={<GrammarPage />} />
+      <Route path="/learn/han-to-eng" element={<HanToEngPage />} />
       <Route path="/learn/listening-speaking" element={<ListeningSpeakingPage />} />
       <Route path="/learn/english-daily" element={<EnglishDailyPage />} />
       <Route path="/learn/reading-intensive" element={<ReadingIntensivePage />} />

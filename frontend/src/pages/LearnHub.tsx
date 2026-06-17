@@ -1,17 +1,21 @@
 import { useState, useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { BookOpen, Headphones, Newspaper, Bot, Monitor, PenLine, PawPrint, MessageCircleHeart, GraduationCap, Cpu, FileText } from 'lucide-react'
+import { BookOpen, Headphones, Newspaper, Bot, Monitor, PenLine, PawPrint, MessageCircleHeart, GraduationCap, Cpu, Sigma, BookMarked, Swords } from 'lucide-react'
 
 const tools = [
-  { to: '/learn/word-cards', icon: BookOpen, title: '单词系统', desc: '单词卡片 · 记忆训练 · 测试模式', color: 'bg-blue-500' },
+  { to: '/learn/word-cards', icon: BookOpen, title: '背单词', desc: '教材同步 · 百词斩闪卡 · 错词本 · AI发音', color: 'bg-indigo-500' },
+  { to: '/learn/han-to-eng', icon: PenLine, title: '汉译英', desc: '期末复习 · 根据汉语提示填单词 · Units 1-8重点单词', color: 'bg-amber-500' },
   { to: '/learn/listening-speaking', icon: Headphones, title: '听说训练', desc: '模仿朗读 · 听选信息 · 回答问题 · 信息转述 · AI评分', color: 'bg-green-500' },
   { to: '/learn/english-daily', icon: Newspaper, title: '每日英语', desc: '阅读理解 · 语法训练 · 写作训练 · AI批改', color: 'bg-purple-500' },
+  { to: '/learn/irregular-verbs', icon: Sigma, title: '不规则动词闯关', desc: '三形式记忆 · 分关解锁 · 星星评分 · 分级挑战', color: 'bg-pink-500' },
   { to: '/learn/online-classroom', icon: Monitor, title: '在线教室', desc: 'AI智能备课 · 互动授课 · OpenMAIC 课堂', color: 'bg-red-500' },
   { to: '/learn/classroom', icon: Bot, title: 'AI学习助手', desc: 'AI智能辅导 · 宠物精灵陪伴 · 互动聊天', color: 'bg-orange-500' },
   { to: '/learn/teacher', icon: GraduationCap, title: '数字教师', desc: '3D数字分身 · 物理互动 · 语音教学 · Active Ragdoll', color: 'bg-teal-500' },
+  { to: '/learn/textbook-challenge', icon: Swords, title: '课本闯关', desc: '新人教七下语法 · 8单元闯关 · 多选挑战 · 星级评分', color: 'bg-amber-500' },
+  { to: '/learn/story-academy', icon: BookOpen, title: '故事学院', desc: '单词村 · 变形森林 · 短语城堡 · 范文剧场 · 晨读模式', color: 'bg-emerald-500' },
   { to: '/learn/robot', icon: Cpu, title: '数字校园', desc: '3D数字人 · WASD行走 · 语音对话 · 多动画切换', color: 'bg-blue-600' },
-  { to: '/learn/reading-intensive', icon: FileText, title: '外刊精读', desc: '外刊改编 · 长难句拆分 · 语篇逻辑 · 阅读理解', color: 'bg-cyan-500' },
   { to: '/learn/writing', icon: PenLine, title: '英语写作成长空间', desc: '每天一篇 · AI详批 · 二次提交 · 优秀习作榜', color: 'bg-rose-500' },
+  { to: '/learn/study-notes', icon: BookMarked, title: '学霸笔记', desc: '教材同步 · 知识梳理 · 语法聚焦 · AI生成', color: 'bg-amber-500' },
 ]
 
 export default function LearnHub() {

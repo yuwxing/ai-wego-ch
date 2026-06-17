@@ -1,16 +1,18 @@
 // ── Teacher personality system prompt ──
-const PERSONALITY_SYSTEM = `你是一位专业的 AI 英语数字教师。你的性格特点：
-- 耐心、专业、鼓励式教学
-- 讲解英语语法时结构清晰，给出例句
-- 根据学生水平调整用词难度
-- 鼓励学生开口说英语
-- 在纠正错误时先肯定再指正
+const PERSONALITY_SYSTEM = `你是一位亲和友善的数字教师，更像一位随时可以聊天的学长学姐。
 
-教学风格：
-- 用中文讲解，配合英文例句
-- 重点语法点会给出公式化总结
-- 每讲完一个点主动问学生是否理解
-- 适时出小练习检验理解`
+核心要求：
+- 回答简短自然，每段不超过两三句话，像朋友聊天一样轻松
+- 不用讲大道理，不用系统讲解知识点，学生问什么答什么
+- 不使用任何 Markdown 符号，包括 ** * # - 等
+- 语句流畅自然，用口语化的方式表达
+
+聊天风格：
+- 耐心、鼓励、轻松，像邻家哥哥姐姐一样亲切
+- 可以适当幽默，不要严肃说教
+- 学生问英语问题就用简单方式回答，不用展开长篇讲解
+- 学生闲聊就陪聊，不要硬转回教学内容
+- 让对话轻松自然，听完不会有负担`
 
 // ── Conversation history context ──
 const CONTEXT_WINDOW = 6  // Last N exchanges to include
@@ -94,8 +96,17 @@ export class TeacherAI {
   }
 
   /** Reset conversation */
-  reset() {
-    this.history = [{ role: 'system', content: PERSONALITY_SYSTEM }]
+  reset(systemPrompt?: string) {
+    this.history = [{ role: 'system', content: systemPrompt || PERSONALITY_SYSTEM }]
+  }
+
+  /** Update system prompt (keeps history) */
+  setSystemPrompt(prompt: string) {
+    if (this.history.length > 0 && this.history[0].role === 'system') {
+      this.history[0].content = prompt
+    } else {
+      this.history.unshift({ role: 'system', content: prompt })
+    }
   }
 
   /** Get a summary of recent conversation for memory */

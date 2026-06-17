@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { MessageSquare, X, Send, Loader2, CheckCircle, Coins, Sparkles } from 'lucide-react';
+import { usersAPI } from '../utils/supabase';
 
 const SUPABASE_URL = 'https://mzjmfyoemcsoqzoooiej.supabase.co/rest/v1/';
 const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im16am1meW9lbWNzb3F6b29vaWVqIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NzQ5MDgwMCwiZXhwIjoyMDkzMDY2ODAwfQ.BaovYmOpmOANyo6fmSPKV1FwNwLWlkVVSa7r8KsaMtM';
@@ -115,92 +116,17 @@ export const FeedbackButton: React.FC = () => {
       // 如果启用赔付，创建赔付记录
       if (claimEnabled && claimAmount > 0 && currentUser?.id) {
         try {
-          // 1. 更新用户token_balance
-          const userRes = await fetch(`${SUPABASE_URL}users?id=eq.${currentUser.id}&select=token_balance`, {
-            headers: {
-              'apikey': SUPABASE_KEY,
-              'Authorization': `Bearer ${SUPABASE_KEY}`,
-            }
-          });
-          const userData = await userRes.json();
-          const currentBalance = userData[0]?.token_balance || 0;
-          const newBalance = currentBalance + claimAmount;
-          
-          await fetch(`${SUPABASE_URL}users?id=eq.${currentUser.id}`, {
-            method: 'PATCH',
-            headers: {
-              'apikey': SUPABASE_KEY,
-              'Authorization': `Bearer ${SUPABASE_KEY}`,
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ token_balance: newBalance })
-          });
-          
-          // 2. 添加token交易记录
-          await fetch(`${SUPABASE_URL}token_transactions`, {
-            method: 'POST',
-            headers: {
-              'apikey': SUPABASE_KEY,
-              'Authorization': `Bearer ${SUPABASE_KEY}`,
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              user_id: currentUser.id,
-              amount: claimAmount,
-              type: 'feedback_compensation',
-              description: `反馈赔付奖励 - ${typeMapping[type] || type}类型反馈`,
-              created_at: now
-            })
-          });
-          
+          await usersAPI.addBalance(currentUser.id, claimAmount, `反馈赔付奖励 - ${typeMapping[type] || type}类型反馈`);
           console.log(`[反馈赔付] 已向用户 ${currentUser.id} 发放 ${claimAmount} 积分`);
         } catch (rewardErr) {
           console.error('[反馈赔付] 自动赔付失败:', rewardErr);
         }
       } else if (type === 'bug' && currentUser?.id && !claimEnabled) {
-        // Bug反馈默认奖励500积分（不申请赔付时）
         try {
-          // 1. 更新用户token_balance
-          const userRes = await fetch(`${SUPABASE_URL}users?id=eq.${currentUser.id}&select=token_balance`, {
-            headers: {
-              'apikey': SUPABASE_KEY,
-              'Authorization': `Bearer ${SUPABASE_KEY}`,
-            }
-          });
-          const userData = await userRes.json();
-          const currentBalance = userData[0]?.token_balance || 0;
-          const newBalance = currentBalance + 500;
-          
-          await fetch(`${SUPABASE_URL}users?id=eq.${currentUser.id}`, {
-            method: 'PATCH',
-            headers: {
-              'apikey': SUPABASE_KEY,
-              'Authorization': `Bearer ${SUPABASE_KEY}`,
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({ token_balance: newBalance })
-          });
-          
-          // 2. 添加token交易记录
-          await fetch(`${SUPABASE_URL}token_transactions`, {
-            method: 'POST',
-            headers: {
-              'apikey': SUPABASE_KEY,
-              'Authorization': `Bearer ${SUPABASE_KEY}`,
-              'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-              user_id: currentUser.id,
-              amount: 500,
-              type: 'bug_feedback_reward',
-              description: 'Bug反馈奖励 - 感谢您帮助改进平台',
-              created_at: now
-            })
-          });
-          
-          console.log(`[反馈赔付] 已向用户 ${currentUser.id} 发放500积分`);
+          await usersAPI.addBalance(currentUser.id, 500, 'Bug反馈奖励');
+          console.log(`[Bug奖励] 已向用户 ${currentUser.id} 发放 500 积分`);
         } catch (rewardErr) {
-          console.error('[反馈赔付] 自动赔付失败:', rewardErr);
+          console.error('[Bug奖励] 失败:', rewardErr);
         }
       }
       

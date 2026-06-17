@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { usageAPI } from '../utils/supabase';
 
 interface User {
   id: number;
@@ -37,10 +38,13 @@ export const UserProvider: React.FC<{ children: ReactNode }> = ({ children }) =>
     }
   }, []);
 
-  // 初始化余额
+  // 初始化余额 + 每日签到
   useEffect(() => {
     if (user?.id && user.id > 0) {
       fetchBalance(user.id);
+      usageAPI.claimDailyBonus(user.id).then(r => {
+        if (r.claimed) fetchBalance(user.id);
+      });
     } else {
       setBalance(0);
     }

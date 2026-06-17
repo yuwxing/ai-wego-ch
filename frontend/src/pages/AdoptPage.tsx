@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 import { Heart, Sparkles, Star, Gift, Bot, Confetti, PawPrint, Home, ArrowLeft, LogOut, Clock, AlertCircle, Check, MessageCircle } from 'lucide-react';
 import { useUser } from '../contexts/UserContext';
 import { SpritePet, SpritePetThumb, petSpriteMap } from '../components/SpritePet';
-import { workerTokenAPI } from '../utils/supabase';
+import { workerTokenAPI, usersAPI } from '../utils/supabase';
 import { GuestPromptModal } from '../components/GuestPromptModal';
 
 // PetDex宠物数据
@@ -164,13 +164,8 @@ export const AdoptPage: React.FC = () => {
   // 判断今天是否已喂养
   const isFedToday = feedDate === getTodayString();
 
-  // 领养按钮点击 - 游客友好提示
+  // 领养按钮点击
   const handleAdoptClick = (pet: Pet) => {
-    if (!user) {
-      // 游客模式：弹出友好提示，可继续浏览
-      setShowGuestPrompt(true);
-      return;
-    }
     setSelectedPet(pet);
     setShowConfirmModal(true);
   };
@@ -178,70 +173,19 @@ export const AdoptPage: React.FC = () => {
   // 确认领养
   const handleConfirmAdopt = async () => {
     if (!selectedPet) return;
-    if (!user) {
-      setBalanceWarning('请先登录/注册账户后再领养宠物');
-      setShowConfirmModal(false);
-      setTimeout(() => setBalanceWarning(null), 4000);
-      return;
-    }
-
-    if (balance < 30) {
-      setBalanceWarning('积分不足，无法领养！需要30积分，请先去完成任务赚取');
-      setShowConfirmModal(false);
-      setTimeout(() => setBalanceWarning(null), 4000);
-      return;
-    }
 
     setIsAdopting(true);
 
     try {
-      // 直接用 Supabase 扣费（不依赖 Worker，避免超时卡住）
-      let newBalance = balance;
-      const SUPABASE_URL = 'https://mzjmfyoemcsoqzoooiej.supabase.co/rest/v1/';
-      const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im16am1meW9lbWNzb3F6b29vaWVqIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NzQ5MDgwMCwiZXhwIjoyMDkzMDY2ODAwfQ.BaovYmOpmOANyo6fmSPKV1FwNwLWlkVVSa7r8KsaMtM';
-      
-      try {
-        // 先查当前余额
-        const balResp = await fetch(`${SUPABASE_URL}users?id=eq.${user.id}&select=token_balance`, {
-          headers: { 'apikey': SUPABASE_KEY, 'Authorization': `Bearer ${SUPABASE_KEY}` }
-        });
-        const balData = await balResp.json();
-        const currentBalance = balData[0]?.token_balance || 0;
-        
-        if (currentBalance < 30) {
-          setBalanceWarning('积分不足，无法领养！需要30积分，请先去完成任务赚取');
-          setShowConfirmModal(false);
-          setIsAdopting(false);
-          return;
+      // 已注册用户才扣积分，游客直接领养
+      if (user && user.id > 0) {
+        try {
+          const result = await usersAPI.deductBalance(user.id, 30);
+          if (result.success) updateBalance(result.newBalance!);
+        } catch (apiErr) {
+          console.warn('Supabase扣费失败:', apiErr);
         }
-        
-        // 扣除30 积分
-        newBalance = currentBalance - 30;
-        const updateResp = await fetch(`${SUPABASE_URL}users?id=eq.${user.id}`, {
-          method: 'PATCH',
-          headers: { 
-            'apikey': SUPABASE_KEY, 
-            'Authorization': `Bearer ${SUPABASE_KEY}`,
-            'Content-Type': 'application/json',
-            'Prefer': 'return=minimal'
-          },
-          body: JSON.stringify({ token_balance: newBalance })
-        });
-        
-        if (!updateResp.ok) throw new Error('扣费失败');
-      } catch (apiErr) {
-        console.warn('Supabase扣费失败，降级使用前端扣费:', apiErr);
-        if (balance < 30) {
-          setBalanceWarning('积分不足，无法领养！需要30积分，请先去完成任务赚取');
-          setShowConfirmModal(false);
-          setIsAdopting(false);
-          return;
-        }
-        newBalance = balance - 30;
       }
-
-      // 更新本地状态
-      updateBalance(newBalance);
       const adoptedPetData: AdoptedPet = {
         petId: selectedPet.petId,
         name: selectedPet.name,
@@ -261,18 +205,20 @@ export const AdoptPage: React.FC = () => {
       setShowSuccessAnimation(true);
       
       // 同步到数据库
-      try {
-        await fetch('/api/pet/adopt', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ 
-            user_id: user.id, 
-            pet_id: selectedPet.petId, 
-            pet_name: selectedPet.name 
-          })
-        });
-      } catch (e) {
-        console.error('同步宠物到数据库失败:', e);
+      if (user && user.id > 0) {
+        try {
+          await fetch('/api/pet/adopt', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+              user_id: user.id, 
+              pet_id: selectedPet.petId, 
+              pet_name: selectedPet.name 
+            })
+          });
+        } catch (e) {
+          console.error('同步宠物到数据库失败:', e);
+        }
       }
       
       // 触发宠物更新事件
@@ -603,7 +549,11 @@ export const AdoptPage: React.FC = () => {
             <div className="px-4 py-3 rounded-xl bg-gradient-to-r from-amber-50 to-orange-50 border border-amber-200 mb-6">
               <p className="text-sm text-amber-700 flex items-start gap-2">
                 <AlertCircle className="w-4 h-4 mt-0.5 flex-shrink-0" />
-                <span><strong>领养需消耗100 <img src="/weg-coin.png" alt="积分" style={{ width: 14, height: 14, borderRadius: "50%", display: "inline-block", verticalAlign: "middle" }} /></strong>，完成英语学习即可喂养</span>
+                {user && user.id > 0 ? (
+                  <span><strong>领养需消耗30 <img src="/weg-coin.png" alt="积分" style={{ width: 14, height: 14, borderRadius: "50%", display: "inline-block", verticalAlign: "middle" }} /></strong>，完成英语学习即可喂养</span>
+                ) : (
+                  <span><strong>✨ 游客免费领养</strong>，注册后可永久保存宠物</span>
+                )}
               </p>
             </div>
             <div className="flex gap-3">

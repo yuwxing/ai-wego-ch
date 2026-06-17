@@ -3,7 +3,23 @@ export function getApiKey(): string | null {
 }
 
 export function setApiKey(key: string): void {
-  localStorage.setItem('deepseek_api_key', key);
+  if (key && key.trim()) {
+    localStorage.setItem('deepseek_api_key', key.trim());
+  } else {
+    localStorage.removeItem('deepseek_api_key');
+  }
+}
+
+export function getSharedApiKey(): string | null {
+  return localStorage.getItem('shared_deepseek_api_key');
+}
+
+export function setSharedApiKey(key: string): void {
+  if (key && key.trim()) {
+    localStorage.setItem('shared_deepseek_api_key', key.trim());
+  } else {
+    localStorage.removeItem('shared_deepseek_api_key');
+  }
 }
 
 export function getApiBaseUrl(): string {
@@ -11,7 +27,7 @@ export function getApiBaseUrl(): string {
 }
 
 function getKey() {
-  return getApiKey() || '';
+  return getApiKey() || getSharedApiKey() || '';
 }
 
 export const DEEPSEEK_API_URL = 'https://api.deepseek.com/v1/chat/completions';

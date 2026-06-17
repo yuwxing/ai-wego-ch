@@ -70,12 +70,17 @@ export default function LiteratureWritePage() {
           const CN = ['一','二','三','四','五','六','七','八','九','十','十一','十二','十三','十四','十五','十六','十七','十八','十九','二十']
           for (const sub of subs) {
             if (!sub?.content) continue
+            if (sub.code && sub.code !== '' && (sub.code === 'paper_short' || sub.code.startsWith('config_'))) continue
+            if (sub.chapter_title?.startsWith('config_')) continue
             if (next.find(c => c.content === sub.content)) continue
-            const lines = sub.content.trim().split('\n')
-            let chTitle = ''
-            for (const line of lines) {
-              const clean = line.replace(/^[""「」\s]+/, '').trim()
-              if (clean.length >= 4) { chTitle = clean.length > 22 ? clean.slice(0, 22) + '…' : clean; break }
+            let chTitle = sub.chapter_title || ''
+            if (!chTitle || /^[a-zA-Z0-9\s!"#$%&'()*+,\-./:;<=>?@[\]^_`{|}~]{2,}$/.test(chTitle.replace(/[第章：\s]/g, ''))) {
+              const lines = sub.content.trim().split('\n')
+              for (const line of lines) {
+                const clean = line.replace(/^[""「」\s]+/, '').trim()
+                if (clean.length >= 4 && /[\u4e00-\u9fff]/.test(clean)) { chTitle = clean.length > 22 ? clean.slice(0, 22) + '…' : clean; break }
+              }
+              if (!chTitle || /^[a-zA-Z0-9\s!"#$%&'()*+,\-./:;<=>?@[\]^_`{|}~]{2,}$/.test(chTitle)) chTitle = ''
             }
             const idx = next.length
             const chNum = CN[idx] || String(idx + 1)
@@ -218,18 +223,13 @@ ${userContent}
           }
         }
         if (!result) {
-          const fallbackScore = 70 + Math.floor(Math.random() * 15)
-          result = {
-            score: fallbackScore,
-            coherence: fallbackScore,
-            creativity: fallbackScore - 5,
-            literary: fallbackScore + 3,
-            passed: fallbackScore >= 80,
-            code: '',
-            suggestions: fallbackScore >= 80
-              ? ['人物对话自然', '环境描写丰富', '继续保持']
-              : ['补充人物心理', '丰富环境描写', '注意段落衔接'],
-          }
+          setReviewResult({
+            score: 0, passed: false, code: '',
+            suggestions: ['AI评审不可用，请联系老师配置API密钥后重试'],
+          })
+          localStorage.removeItem('literature_pending')
+          setPendingSubmit(null)
+          return
         }
         setReviewResult(result)
         if (result.chapter_title && !chapterTitle.trim()) setChapterTitle(result.chapter_title)
@@ -272,8 +272,13 @@ ${userContent}
     return () => clearTimeout(timer)
   }, [submitted, reviewResult])
 
+  // 统计中文字符数（排除英文字母、数字、标点）
+  function chineseCharCount(text: string): number {
+    return (text.match(/[\u4e00-\u9fff]/g) || []).length
+  }
+
   const handleSubmit = async () => {
-    if (!userContent.trim() || wordCount < 1000) return
+    if (!userContent.trim() || chineseCharCount(userContent) < 1000) return
     setSubmitting(true)
     await new Promise(r => setTimeout(r, 1000))
     setSubmitting(false)
@@ -452,25 +457,38 @@ ${userContent}
 
         <main className="flex-1 overflow-y-auto p-4 md:p-6">
           <div className="max-w-3xl mx-auto space-y-4">
-            <div className="glass-card rounded-2xl p-5">
-              <div className="flex items-center gap-2 mb-3">
-                <BookOpen className="w-4 h-4 text-emerald-500" />
-                <span className="text-xs font-medium text-emerald-600">上文内容</span>
+            {current && (
+              <div className="glass-card rounded-2xl p-5">
+                <div className="flex items-center gap-2 mb-3">
+                  <BookOpen className="w-4 h-4 text-emerald-500" />
+                  <span className="text-xs font-medium text-emerald-600">当前章节</span>
+                  <span className="text-xs text-slate-400 ml-auto">{current.title}</span>
+                </div>
+                <div className="bg-white/60 rounded-xl p-4 border border-emerald-100/50">
+                  {current.content.split('\n\n').map((p, i) => (
+                    <p key={i} className={`text-sm text-slate-600 leading-7 whitespace-pre-wrap ${i > 0 ? 'mt-4' : ''}`}>{p}</p>
+                  ))}
+                </div>
               </div>
-              <div className="bg-emerald-50/50 rounded-xl p-4 border border-emerald-100/50">
-                {previousContent.split('\n\n').map((p, i) => (
-                  <p key={i} className={`text-sm text-slate-600 leading-7 whitespace-pre-wrap ${i > 0 ? 'mt-4' : ''}`}>{p}</p>
-                ))}
-                {current && (
-                  <div className="mt-3 pt-3 border-t border-emerald-100/50">
-                    <p className="text-xs text-emerald-500 font-medium mb-1">当前章节：{current.title}</p>
-                    {current.content.split('\n\n').map((p, i) => (
-                      <p key={i} className={`text-sm text-slate-500 leading-7 whitespace-pre-wrap ${i > 0 ? 'mt-4' : ''}`}>{p}</p>
-                    ))}
-                  </div>
-                )}
-              </div>
-            </div>
+            )}
+            {previousChapters.length > 0 && (
+              <details className="glass-card rounded-2xl p-5 group">
+                <summary className="flex items-center gap-2 cursor-pointer text-xs font-medium text-slate-400 hover:text-slate-600 select-none">
+                  <BookOpen className="w-3.5 h-3.5" />
+                  查看上文（共 {previousChapters.length} 章）
+                </summary>
+                <div className="mt-4 space-y-4">
+                  {previousChapters.map(ch => (
+                    <div key={ch.id} className="bg-emerald-50/50 rounded-xl p-4 border border-emerald-100/50">
+                      <p className="text-xs text-emerald-500 font-medium mb-2">{ch.title} · {ch.author}</p>
+                      {ch.content.split('\n\n').map((p, i) => (
+                        <p key={i} className={`text-sm text-slate-500 leading-7 whitespace-pre-wrap ${i > 0 ? 'mt-4' : ''}`}>{p}</p>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              </details>
+            )}
 
             <div className="glass-card rounded-2xl p-5">
               <div className="flex items-center gap-2 mb-3">
@@ -489,7 +507,9 @@ ${userContent}
                 className="w-full min-h-[200px] p-4 bg-white/70 border border-slate-200 rounded-xl text-sm text-slate-700 placeholder-slate-300 focus:outline-none focus:ring-2 focus:ring-emerald-300 focus:border-transparent resize-y leading-relaxed"
               />
               <div className="flex items-center justify-between mt-3">
-                <span className={`text-xs ${wordCount >= 1000 ? 'text-emerald-500' : 'text-amber-500'}`}>字数：{wordCount}{wordCount < 1000 ? `/1000` : ''}</span>
+                <span className={`text-xs ${chineseCharCount(userContent) >= 1000 ? 'text-emerald-500' : 'text-amber-500'}`}>
+                  汉字字数：{chineseCharCount(userContent)}{chineseCharCount(userContent) < 1000 ? `/1000` : ''}
+                </span>
                 <div className="flex items-center gap-2">
                   {aiResult && (
                     <button onClick={acceptPolish}
@@ -528,14 +548,14 @@ ${userContent}
                 className="flex items-center gap-1.5 px-4 py-2.5 rounded-xl bg-white border border-slate-200 text-slate-600 text-sm font-medium hover:bg-slate-50 transition-all">
                 <Save className="w-4 h-4" /> 保存草稿
               </button>
-              <button onClick={handleSubmit} disabled={submitting || wordCount < 1000}
+              <button onClick={handleSubmit} disabled={submitting || chineseCharCount(userContent) < 1000}
                 className="flex items-center gap-1.5 px-5 py-2.5 rounded-xl btn-gradient-primary text-sm font-bold hover:shadow-lg transition-all disabled:opacity-50 ml-auto">
                 {submitting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Send className="w-4 h-4" />}
                 {submitting ? '提交中...' : '提交作品'}
               </button>
             </div>
-            {wordCount > 0 && wordCount < 1000 && (
-              <p className="text-xs text-amber-500 flex items-center gap-1"><AlertCircle className="w-3 h-3" /> 续写至少1000字才能提交</p>
+            {chineseCharCount(userContent) > 0 && chineseCharCount(userContent) < 1000 && (
+              <p className="text-xs text-amber-500 flex items-center gap-1"><AlertCircle className="w-3 h-3" /> 至少需要1000个汉字才能提交</p>
             )}
           </div>
         </main>

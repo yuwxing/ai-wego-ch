@@ -11,6 +11,14 @@ body {
   margin: 0;
   padding: 0;
   -webkit-font-smoothing: antialiased;
+  min-height: 100vh;
+  background: linear-gradient(180deg,
+    #dbeafe 0%,
+    #bae6fd 25%,
+    #e0f2fe 50%,
+    #c7d2fe 75%,
+    #dbeafe 100%
+  );
 }
 
 button {
@@ -32,11 +40,11 @@ input, textarea, select {
 .page-wrapper {
   min-height: 100vh;
   background: linear-gradient(180deg,
-    #f0fdf4 0%,
-    #ecfdf5 25%,
-    #fefce8 50%,
-    #fff7ed 75%,
-    #f0fdf4 100%
+    #dbeafe 0%,
+    #bae6fd 25%,
+    #e0f2fe 50%,
+    #c7d2fe 75%,
+    #dbeafe 100%
   );
   position: relative;
 }
@@ -49,9 +57,9 @@ input, textarea, select {
   right: 0;
   bottom: 0;
   background:
-    radial-gradient(ellipse 70% 40% at 5% 15%, rgba(134, 239, 172, 0.15) 0%, transparent 50%),
-    radial-gradient(ellipse 50% 35% at 95% 85%, rgba(147, 197, 253, 0.12) 0%, transparent 50%),
-    radial-gradient(ellipse 40% 30% at 50% 50%, rgba(253, 224, 71, 0.06) 0%, transparent 50%);
+    radial-gradient(ellipse 70% 40% at 5% 15%, rgba(147, 197, 253, 0.25) 0%, transparent 50%),
+    radial-gradient(ellipse 50% 35% at 95% 85%, rgba(196, 181, 253, 0.15) 0%, transparent 50%),
+    radial-gradient(ellipse 40% 30% at 50% 50%, rgba(147, 197, 253, 0.08) 0%, transparent 50%);
   pointer-events: none;
   z-index: 0;
 }
@@ -336,4 +344,10 @@ input, textarea, select {
 /* ===== 安全区域适配 ===== */
 .safe-area-inset-bottom {
   padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+/* ===== 弹幕动画 ===== */
+@keyframes danmaku-scroll {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(calc(-100vw - 200%)); }
 }

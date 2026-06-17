@@ -194,6 +194,81 @@ async function main() {
     console.error(`❌ Listening & Speaking failed: ${e.message}`);
   }
 
+  console.log(`\n--- Generating 外刊精读 content... ---`);
+  try {
+    const rdPrompt = `Generate a simplified adapted reading passage based on The Economist (Science & Tech) or Scientific American style.
+Date: ${today()}.
+Topic: Choose a science/technology topic each day (AI, climate, space, biotech, neuroscience, energy, computing, medicine, etc.) - DIFFERENT topic every day.
+
+Requirements:
+- article: 280-450 words adapted English passage (simplified for high school students, natural and engaging)
+- translation: Full Chinese translation
+- source: Either "经济学人·科技版" or "科学美国人" - alternate each day
+- long_sentences: Pick 2-3 complex sentences from the article for deep parsing:
+  * The original sentence
+  * Chinese translation
+  * Structure analysis (主谓宾定状补 breakdown in Chinese)
+  * Key grammar points (定语从句、分词作状语、倒装、虚拟语气、强调句等)
+  * Word-by-word/phrase breakdown explaining each component's role
+- discourse_analysis:
+  * text_type: 说明文/议论文/科技报道
+  * structure: Overall text structure analysis in Chinese
+  * main_idea: Main idea in Chinese
+  * key_transitions: Important linking words and their functions
+  * paragraph_flow: How each paragraph connects to the next
+  * author_attitude: Author's stance/attitude
+- reading_questions: 4-5 questions including:
+  * 1 main idea question
+  * 1-2 detail questions targeting complex sentences
+  * 1 inference question
+  * 1 discourse logic question (衔接、指代、逻辑关系)
+  Each with 4 options and answer, labeled by type.`;
+
+    const rdSchema = {
+      date: today(),
+      title_cn: "中文标题（10字以内）",
+      title_en: "English Title",
+      source: "经济学人·科技版 / 科学美国人",
+      article: "Adapted passage 280-450 words",
+      translation: "全文中文翻译",
+      long_sentences: [
+        {
+          sentence: "Original complex sentence...",
+          translation: "中文翻译",
+          structure: "主谓宾定状补结构分析",
+          grammar_points: ["定语从句", "现在分词作状语"],
+          breakdown: [
+            { part: "主句", detail: "The core..." },
+            { part: "从句", detail: "Modifies..." }
+          ]
+        }
+      ],
+      discourse_analysis: {
+        text_type: "说明文",
+        structure: "总-分-总结构，第一段引出话题，中间三段从不同角度论证...",
+        main_idea: "文章讨论了...",
+        key_transitions: [
+          { word: "However", function: "转折，引出相反观点" },
+          { word: "Furthermore", function: "递进，补充论据" }
+        ],
+        paragraph_flow: ["段落一：引出话题...", "段落二：...", "段落三：..."],
+        author_attitude: "客观中立，倾向于支持..."
+      },
+      questions: [
+        { question: "Question?", options: ["A.", "B.", "C.", "D."], answer: "A", type: "main_idea | detail | inference | discourse" }
+      ]
+    };
+
+    const rdContent = await deepseek(rdPrompt, rdSchema);
+    rdContent.date = today();
+
+    const rdTitle = `${today().replace(/-/g, "")} 外刊精读 · ${rdContent.source || "经济学人"}`;
+    const inserted = await insertTask("reading_intensive", rdTitle, rdContent);
+    console.log(`✅ 外刊精读 created: ${rdTitle} (id: ${inserted?.id || "unknown"})`);
+  } catch (e) {
+    console.error(`❌ 外刊精读 failed: ${e.message}`);
+  }
+
   console.log(`\n=== Done ===`);
 }
 

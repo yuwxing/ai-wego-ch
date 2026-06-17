@@ -21,7 +21,8 @@ const sections = [
     color: 'from-sky-400 to-blue-500',
     links: [
       { to: '/learn/writing', label: '英语写作', desc: '中考/高考作文 · AI批改 · 二次提交 · 习作榜' },
-      { to: '/learn/word-cards', label: '单词' },
+      { to: '/learn/word-cards', label: '背单词' },
+      { to: '/learn/han-to-eng', label: '汉译英' },
       { to: '/learn/listening-speaking', label: '听说' },
       { to: '/learn/english-daily', label: '每日英语' },
       { to: '/learn/online-classroom', label: '在线教室' },

@@ -1,5 +1,5 @@
 // ── Text-To-Speech ──
-export function speak(text: string, lang = 'zh-CN', rate = 1.1, pitch = 1.0): Promise<void> {
+export function speak(text: string, lang = 'zh-CN', rate = 1.1, pitch = 1.0, gender: 'female' | 'male' = 'female'): Promise<void> {
   return new Promise((resolve) => {
     if (!window.speechSynthesis) {
       console.warn('SpeechSynthesis not supported')
@@ -13,13 +13,13 @@ export function speak(text: string, lang = 'zh-CN', rate = 1.1, pitch = 1.0): Pr
     const utterance = new SpeechSynthesisUtterance(text)
     utterance.lang = lang
     utterance.rate = rate
-    utterance.pitch = pitch
+    utterance.pitch = gender === 'female' ? 1.2 : 0.9
 
-    // Try to find a good Chinese voice
+    // Try to find a matching voice
     const voices = window.speechSynthesis.getVoices()
     const zhVoice = voices.find(v => v.lang.startsWith('zh') && v.name.includes('Natural'))
       || voices.find(v => v.lang.startsWith('zh'))
-      || voices.find(v => v.lang.startsWith('en') && v.name.includes('Female'))
+      || voices.find(v => v.lang.startsWith('en') && v.name.includes(gender === 'female' ? 'Female' : 'Male'))
     if (zhVoice) utterance.voice = zhVoice
 
     utterance.onend = () => resolve()

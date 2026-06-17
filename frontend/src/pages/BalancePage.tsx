@@ -3,7 +3,7 @@ import WegCoin from '../components/WegCoin';
 import React, { useState, useEffect } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { Coins, Gift, ArrowLeft, Shield, Sparkles, CheckCircle, AlertTriangle, TrendingUp, Calendar, Download, ArrowUpRight, ArrowDownLeft, Zap, RotateCcw, Wallet, MessageSquare, X, Mail, Gift as GiftIcon, Bug, Unlock, HandCoins } from 'lucide-react';
-import { supabaseFetch, type TokenTransaction } from '../utils/supabase';
+import { supabaseFetch, type TokenTransaction, usersAPI } from '../utils/supabase';
 import { workerTokenAPI } from '../utils/supabase';
 import { useUser } from '../contexts/UserContext';
 
@@ -270,7 +270,6 @@ const BalancePage: React.FC = () => {
       setClaimingReward(true);
       setRewardMessage(null);
 
-      // Check if already claimed today
       const today = new Date().toISOString().split('T')[0];
       const existing = await supabaseFetch(`transactions?from_id=eq.${userId}&from_type=eq.user&type=eq.daily_login&created_at=gte.${today}&select=id`);
       if (existing && existing.length > 0) {
@@ -279,32 +278,11 @@ const BalancePage: React.FC = () => {
         return;
       }
 
-      // Get current balance
-      const userData = await supabaseFetch(`users?id=eq.${userId}&select=token_balance`);
-      const currentBalance = userData?.[0]?.token_balance || 0;
-      const newBalance = currentBalance + 20;
-
-      // Update balance
-      await supabaseFetch(`users?id=eq.${userId}`, {
-        method: 'PATCH',
-        headers: { 'Content-Type': 'application/json', 'Prefer': 'return=minimal' },
-        body: JSON.stringify({ token_balance: newBalance }),
-      });
-
-      // Record transaction
-      await supabaseFetch('transactions', {
-        method: 'POST',
-        body: JSON.stringify({
-          from_id: userId, from_type: 'user', to_id: userId, to_type: 'user',
-          amount: 20, type: 'daily_login', description: '每日登录奖励',
-          created_at: new Date().toISOString(),
-        }),
-      });
+      await usersAPI.addBalance(userId, 20, '每日登录奖励');
 
       setRewardClaimed(true);
       setRewardMessage('领取成功！每日登录 +20 积分');
 
-      // Refresh user data
       const fresh = await fetchUser(userId);
       if (fresh) setUser(fresh);
       const txData = await fetchTransactions(userId);

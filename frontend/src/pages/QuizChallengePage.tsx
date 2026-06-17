@@ -1,6 +1,6 @@
 import { useState, useCallback } from 'react'
 import { useNavigate, useParams } from 'react-router-dom'
-import { ArrowLeft, CheckCircle2, XCircle, RefreshCw, Home, Sparkles, BookOpen, Beaker, Globe, Landmark } from 'lucide-react'
+import { ArrowLeft, CheckCircle2, XCircle, RefreshCw, Home, Sparkles, BookOpen, Beaker, Globe, Landmark, Loader2, Shuffle } from 'lucide-react'
 
 interface Question { q: string; opts: string[]; answer: number }
 interface QuizConfig { title: string; emoji: string; icon: any; subtitle: string; about: string; questions: Question[] }
@@ -9,111 +9,155 @@ function shuffle<T>(arr: T[]): T[] {
   const a = [...arr]; for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]] } return a
 }
 
-const QUIZ: Record<string, QuizConfig> = {
-  poetry: {
-    title: '古诗词挑战', emoji: '📜', icon: BookOpen, subtitle: '经典诗词填空，测试你的文学底蕴',
-    about: '本测试包含 15 道古诗词填空题目，涵盖中小学必背篇目及经典名句。测试你的古诗文积累量，看看谁是真正的诗词达人。',
-    questions: shuffle([
-      { q: '"床前明月光" 的下一句是？', opts: ['低头思故乡', '疑是地上霜', '举头望明月', '对影成三人'], answer: 1 },
-      { q: '"举头望明月" 的下一句是？', opts: ['疑是地上霜', '低头思故乡', '月是故乡明', '对影成三人'], answer: 1 },
-      { q: '"好雨知时节" 的下一句是？', opts: ['随风潜入夜', '润物细无声', '当春乃发生', '花重锦官城'], answer: 2 },
-      { q: '"离离原上草" 的下一句是？', opts: ['一岁一枯荣', '野火烧不尽', '春风吹又生', '芳草碧连天'], answer: 0 },
-      { q: '"锄禾日当午" 的下一句是？', opts: ['汗滴禾下土', '粒粒皆辛苦', '农夫犹饿死', '春种一粒粟'], answer: 0 },
-      { q: '"停车坐爱枫林晚" 的下一句是？', opts: ['霜叶红于二月花', '白云生处有人家', '远上寒山石径斜', '江枫渔火对愁眠'], answer: 0 },
-      { q: '"两个黄鹂鸣翠柳" 的下一句是？', opts: ['窗含西岭千秋雪', '一行白鹭上青天', '门泊东吴万里船', '春风又绿江南岸'], answer: 1 },
-      { q: '"但愿人长久" 的下一句是？', opts: ['明月几时有', '把酒问青天', '千里共婵娟', '起舞弄清影'], answer: 2 },
-      { q: '"海内存知己" 的下一句是？', opts: ['天涯若比邻', '万里尚为邻', '与君离别意', '无为在歧路'], answer: 0 },
-      { q: '"独在异乡为异客" 的下一句是？', opts: ['遍插茱萸少一人', '每逢佳节倍思亲', '遥知兄弟登高处', '西出阳关无故人'], answer: 1 },
-      { q: '"飞流直下三千尺" 的下一句是？', opts: ['疑是银河落九天', '轻舟已过万重山', '白云千载空悠悠', '日照香炉生紫烟'], answer: 0 },
-      { q: '"山重水复疑无路" 的下一句是？', opts: ['柳暗花明又一村', '衣冠简朴古风存', '箫鼓追随春社近', '莫笑农家腊酒浑'], answer: 0 },
-      { q: '"千山鸟飞绝" 的下一句是？', opts: ['孤舟蓑笠翁', '万径人踪灭', '独钓寒江雪', '风雪夜归人'], answer: 1 },
-      { q: '"落红不是无情物" 的下一句是？', opts: ['化作春泥更护花', '春花秋月何时了', '无可奈何花落去', '似曾相识燕归来'], answer: 0 },
-      { q: '"竹外桃花三两枝" 的下一句是？', opts: ['春江水暖鸭先知', '桃花潭水深千尺', '人间四月芳菲尽', '山寺桃花始盛开'], answer: 0 },
-      { q: '"春风又绿江南岸" 的下一句是？', opts: ['明月何时照我还', '千里莺啼绿映红', '烟花三月下扬州', '多情却被无情恼'], answer: 0 },
-      { q: '"大漠沙如雪" 的下一句是？', opts: ['燕山月似钩', '月黑雁飞高', '欲将轻骑逐', '大雪满弓刀'], answer: 0 },
-      { q: '"欲穷千里目" 的下一句是？', opts: ['黄河入海流', '更上一层楼', '白日依山尽', '春风不度玉门关'], answer: 1 },
-      { q: '"随风潜入夜" 的下一句是？', opts: ['润物细无声', '当春乃发生', '花重锦官城', '好雨知时节'], answer: 0 },
-      { q: '"纸上得来终觉浅" 的下一句是？', opts: ['绝知此事要躬行', '少壮工夫老始成', '古人学问无遗力', '莫向光阴惰寸功'], answer: 0 },
-    ]),
-  },
-  history: {
-    title: '历史常识挑战', emoji: '🏛️', icon: Landmark, subtitle: '纵横古今，测试你的历史知识储备',
-    about: '本测试包含 15 道历史常识题目，涵盖中国史与世界史的核心事件、人物与制度。从古代文明到现代历史，全面考察你的史学素养。',
-    questions: shuffle([
-      { q: '中国历史上第一个统一的封建王朝是？', opts: ['夏朝', '商朝', '秦朝', '汉朝'], answer: 2 },
-      { q: '辛亥革命爆发于哪一年？', opts: ['1898年', '1911年', '1919年', '1927年'], answer: 1 },
-      { q: '火药最早是由哪个国家发明的？', opts: ['印度', '阿拉伯', '中国', '希腊'], answer: 2 },
-      { q: '第一次世界大战爆发于哪一年？', opts: ['1914年', '1916年', '1918年', '1910年'], answer: 0 },
-      { q: '唐朝的开国皇帝是谁？', opts: ['李世民', '李渊', '武则天', '李治'], answer: 1 },
-      { q: '法国大革命爆发于哪一年？', opts: ['1776年', '1789年', '1799年', '1804年'], answer: 1 },
-      { q: '秦始皇统一六国是在公元前多少年？', opts: ['221年', '256年', '206年', '202年'], answer: 0 },
-      { q: '"焚书坑儒" 发生在哪个朝代？', opts: ['汉朝', '秦朝', '隋朝', '明朝'], answer: 1 },
-      { q: '二战全面爆发的标志是？', opts: ['日本侵华', '德国入侵波兰', '珍珠港事件', '诺曼底登陆'], answer: 1 },
-      { q: '科举制度创立于哪个朝代？', opts: ['汉朝', '魏晋', '隋朝', '唐朝'], answer: 2 },
-      { q: '文艺复兴运动起源于哪个国家？', opts: ['法国', '英国', '意大利', '西班牙'], answer: 2 },
-      { q: '鸦片战争爆发于哪一年？', opts: ['1838年', '1840年', '1842年', '1856年'], answer: 1 },
-      { q: '人类第一次登月是在哪一年？', opts: ['1961年', '1965年', '1969年', '1972年'], answer: 2 },
-      { q: '联合国成立于哪一年？', opts: ['1942年', '1945年', '1949年', '1955年'], answer: 1 },
-      { q: '中国最后一个封建王朝是？', opts: ['宋朝', '元朝', '明朝', '清朝'], answer: 3 },
-      { q: '哥伦布首次到达美洲大陆是在哪一年？', opts: ['1492年', '1498年', '1500年', '1520年'], answer: 0 },
-      { q: '英国工业革命首先从哪个行业开始？', opts: ['钢铁业', '采矿业', '纺织业', '运输业'], answer: 2 },
-      { q: '世界四大文明古国不包括以下哪个？', opts: ['古埃及', '古希腊', '古印度', '古巴比伦'], answer: 1 },
-      { q: '郑和下西洋发生在哪个朝代？', opts: ['宋朝', '元朝', '明朝', '清朝'], answer: 2 },
-      { q: '二战中诺曼底登陆发生在哪一年？', opts: ['1943年', '1944年', '1945年', '1942年'], answer: 1 },
-    ]),
-  },
-  science: {
-    title: '科学常识挑战', emoji: '🔬', icon: Beaker, subtitle: '30 道跨学科科学题，测试你的科学素养',
-    about: '本测试包含 15 道跨学科科学题目，涵盖物理、化学、生物、天文和地球科学。题目由浅入深，考察你的科学素养和常识储备。',
-    questions: shuffle([
-      { q: '光在真空中的传播速度约为？', opts: ['3×10⁶ m/s', '3×10⁸ m/s', '3×10¹⁰ m/s', '3×10⁴ m/s'], answer: 1 },
-      { q: '水的化学式是？', opts: ['H₂O₂', 'CO₂', 'H₂O', 'NaCl'], answer: 2 },
-      { q: '地球自转一周约需？', opts: ['12小时', '24小时', '48小时', '365天'], answer: 1 },
-      { q: '人体最大的器官是？', opts: ['心脏', '肝脏', '皮肤', '大脑'], answer: 2 },
-      { q: '声音不能在以下哪种介质中传播？', opts: ['水', '铁', '真空', '空气'], answer: 2 },
-      { q: '植物通过什么进行光合作用？', opts: ['线粒体', '叶绿素', '细胞核', '液泡'], answer: 1 },
-      { q: '铁的化学符号是？', opts: ['Fe', 'Ir', 'F', 'Ie'], answer: 0 },
-      { q: '太阳系中最大的行星是？', opts: ['土星', '天王星', '木星', '海王星'], answer: 2 },
-      { q: '血液中运输氧气的细胞是？', opts: ['白细胞', '血小板', '红细胞', '淋巴细胞'], answer: 2 },
-      { q: '电压的单位是？', opts: ['安培', '伏特', '欧姆', '瓦特'], answer: 1 },
-      { q: '人体骨骼共有多少块？', opts: ['106块', '206块', '306块', '156块'], answer: 1 },
-      { q: '标准大气压下水的沸点是？', opts: ['80°C', '90°C', '100°C', '120°C'], answer: 2 },
-      { q: '地球唯一的天然卫星是？', opts: ['火星', '太阳', '月球', '金星'], answer: 2 },
-      { q: 'DNA 的双螺旋结构由谁发现？', opts: ['达尔文', '牛顿', '沃森和克里克', '孟德尔'], answer: 2 },
-      { q: '光合作用的产物是？', opts: ['水和二氧化碳', '葡萄糖和氧气', '蛋白质和脂肪', '淀粉和水'], answer: 1 },
-      { q: '人体中最坚硬的物质是？', opts: ['骨骼', '牙釉质', '指甲', '头发'], answer: 1 },
-      { q: '化学中 pH=7 表示？', opts: ['酸性', '碱性', '中性', '强酸'], answer: 2 },
-      { q: '相对论是由谁提出的？', opts: ['牛顿', '爱因斯坦', '普朗克', '霍金'], answer: 1 },
-      { q: '人体最大的内脏器官是？', opts: ['心脏', '胃', '肝脏', '肺'], answer: 2 },
-      { q: '光年是衡量什么的单位？', opts: ['时间', '速度', '距离', '亮度'], answer: 2 },
-    ]),
-  },
-  geography: {
-    title: '地理常识挑战', emoji: '🌍', icon: Globe, subtitle: '环游世界，测试你的地理知识储备',
-    about: '本测试包含 15 道地理常识题目，涵盖世界地理、中国地理、自然地理和人文地理。从山川河流到国家首都，看看你是不是地理小达人。',
-    questions: shuffle([
-      { q: '世界上面积最大的国家是？', opts: ['中国', '美国', '俄罗斯', '加拿大'], answer: 2 },
-      { q: '长江全长约多少公里？', opts: ['3600公里', '5500公里', '6300公里', '7200公里'], answer: 2 },
-      { q: '地球上面积最大的海洋是？', opts: ['大西洋', '印度洋', '太平洋', '北冰洋'], answer: 2 },
-      { q: '珠穆朗玛峰海拔约多少米？', opts: ['7848米', '8848米', '9848米', '6848米'], answer: 1 },
-      { q: '非洲最高的山是？', opts: ['乞力马扎罗山', '阿特拉斯山', '德拉肯斯山', '鲁文佐里山'], answer: 0 },
-      { q: '世界上面积最大的沙漠是？', opts: ['戈壁沙漠', '撒哈拉沙漠', '阿拉伯沙漠', '塔克拉玛干沙漠'], answer: 1 },
-      { q: '澳大利亚的首都是？', opts: ['悉尼', '墨尔本', '堪培拉', '布里斯班'], answer: 2 },
-      { q: '世界上最大的岛屿是？', opts: ['台湾岛', '格陵兰岛', '马达加斯加岛', '大不列颠岛'], answer: 1 },
-      { q: '黄河注入哪个海？', opts: ['黄海', '渤海', '东海', '南海'], answer: 1 },
-      { q: '赤道的纬度是？', opts: ['90°', '45°', '0°', '23.5°'], answer: 2 },
-      { q: '巴西的首都是？', opts: ['里约热内卢', '圣保罗', '巴西利亚', '萨尔瓦多'], answer: 2 },
-      { q: '日本最高的山峰是？', opts: ['富士山', '阿苏山', '立山', '白山'], answer: 0 },
-      { q: '世界上面积最小的国家是？', opts: ['摩纳哥', '圣马力诺', '梵蒂冈', '列支敦士登'], answer: 2 },
-      { q: '好望角位于哪个国家？', opts: ['埃及', '南非', '肯尼亚', '尼日利亚'], answer: 1 },
-      { q: '世界上最长的山脉是？', opts: ['喜马拉雅山脉', '阿尔卑斯山脉', '安第斯山脉', '落基山脉'], answer: 2 },
-      { q: '北极和南极哪个更冷？', opts: ['北极更冷', '南极更冷', '一样冷', '无法比较'], answer: 1 },
-      { q: '世界第一大河（按流量）是？', opts: ['尼罗河', '长江', '亚马逊河', '密西西比河'], answer: 2 },
-      { q: '中国的陆地面积约多少万平方公里？', opts: ['860万', '960万', '1060万', '760万'], answer: 1 },
-      { q: '时区的划分依据是？', opts: ['纬度', '经度', '海拔', '人口'], answer: 1 },
-      { q: '世界上最大的湖泊是？', opts: ['苏必利尔湖', '贝加尔湖', '里海', '维多利亚湖'], answer: 2 },
-    ]),
-  },
+const QUIZ_BANK: Record<string, Question[]> = {
+  poetry: shuffle([
+    { q: '"床前明月光" 的下一句是？', opts: ['低头思故乡', '疑是地上霜', '举头望明月', '对影成三人'], answer: 1 },
+    { q: '"举头望明月" 的下一句是？', opts: ['疑是地上霜', '低头思故乡', '月是故乡明', '对影成三人'], answer: 1 },
+    { q: '"好雨知时节" 的下一句是？', opts: ['随风潜入夜', '润物细无声', '当春乃发生', '花重锦官城'], answer: 2 },
+    { q: '"离离原上草" 的下一句是？', opts: ['一岁一枯荣', '野火烧不尽', '春风吹又生', '芳草碧连天'], answer: 0 },
+    { q: '"锄禾日当午" 的下一句是？', opts: ['汗滴禾下土', '粒粒皆辛苦', '农夫犹饿死', '春种一粒粟'], answer: 0 },
+    { q: '"停车坐爱枫林晚" 的下一句是？', opts: ['霜叶红于二月花', '白云生处有人家', '远上寒山石径斜', '江枫渔火对愁眠'], answer: 0 },
+    { q: '"两个黄鹂鸣翠柳" 的下一句是？', opts: ['窗含西岭千秋雪', '一行白鹭上青天', '门泊东吴万里船', '春风又绿江南岸'], answer: 1 },
+    { q: '"但愿人长久" 的下一句是？', opts: ['明月几时有', '把酒问青天', '千里共婵娟', '起舞弄清影'], answer: 2 },
+    { q: '"海内存知己" 的下一句是？', opts: ['天涯若比邻', '万里尚为邻', '与君离别意', '无为在歧路'], answer: 0 },
+    { q: '"独在异乡为异客" 的下一句是？', opts: ['遍插茱萸少一人', '每逢佳节倍思亲', '遥知兄弟登高处', '西出阳关无故人'], answer: 1 },
+    { q: '"飞流直下三千尺" 的下一句是？', opts: ['疑是银河落九天', '轻舟已过万重山', '白云千载空悠悠', '日照香炉生紫烟'], answer: 0 },
+    { q: '"山重水复疑无路" 的下一句是？', opts: ['柳暗花明又一村', '衣冠简朴古风存', '箫鼓追随春社近', '莫笑农家腊酒浑'], answer: 0 },
+    { q: '"千山鸟飞绝" 的下一句是？', opts: ['孤舟蓑笠翁', '万径人踪灭', '独钓寒江雪', '风雪夜归人'], answer: 1 },
+    { q: '"落红不是无情物" 的下一句是？', opts: ['化作春泥更护花', '春花秋月何时了', '无可奈何花落去', '似曾相识燕归来'], answer: 0 },
+    { q: '"竹外桃花三两枝" 的下一句是？', opts: ['春江水暖鸭先知', '桃花潭水深千尺', '人间四月芳菲尽', '山寺桃花始盛开'], answer: 0 },
+    { q: '"春风又绿江南岸" 的下一句是？', opts: ['明月何时照我还', '千里莺啼绿映红', '烟花三月下扬州', '多情却被无情恼'], answer: 0 },
+    { q: '"大漠沙如雪" 的下一句是？', opts: ['燕山月似钩', '月黑雁飞高', '欲将轻骑逐', '大雪满弓刀'], answer: 0 },
+    { q: '"欲穷千里目" 的下一句是？', opts: ['黄河入海流', '更上一层楼', '白日依山尽', '春风不度玉门关'], answer: 1 },
+    { q: '"随风潜入夜" 的下一句是？', opts: ['润物细无声', '当春乃发生', '花重锦官城', '好雨知时节'], answer: 0 },
+    { q: '"纸上得来终觉浅" 的下一句是？', opts: ['绝知此事要躬行', '少壮工夫老始成', '古人学问无遗力', '莫向光阴惰寸功'], answer: 0 },
+  ]),
+  history: shuffle([
+    { q: '中国历史上第一个统一的封建王朝是？', opts: ['夏朝', '商朝', '秦朝', '汉朝'], answer: 2 },
+    { q: '辛亥革命爆发于哪一年？', opts: ['1898年', '1911年', '1919年', '1927年'], answer: 1 },
+    { q: '火药最早是由哪个国家发明的？', opts: ['印度', '阿拉伯', '中国', '希腊'], answer: 2 },
+    { q: '第一次世界大战爆发于哪一年？', opts: ['1914年', '1916年', '1918年', '1910年'], answer: 0 },
+    { q: '唐朝的开国皇帝是谁？', opts: ['李世民', '李渊', '武则天', '李治'], answer: 1 },
+    { q: '法国大革命爆发于哪一年？', opts: ['1776年', '1789年', '1799年', '1804年'], answer: 1 },
+    { q: '秦始皇统一六国是在公元前多少年？', opts: ['221年', '256年', '206年', '202年'], answer: 0 },
+    { q: '"焚书坑儒" 发生在哪个朝代？', opts: ['汉朝', '秦朝', '隋朝', '明朝'], answer: 1 },
+    { q: '二战全面爆发的标志是？', opts: ['日本侵华', '德国入侵波兰', '珍珠港事件', '诺曼底登陆'], answer: 1 },
+    { q: '科举制度创立于哪个朝代？', opts: ['汉朝', '魏晋', '隋朝', '唐朝'], answer: 2 },
+    { q: '文艺复兴运动起源于哪个国家？', opts: ['法国', '英国', '意大利', '西班牙'], answer: 2 },
+    { q: '鸦片战争爆发于哪一年？', opts: ['1838年', '1840年', '1842年', '1856年'], answer: 1 },
+    { q: '人类第一次登月是在哪一年？', opts: ['1961年', '1965年', '1969年', '1972年'], answer: 2 },
+    { q: '联合国成立于哪一年？', opts: ['1942年', '1945年', '1949年', '1955年'], answer: 1 },
+    { q: '中国最后一个封建王朝是？', opts: ['宋朝', '元朝', '明朝', '清朝'], answer: 3 },
+    { q: '哥伦布首次到达美洲大陆是在哪一年？', opts: ['1492年', '1498年', '1500年', '1520年'], answer: 0 },
+    { q: '英国工业革命首先从哪个行业开始？', opts: ['钢铁业', '采矿业', '纺织业', '运输业'], answer: 2 },
+    { q: '世界四大文明古国不包括以下哪个？', opts: ['古埃及', '古希腊', '古印度', '古巴比伦'], answer: 1 },
+    { q: '郑和下西洋发生在哪个朝代？', opts: ['宋朝', '元朝', '明朝', '清朝'], answer: 2 },
+    { q: '二战中诺曼底登陆发生在哪一年？', opts: ['1943年', '1944年', '1945年', '1942年'], answer: 1 },
+  ]),
+  science: shuffle([
+    { q: '光在真空中的传播速度约为？', opts: ['3×10⁶ m/s', '3×10⁸ m/s', '3×10¹⁰ m/s', '3×10⁴ m/s'], answer: 1 },
+    { q: '水的化学式是？', opts: ['H₂O₂', 'CO₂', 'H₂O', 'NaCl'], answer: 2 },
+    { q: '地球自转一周约需？', opts: ['12小时', '24小时', '48小时', '365天'], answer: 1 },
+    { q: '人体最大的器官是？', opts: ['心脏', '肝脏', '皮肤', '大脑'], answer: 2 },
+    { q: '声音不能在以下哪种介质中传播？', opts: ['水', '铁', '真空', '空气'], answer: 2 },
+    { q: '植物通过什么进行光合作用？', opts: ['线粒体', '叶绿素', '细胞核', '液泡'], answer: 1 },
+    { q: '铁的化学符号是？', opts: ['Fe', 'Ir', 'F', 'Ie'], answer: 0 },
+    { q: '太阳系中最大的行星是？', opts: ['土星', '天王星', '木星', '海王星'], answer: 2 },
+    { q: '血液中运输氧气的细胞是？', opts: ['白细胞', '血小板', '红细胞', '淋巴细胞'], answer: 2 },
+    { q: '电压的单位是？', opts: ['安培', '伏特', '欧姆', '瓦特'], answer: 1 },
+    { q: '人体骨骼共有多少块？', opts: ['106块', '206块', '306块', '156块'], answer: 1 },
+    { q: '标准大气压下水的沸点是？', opts: ['80°C', '90°C', '100°C', '120°C'], answer: 2 },
+    { q: '地球唯一的天然卫星是？', opts: ['火星', '太阳', '月球', '金星'], answer: 2 },
+    { q: 'DNA 的双螺旋结构由谁发现？', opts: ['达尔文', '牛顿', '沃森和克里克', '孟德尔'], answer: 2 },
+    { q: '光合作用的产物是？', opts: ['水和二氧化碳', '葡萄糖和氧气', '蛋白质和脂肪', '淀粉和水'], answer: 1 },
+    { q: '人体中最坚硬的物质是？', opts: ['骨骼', '牙釉质', '指甲', '头发'], answer: 1 },
+    { q: '化学中 pH=7 表示？', opts: ['酸性', '碱性', '中性', '强酸'], answer: 2 },
+    { q: '相对论是由谁提出的？', opts: ['牛顿', '爱因斯坦', '普朗克', '霍金'], answer: 1 },
+    { q: '人体最大的内脏器官是？', opts: ['心脏', '胃', '肝脏', '肺'], answer: 2 },
+    { q: '光年是衡量什么的单位？', opts: ['时间', '速度', '距离', '亮度'], answer: 2 },
+  ]),
+  geography: shuffle([
+    { q: '世界上面积最大的国家是？', opts: ['中国', '美国', '俄罗斯', '加拿大'], answer: 2 },
+    { q: '长江全长约多少公里？', opts: ['3600公里', '5500公里', '6300公里', '7200公里'], answer: 2 },
+    { q: '地球上面积最大的海洋是？', opts: ['大西洋', '印度洋', '太平洋', '北冰洋'], answer: 2 },
+    { q: '珠穆朗玛峰海拔约多少米？', opts: ['7848米', '8848米', '9848米', '6848米'], answer: 1 },
+    { q: '非洲最高的山是？', opts: ['乞力马扎罗山', '阿特拉斯山', '德拉肯斯山', '鲁文佐里山'], answer: 0 },
+    { q: '世界上面积最大的沙漠是？', opts: ['戈壁沙漠', '撒哈拉沙漠', '阿拉伯沙漠', '塔克拉玛干沙漠'], answer: 1 },
+    { q: '澳大利亚的首都是？', opts: ['悉尼', '墨尔本', '堪培拉', '布里斯班'], answer: 2 },
+    { q: '世界上最大的岛屿是？', opts: ['台湾岛', '格陵兰岛', '马达加斯加岛', '大不列颠岛'], answer: 1 },
+    { q: '黄河注入哪个海？', opts: ['黄海', '渤海', '东海', '南海'], answer: 1 },
+    { q: '赤道的纬度是？', opts: ['90°', '45°', '0°', '23.5°'], answer: 2 },
+    { q: '巴西的首都是？', opts: ['里约热内卢', '圣保罗', '巴西利亚', '萨尔瓦多'], answer: 2 },
+    { q: '日本最高的山峰是？', opts: ['富士山', '阿苏山', '立山', '白山'], answer: 0 },
+    { q: '世界上面积最小的国家是？', opts: ['摩纳哥', '圣马力诺', '梵蒂冈', '列支敦士登'], answer: 2 },
+    { q: '好望角位于哪个国家？', opts: ['埃及', '南非', '肯尼亚', '尼日利亚'], answer: 1 },
+    { q: '世界上最长的山脉是？', opts: ['喜马拉雅山脉', '阿尔卑斯山脉', '安第斯山脉', '落基山脉'], answer: 2 },
+    { q: '北极和南极哪个更冷？', opts: ['北极更冷', '南极更冷', '一样冷', '无法比较'], answer: 1 },
+    { q: '世界第一大河（按流量）是？', opts: ['尼罗河', '长江', '亚马逊河', '密西西比河'], answer: 2 },
+    { q: '中国的陆地面积约多少万平方公里？', opts: ['860万', '960万', '1060万', '760万'], answer: 1 },
+    { q: '时区的划分依据是？', opts: ['纬度', '经度', '海拔', '人口'], answer: 1 },
+    { q: '世界上最大的湖泊是？', opts: ['苏必利尔湖', '贝加尔湖', '里海', '维多利亚湖'], answer: 2 },
+  ]),
+}
+
+const QUIZ_META: Record<string, Omit<QuizConfig, 'questions'>> = {
+  poetry: { title: '古诗词挑战', emoji: '📜', icon: BookOpen, subtitle: '经典诗词填空，测试你的文学底蕴', about: '本测试包含 15 道古诗词填空题目，涵盖中小学必背篇目及经典名句。' },
+  history: { title: '历史常识挑战', emoji: '🏛️', icon: Landmark, subtitle: '纵横古今，测试你的历史知识储备', about: '本测试包含 15 道历史常识题目，涵盖中国史与世界史的核心事件、人物与制度。' },
+  science: { title: '科学常识挑战', emoji: '🔬', icon: Beaker, subtitle: '30 道跨学科科学题，测试你的科学素养', about: '本测试包含 15 道跨学科科学题目，涵盖物理、化学、生物、天文和地球科学。' },
+  geography: { title: '地理常识挑战', emoji: '🌍', icon: Globe, subtitle: '环游世界，测试你的地理知识储备', about: '本测试包含 15 道地理常识题目，涵盖世界地理、中国地理、自然地理和人文地理。' },
+}
+
+function pickQuestions(bank: Question[], count = 15): Question[] {
+  const shuffled = shuffle(bank)
+  return shuffled.slice(0, count)
+}
+
+async function generateQuestionsByAI(type: string): Promise<Question[] | null> {
+  const apiKey = localStorage.getItem('deepseek_api_key') || localStorage.getItem('deepseek-api-key')
+  if (!apiKey) return null
+
+  const topics: Record<string, string> = {
+    poetry: '中国古诗词（中小学必背篇目及经典名句，上下句填空）',
+    history: '中国历史和世界历史常识',
+    science: '跨学科科学常识（物理、化学、生物、天文、地球科学）',
+    geography: '世界地理和中国地理常识',
+  }
+
+  const prompt = `你是一个出题老师。请生成 15 道关于"${topics[type] || type}"的选择题，每道题 4 个选项，难度中等。
+
+请严格按照以下 JSON 格式输出，不要包含任何其他文字：
+{
+  "questions": [
+    {
+      "q": "题目内容",
+      "opts": ["A选项", "B选项", "C选项", "D选项"],
+      "answer": 0
+    }
+  ]
+}
+注意：answer 字段是正确答案的索引（0/1/2/3），必须是一个数字。题目不能重复，确保每道题都有唯一正确答案。`
+
+  try {
+    const res = await fetch('https://api.deepseek.com/v1/chat/completions', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
+      body: JSON.stringify({ model: 'deepseek-chat', messages: [{ role: 'system', content: '你是一个专业的出题老师，只输出 JSON。' }, { role: 'user', content: prompt }], max_tokens: 4096, temperature: 0.8 }),
+    })
+    if (!res.ok) return null
+    const data = await res.json()
+    const text = data.choices?.[0]?.message?.content || ''
+    const jsonMatch = text.match(/\{[\s\S]*\}/)
+    if (!jsonMatch) return null
+    const parsed = JSON.parse(jsonMatch[0])
+    if (!parsed.questions || !Array.isArray(parsed.questions) || parsed.questions.length === 0) return null
+    return parsed.questions.slice(0, 15).map((q: any) => ({
+      q: q.q,
+      opts: Array.isArray(q.opts) && q.opts.length === 4 ? q.opts : ['A', 'B', 'C', 'D'],
+      answer: typeof q.answer === 'number' && q.answer >= 0 && q.answer <= 3 ? q.answer : 0,
+    }))
+  } catch {
+    return null
+  }
 }
 
 const RANKS = [
@@ -129,8 +173,13 @@ function getRank(score: number) { return RANKS.find(r => score >= r.min) || RANK
 export default function QuizChallengePage() {
   const navigate = useNavigate()
   const { type } = useParams<{ type: string }>()
-  const config = QUIZ[type || '']
-  if (!config) { navigate('/'); return null }
+  const meta = QUIZ_META[type || '']
+  if (!meta) { navigate('/'); return null }
+
+  const [questions, setQuestions] = useState<Question[]>(() => pickQuestions(QUIZ_BANK[type!], 15))
+  const [aiQuestions, setAiQuestions] = useState<Question[] | null>(null)
+  const [generating, setGenerating] = useState(false)
+  const [source, setSource] = useState<'bank' | 'ai'>('bank')
 
   const [phase, setPhase] = useState<'intro' | 'playing' | 'done'>('intro')
   const [index, setIndex] = useState(0)
@@ -138,11 +187,12 @@ export default function QuizChallengePage() {
   const [score, setScore] = useState(0)
   const [results, setResults] = useState<boolean[]>([])
 
-  const question = config.questions[index]
-  const isLast = index >= config.questions.length - 1
+  const activeQuestions = aiQuestions || questions
+  const question = activeQuestions[index]
+  const isLast = index >= activeQuestions.length - 1
 
   const handleSelect = useCallback((i: number) => {
-    if (selected !== null) return
+    if (selected !== null || !question) return
     setSelected(i)
     const correct = i === question.answer
     if (correct) setScore(s => s + 1)
@@ -159,21 +209,59 @@ export default function QuizChallengePage() {
     window.location.reload()
   }, [])
 
+  const handleGenerate = useCallback(async () => {
+    setGenerating(true)
+    const result = await generateQuestionsByAI(type!)
+    if (result && result.length > 0) {
+      setAiQuestions(result)
+      setSource('ai')
+    }
+    setGenerating(false)
+  }, [type])
+
+  const handleUseBank = useCallback(() => {
+    setAiQuestions(null)
+    setSource('bank')
+    setQuestions(pickQuestions(QUIZ_BANK[type!], 15))
+  }, [type])
+
   if (phase === 'intro') {
-    const Icon = config.icon
+    const Icon = meta.icon
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-950 to-slate-900 flex items-center justify-center p-4">
         <div className="w-full max-w-lg bg-white/5 backdrop-blur-xl rounded-3xl border border-white/10 p-8 text-center">
           <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-lg shadow-amber-500/30">
             <Icon className="w-10 h-10 text-white" />
           </div>
-          <h1 className="text-2xl font-bold text-white mb-2">{config.title}</h1>
-          <p className="text-white/50 text-sm mb-2">{config.subtitle}</p>
-          <p className="text-white/30 text-xs mb-8">{config.about}</p>
-          <button onClick={() => setPhase('playing')}
-            className="w-full py-4 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold text-lg hover:shadow-lg hover:shadow-amber-500/30 transition-all flex items-center justify-center gap-2">
-            开始测试
-          </button>
+          <h1 className="text-2xl font-bold text-white mb-2">{meta.title}</h1>
+          <p className="text-white/50 text-sm mb-2">{meta.subtitle}</p>
+          <p className="text-white/30 text-xs mb-6">{meta.about}</p>
+          <div className="flex items-center justify-center gap-2 mb-4">
+            {source === 'ai' && <span className="text-xs px-2 py-0.5 rounded-full bg-green-500/20 text-green-400 border border-green-500/30">AI 生成</span>}
+            {source === 'bank' && <span className="text-xs px-2 py-0.5 rounded-full bg-white/10 text-white/40 border border-white/10">题库</span>}
+          </div>
+          {generating ? (
+            <div className="w-full py-4 rounded-2xl bg-white/5 text-white/50 flex items-center justify-center gap-2">
+              <Loader2 className="w-5 h-5 animate-spin" /> AI 生成题目中...
+            </div>
+          ) : (
+            <>
+              <button onClick={() => setPhase('playing')}
+                className="w-full py-4 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold text-lg hover:shadow-lg hover:shadow-amber-500/30 transition-all flex items-center justify-center gap-2">
+                开始测试
+              </button>
+              <button onClick={handleGenerate} disabled={generating}
+                className="mt-3 w-full py-3 rounded-2xl bg-white/5 text-white/60 text-sm hover:bg-white/10 transition-all flex items-center justify-center gap-2">
+                <Shuffle className="w-4 h-4" /> AI 随机生成新题目
+              </button>
+              {source === 'ai' && (
+                <button onClick={handleUseBank}
+                  className="mt-2 w-full py-2.5 rounded-2xl bg-white/5 text-white/40 text-xs hover:bg-white/10 transition-all flex items-center justify-center gap-1.5">
+                  切换回题库
+                </button>
+              )}
+            </>
+          )}
           <button onClick={() => navigate('/')} className="mt-3 w-full py-2.5 rounded-2xl bg-white/5 text-white/50 text-sm hover:bg-white/10 transition-all">
             返回首页
           </button>
@@ -183,22 +271,25 @@ export default function QuizChallengePage() {
   }
 
   if (phase === 'done') {
-    const Icon = config.icon
+    const Icon = meta.icon
     const rank = getRank(score)
-    const total = config.questions.length
+    const total = activeQuestions.length
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-950 to-slate-900 flex items-center justify-center p-4">
         <div className="w-full max-w-lg bg-white/5 backdrop-blur-xl rounded-3xl border border-white/10 p-8 text-center">
           <div className="w-20 h-20 mx-auto mb-4 rounded-full bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center shadow-lg shadow-amber-500/30">
             <Sparkles className="w-10 h-10 text-white" />
           </div>
-          <h2 className="text-2xl font-bold text-white mb-2">{config.title}</h2>
+          <h2 className="text-2xl font-bold text-white mb-2">{meta.title}</h2>
+          <div className="flex items-center justify-center gap-2 mb-4">
+            {source === 'ai' && <span className="text-xs px-2 py-0.5 rounded-full bg-green-500/20 text-green-400 border border-green-500/30">AI 生成</span>}
+          </div>
           <p className="text-white/40 text-sm mb-6">测试完成</p>
           <div className="text-7xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-amber-400 to-orange-500 my-4">{score}/{total}</div>
           <div className={`text-lg font-bold ${rank.color} mb-1`}>{rank.label}</div>
           <p className="text-white/50 text-sm mb-6">{rank.desc}</p>
           <div className="space-y-1.5 mb-6 max-h-48 overflow-y-auto text-left">
-            {config.questions.slice(0, 15).map((q, i) => (
+            {activeQuestions.slice(0, 15).map((q, i) => (
               <div key={i} className={`flex items-start gap-2 text-xs px-3 py-1.5 rounded-lg ${results[i] ? 'bg-green-500/10 text-green-400' : 'bg-red-500/10 text-red-400'}`}>
                 {results[i] ? <CheckCircle2 className="w-3.5 h-3.5 shrink-0 mt-0.5" /> : <XCircle className="w-3.5 h-3.5 shrink-0 mt-0.5" />}
                 <span className="flex-1">{q.q}</span>
@@ -219,20 +310,22 @@ export default function QuizChallengePage() {
     )
   }
 
+  if (!question) return null
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-950 to-slate-900 flex items-center justify-center p-4">
       <div className="w-full max-w-2xl">
-        {/* Header */}
         <div className="flex items-center justify-between mb-6">
           <button onClick={() => navigate('/')} className="w-9 h-9 rounded-xl bg-white/5 border border-white/10 flex items-center justify-center text-white/60 hover:text-white hover:bg-white/10 transition-all">
             <ArrowLeft className="w-4 h-4" />
           </button>
           <div className="text-center">
             <div className="flex items-center gap-1.5 justify-center">
-              <span className="text-lg">{config.emoji}</span>
-              <span className="text-sm text-white font-semibold">{config.title}</span>
+              <span className="text-lg">{meta.emoji}</span>
+              <span className="text-sm text-white font-semibold">{meta.title}</span>
+              {source === 'ai' && <span className="text-[10px] px-1.5 py-0.5 rounded-full bg-green-500/20 text-green-400 border border-green-500/30">AI</span>}
             </div>
-            <p className="text-xs text-white/30">第 {index + 1}/{config.questions.length} 题</p>
+            <p className="text-xs text-white/30">第 {index + 1}/{activeQuestions.length} 题</p>
           </div>
           <div className="text-right">
             <div className="text-2xl font-bold text-white tabular-nums">{score}</div>
@@ -240,12 +333,10 @@ export default function QuizChallengePage() {
           </div>
         </div>
 
-        {/* Progress bar */}
         <div className="h-1.5 rounded-full bg-white/5 mb-8 overflow-hidden">
-          <div className="h-full rounded-full bg-gradient-to-r from-amber-500 to-orange-500 transition-all duration-500" style={{ width: `${(index + 1) / config.questions.length * 100}%` }} />
+          <div className="h-full rounded-full bg-gradient-to-r from-amber-500 to-orange-500 transition-all duration-500" style={{ width: `${(index + 1) / activeQuestions.length * 100}%` }} />
         </div>
 
-        {/* Question card */}
         <div className="bg-white/5 backdrop-blur-xl rounded-3xl border border-white/10 p-8 mb-6">
           <p className="text-sm font-medium text-white mb-6 leading-relaxed">{question.q}</p>
           <div className="grid grid-cols-1 gap-3">
@@ -269,7 +360,6 @@ export default function QuizChallengePage() {
           </div>
         </div>
 
-        {/* Next button */}
         <button onClick={handleNext} disabled={selected === null}
           className={`w-full py-3 rounded-2xl font-semibold transition-all flex items-center justify-center gap-2 ${selected !== null ? 'bg-gradient-to-r from-purple-500 to-indigo-500 text-white hover:shadow-lg hover:shadow-purple-500/30' : 'bg-white/5 text-white/30 cursor-not-allowed'}`}>
           {isLast ? '查看结果' : '下一题'}

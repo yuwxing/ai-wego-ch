@@ -43,13 +43,16 @@ interface ReadingContent {
 
 export default function ReadingIntensivePage() {
   const navigate = useNavigate()
-  const [data, setData] = useState<ReadingContent | null>(null)
+  const [allArticles, setAllArticles] = useState<{ id: number; title: string; data: ReadingContent }[]>([])
+  const [currentId, setCurrentId] = useState<number | null>(null)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [showTranslation, setShowTranslation] = useState(false)
   const [expandedSentences, setExpandedSentences] = useState<number[]>([])
   const [selectedAnswers, setSelectedAnswers] = useState<Record<number, string>>({})
   const [submitted, setSubmitted] = useState(false)
+
+  const data = allArticles.find(a => a.id === currentId)?.data || null
 
   useEffect(() => { fetchContent() }, [])
 
@@ -58,15 +61,17 @@ export default function ReadingIntensivePage() {
     setError(null)
     try {
       const resp = await fetch(
-        `${SUPABASE_URL}tasks?status=eq.reading_intensive&select=id,title,description&order=id.desc&limit=1`,
+        `${SUPABASE_URL}tasks?status=eq.reading_intensive&select=id,title,description&order=id.desc`,
         { headers: { apikey: SUPABASE_KEY, Authorization: `Bearer ${SUPABASE_KEY}`, 'Content-Type': 'application/json' } }
       )
       if (!resp.ok) throw new Error(`HTTP ${resp.status}`)
       const rows = await resp.json()
       if (rows.length > 0) {
-        setData(JSON.parse(rows[0].description))
+        const articles = rows.map((r: any) => ({ id: r.id, title: r.title, data: JSON.parse(r.description) }))
+        setAllArticles(articles)
+        setCurrentId(articles[0].id)
       } else {
-        setError('暂无今日外刊内容')
+        setError('暂无内容')
       }
     } catch {
       setError('网络错误，请重试')
@@ -141,7 +146,7 @@ export default function ReadingIntensivePage() {
   }
 
   return (
-    <div className="page-wrapper min-h-screen flex flex-col">
+    <div className="page-wrapper min-h-screen flex flex-col md:overflow-hidden">
       <header className="bg-white/80 backdrop-blur-md border-b border-emerald-100/50 px-4 py-3 flex items-center gap-3 flex-shrink-0">
         <button onClick={() => navigate(-1)} className="p-1.5 rounded-lg hover:bg-emerald-50 text-slate-500">
           <ChevronRight className="w-5 h-5 rotate-180" />
@@ -150,37 +155,72 @@ export default function ReadingIntensivePage() {
           <BookOpen className="w-4 h-4 text-white" />
         </div>
         <span className="text-sm font-semibold text-slate-700">外刊精读</span>
-        <span className="text-xs text-slate-400 ml-auto">{data?.source}</span>
+        <span className="text-[10px] text-slate-400 ml-auto">共{allArticles.length}篇</span>
       </header>
 
-      <div className="flex-1 overflow-y-auto">
-        <div className="max-w-3xl mx-auto p-4 md:p-6 space-y-5">
-          <div className="glass-card rounded-2xl p-5">
-            <h1 className="text-lg font-bold text-slate-800 mb-1">{data?.title_cn}</h1>
-            <p className="text-sm text-slate-500 italic mb-3">{data?.title_en}</p>
-            <div className="flex items-center gap-3 text-xs text-slate-400 mb-4">
-              <span>{data?.date}</span>
-              <span className="w-1 h-1 rounded-full bg-slate-300" />
-              <span>{data?.source}</span>
-            </div>
-
-            <div className="bg-white/80 rounded-xl p-4 border border-slate-100">
-              <div className="flex items-center justify-between mb-3">
-                <span className="text-xs font-medium text-slate-500">正文</span>
-                <button onClick={() => setShowTranslation(!showTranslation)}
-                  className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-lg bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition-colors">
-                  <Languages className="w-3 h-3" />
-                  {showTranslation ? '隐藏翻译' : '显示翻译'}
+      <div className="flex-1 flex flex-col md:flex-row md:overflow-hidden">
+        <div className="md:hidden px-4 pt-3 pb-2 flex-shrink-0">
+          <select value={String(currentId ?? '')} onChange={e => {
+            const next = allArticles.find(a => String(a.id) === e.target.value)
+            if (!next) return
+            setCurrentId(next.id)
+            setSelectedAnswers({})
+            setSubmitted(false)
+            setExpandedSentences([])
+            setShowTranslation(false)
+          }}
+            className="w-full text-xs bg-white border border-slate-200 rounded-xl px-3 py-2.5 text-slate-600 focus:outline-none focus:ring-1 focus:ring-emerald-300 appearance-none">
+            {allArticles.map(a => <option key={a.id} value={String(a.id)}>{a.data?.title_cn || a.title}</option>)}
+          </select>
+        </div>
+        <aside className="hidden md:block w-56 lg:w-64 bg-white/50 border-r border-emerald-100/50 overflow-y-auto flex-shrink-0 p-3">
+          <div className="space-y-1.5">
+            {allArticles.map(a => {
+              const active = a.id === currentId
+              return (
+                <button key={a.id} onClick={() => { setCurrentId(a.id); setSelectedAnswers({}); setSubmitted(false); setExpandedSentences([]); setShowTranslation(false) }}
+                  className={`w-full text-left p-2.5 rounded-xl transition-all text-xs ${
+                    active ? 'bg-emerald-100 border border-emerald-200 shadow-sm' : 'hover:bg-slate-100 border border-transparent'
+                  }`}>
+                  <p className={`font-medium truncate ${active ? 'text-emerald-800' : 'text-slate-600'}`}>
+                    {a.data?.title_cn || '无标题'}
+                  </p>
+                  <p className="text-[10px] text-slate-400 mt-0.5">{a.data?.source} · {a.data?.date}</p>
                 </button>
-              </div>
-              <p className="text-sm text-slate-700 leading-7 whitespace-pre-wrap">{data?.article}</p>
-              {showTranslation && (
-                <div className="mt-3 pt-3 border-t border-slate-100">
-                  <p className="text-sm text-slate-500 leading-7 whitespace-pre-wrap">{data?.translation}</p>
-                </div>
-              )}
-            </div>
+              )
+            })}
+            {allArticles.length === 0 && <p className="text-xs text-slate-400 text-center py-8">暂无内容</p>}
           </div>
+        </aside>
+
+        <div className="flex-1 min-h-0 overflow-y-auto">
+          <div className="max-w-3xl mx-auto p-4 md:p-6 space-y-5" key={currentId}>
+            <div className="glass-card rounded-2xl p-5">
+              <h1 className="text-lg font-bold text-slate-800 mb-1">{data?.title_cn}</h1>
+              <p className="text-sm text-slate-500 italic mb-3">{data?.title_en}</p>
+              <div className="flex items-center gap-3 text-xs text-slate-400 mb-4">
+                <span>{data?.date}</span>
+                <span className="w-1 h-1 rounded-full bg-slate-300" />
+                <span>{data?.source}</span>
+              </div>
+
+              <div className="bg-white/80 rounded-xl p-4 border border-slate-100">
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-xs font-medium text-slate-500">正文</span>
+                  <button onClick={() => setShowTranslation(!showTranslation)}
+                    className="flex items-center gap-1 text-xs px-3 py-1.5 rounded-lg bg-emerald-50 text-emerald-600 hover:bg-emerald-100 transition-colors">
+                    <Languages className="w-3 h-3" />
+                    {showTranslation ? '隐藏翻译' : '显示翻译'}
+                  </button>
+                </div>
+                <p className="text-sm text-slate-700 leading-7 whitespace-pre-wrap">{data?.article}</p>
+                {showTranslation && (
+                  <div className="mt-3 pt-3 border-t border-slate-100">
+                    <p className="text-sm text-slate-500 leading-7 whitespace-pre-wrap">{data?.translation}</p>
+                  </div>
+                )}
+              </div>
+            </div>
 
           {data?.long_sentences && data.long_sentences.length > 0 && (
             <div className="glass-card rounded-2xl p-5">
@@ -310,8 +350,9 @@ export default function ReadingIntensivePage() {
                         const isSelected = selectedAnswers[qi]?.[0] === letter
                         const isCorrect = letter === q.answer
                         let btnStyle = 'border-slate-200 hover:border-emerald-300 hover:bg-emerald-50'
-                        if (submitted && isSelected && isCorrect) btnStyle = 'border-emerald-400 bg-emerald-50'
-                        else if (submitted && isSelected && !isCorrect) btnStyle = 'border-red-300 bg-red-50'
+                        if (!submitted && isSelected) btnStyle = 'border-emerald-400 bg-emerald-50 ring-1 ring-emerald-300'
+                        else if (submitted && isSelected && isCorrect) btnStyle = 'border-emerald-400 bg-emerald-50 ring-1 ring-emerald-300'
+                        else if (submitted && isSelected && !isCorrect) btnStyle = 'border-red-300 bg-red-50 ring-1 ring-red-200'
                         else if (submitted && isCorrect) btnStyle = 'border-emerald-300 bg-emerald-50/50'
                         return (
                           <button key={oi} onClick={() => handleAnswerSelect(qi, letter)}
@@ -350,6 +391,7 @@ export default function ReadingIntensivePage() {
           </div>
         </div>
       </div>
+    </div>
     </div>
   )
 }

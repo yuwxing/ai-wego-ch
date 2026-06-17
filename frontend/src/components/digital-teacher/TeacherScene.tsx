@@ -1,10 +1,11 @@
-import React from 'react'
-import { Canvas } from '@react-three/fiber'
-import { OrbitControls } from '@react-three/drei'
+import React, { useRef } from 'react'
+import { Canvas, useFrame } from '@react-three/fiber'
+import { OrbitControls, Html } from '@react-three/drei'
 import TeacherGLB from './TeacherGLB'
 import type { RobotAnim } from './RobotAvatar'
 import TeachingBlackboard from './TeachingBlackboard'
 import HolographicClassroom from './HolographicClassroom'
+import * as THREE from 'three'
 
 interface Props {
   mode: 'idle' | 'walk' | 'talk'
@@ -12,15 +13,66 @@ interface Props {
   ikTarget?: [number, number, number] | null
   blackboard?: string
   modelUrl?: string
+  children?: React.ReactNode
+  onTeacherClick?: () => void
+  teacherPos?: React.MutableRefObject<THREE.Vector3>
 }
 
-export default function TeacherScene({ mode, walkDir, blackboard, modelUrl }: Props) {
+function TeacherChatButton({ onClick, posRef }: { onClick?: () => void; posRef: React.MutableRefObject<THREE.Vector3> }) {
+  const groupRef = useRef<THREE.Group>(null!)
+
+  useFrame(() => {
+    if (groupRef.current) {
+      groupRef.current.position.copy(posRef.current)
+      groupRef.current.position.y += 2.4
+    }
+  })
+
+  return (
+    <group ref={groupRef}>
+      <Html center>
+        <div
+          onClick={(e) => { e.stopPropagation(); onClick?.() }}
+          style={{
+            background: 'rgba(34,211,238,0.2)',
+            backdropFilter: 'blur(8px)',
+            border: '1px solid rgba(34,211,238,0.5)',
+            borderRadius: 20,
+            padding: '6px 14px',
+            cursor: 'pointer',
+            color: '#22d3ee',
+            fontSize: 14,
+            fontWeight: 600,
+            fontFamily: '"PingFang SC", sans-serif',
+            whiteSpace: 'nowrap',
+            transition: 'all 0.2s',
+            userSelect: 'none',
+            boxShadow: '0 0 20px rgba(34,211,238,0.3)',
+          }}
+          onMouseEnter={e => {
+            e.currentTarget.style.background = 'rgba(34,211,238,0.35)'
+            e.currentTarget.style.boxShadow = '0 0 30px rgba(34,211,238,0.5)'
+          }}
+          onMouseLeave={e => {
+            e.currentTarget.style.background = 'rgba(34,211,238,0.2)'
+            e.currentTarget.style.boxShadow = '0 0 20px rgba(34,211,238,0.3)'
+          }}
+        >
+          💬 提问
+        </div>
+      </Html>
+    </group>
+  )
+}
+
+export default function TeacherScene({ mode, walkDir, blackboard, modelUrl, children, onTeacherClick }: Props) {
   const anim: RobotAnim = mode === 'walk' ? 'walk' : mode === 'talk' ? 'talk' : 'idle'
+  const teacherPos = useRef(new THREE.Vector3(0, 0, 0))
 
   return (
     <Canvas
       shadows
-      camera={{ position: [1.5, 1.6, 3.0], fov: 50 }}
+      camera={{ position: [0, 1.6, 4.5], fov: 55 }}
       style={{ width: '100%', height: '100%', background: '#050510' }}
     >
       <ambientLight intensity={1.2} color="#ffffff" />
@@ -35,13 +87,17 @@ export default function TeacherScene({ mode, walkDir, blackboard, modelUrl }: Pr
 
       <HolographicClassroom />
 
-      <TeacherGLB modelUrl={modelUrl} animation={anim} walkDir={walkDir} />
+      <TeacherGLB modelUrl={modelUrl} animation={anim} walkDir={walkDir} posRef={teacherPos} />
+
+      <TeacherChatButton onClick={onTeacherClick} posRef={teacherPos} />
 
       <TeachingBlackboard content={blackboard || ''} visible={!!blackboard} />
 
-      <OrbitControls target={[0, 1.2, 0]} enableDamping minDistance={1.5} maxDistance={6} />
+      {children}
 
-      <fog attach="fog" args={['#050510', 6, 12]} />
+      <OrbitControls target={[0, 1.2, 0]} enableDamping minDistance={1.5} maxDistance={6} autoRotate autoRotateSpeed={0.6} />
+
+      <fog attach="fog" args={['#050510', 6, 14]} />
     </Canvas>
   )
 }

@@ -753,6 +753,7 @@ export default function ListeningSpeakingPage() {
   const renderPartB = () => {
     if (!data) return null;
     const { part_b } = data;
+    const totalBQuestions = part_b.conversations.reduce((sum, c) => sum + c.questions.length, 0);
     return (
       <div style={{ padding: '16px' }}>
         {part_b.conversations.map((conv, ci) => (
@@ -894,24 +895,29 @@ export default function ListeningSpeakingPage() {
           </div>
         ))}
         
-        {!submitted && (
-          <button
-            onClick={handleSubmit}
-            disabled={Object.keys(selectedAnswers).length < 3}
+          {!submitted && (
+          <div>
+            <div style={{ textAlign: 'center', marginBottom: '12px', fontSize: '13px', color: Object.keys(selectedAnswers).length >= totalBQuestions ? '#4caf50' : '#ff9800' }}>
+              {Object.keys(selectedAnswers).length} / {totalBQuestions} 已答
+            </div>
+            <button
+              onClick={handleSubmit}
+              disabled={Object.keys(selectedAnswers).length < totalBQuestions}
             style={{
               width: '100%',
               padding: '14px',
-              background: Object.keys(selectedAnswers).length >= 3 ? '#2196f3' : '#ccc',
+              background: Object.keys(selectedAnswers).length >= totalBQuestions ? '#2196f3' : '#ccc',
               color: '#fff',
               border: 'none',
               borderRadius: '10px',
               fontSize: '15px',
               fontWeight: '600',
-              cursor: Object.keys(selectedAnswers).length >= 3 ? 'pointer' : 'not-allowed'
+              cursor: Object.keys(selectedAnswers).length >= totalBQuestions ? 'pointer' : 'not-allowed'
             }}
           >
             提交答案
-          </button>
+           </button>
+           </div>
         )}
       </div>
     );
@@ -1082,25 +1088,26 @@ export default function ListeningSpeakingPage() {
                 </button>
               </div>
 
-              {/* 参考答案 */}
+              {/* 参考答案：完成练习后才能查看 */}
               <button
                 onClick={() => {
                   const arr = expandedAnswers;
                   if (arr.includes(idx)) setExpandedAnswers(arr.filter(i => i !== idx));
                   else setExpandedAnswers([...arr, idx]);
                 }}
+                disabled={!scoreC[idx]}
                 style={{
-                  background: '#f3e5f5',
+                  background: scoreC[idx] ? '#f3e5f5' : '#f5f5f5',
                   border: 'none',
                   borderRadius: '8px',
                   padding: '8px 14px',
                   fontSize: '12px',
-                  color: '#7b1fa2',
-                  cursor: 'pointer',
+                  color: scoreC[idx] ? '#7b1fa2' : '#bbb',
+                  cursor: scoreC[idx] ? 'pointer' : 'default',
                   fontWeight: '500'
                 }}
               >
-                {expandedAnswers.includes(idx) ? '▲ 收起答案' : '▼ 查看参考答案'}
+                {scoreC[idx] ? (expandedAnswers.includes(idx) ? '▲ 收起答案' : '▼ 查看参考答案') : '✅ 先练习回答再看答案'}
               </button>
               {expandedAnswers.includes(idx) && (
                 <div style={{
@@ -1132,6 +1139,84 @@ export default function ListeningSpeakingPage() {
                   </button>
                 </div>
               )}
+
+              {/* 练习回答 */}
+              <div style={{ marginTop: '12px' }}>
+                <button
+                  onClick={() => togglePracticeC(idx)}
+                  style={{
+                    background: practiceCExpanded.includes(idx) ? '#e8f5e9' : '#fff3e0',
+                    border: `2px solid ${practiceCExpanded.includes(idx) ? '#4caf50' : '#ff9800'}`,
+                    borderRadius: '8px',
+                    padding: '8px 14px',
+                    fontSize: '12px',
+                    color: practiceCExpanded.includes(idx) ? '#2e7d32' : '#e65100',
+                    cursor: 'pointer',
+                    fontWeight: '500',
+                    width: '100%'
+                  }}
+                >
+                  {practiceCExpanded.includes(idx) ? '🙈 收起练习' : '✏️ 练习回答'}
+                </button>
+                {practiceCExpanded.includes(idx) && (
+                  <div style={{ marginTop: '10px' }}>
+                    <textarea
+                      value={inputTextC[idx] || ''}
+                      onChange={(e) => setInputTextC(prev => ({ ...prev, [idx]: e.target.value }))}
+                      placeholder="输入你的回答..."
+                      style={{
+                        width: '100%',
+                        minHeight: '60px',
+                        padding: '10px',
+                        border: '2px solid #e0e0e0',
+                        borderRadius: '8px',
+                        fontSize: '13px',
+                        lineHeight: '1.5',
+                        resize: 'vertical',
+                        fontFamily: 'inherit',
+                        boxSizing: 'border-box',
+                        marginBottom: '8px'
+                      }}
+                    />
+                    <button
+                      onClick={() => handleGradeC(idx, q.en_answer)}
+                      style={{
+                        width: '100%',
+                        padding: '10px',
+                        background: 'linear-gradient(135deg, #9c27b0 0%, #e040fb 100%)',
+                        color: '#fff',
+                        border: 'none',
+                        borderRadius: '8px',
+                        fontSize: '13px',
+                        fontWeight: '600',
+                        cursor: 'pointer'
+                      }}
+                    >
+                      评分
+                    </button>
+                    {scoreC[idx] && (
+                      <div style={{
+                        marginTop: '8px',
+                        padding: '10px',
+                        background: '#f0f7ff',
+                        borderRadius: '8px',
+                        fontSize: '13px'
+                      }}>
+                        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                          <span style={{ fontWeight: 600, color: '#1565c0' }}>得分：{scoreC[idx].score}/5</span>
+                          <span style={{ color: '#333' }}>{scoreC[idx].feedback}</span>
+                        </div>
+                        <div style={{ fontSize: '12px', color: '#666', marginTop: '4px' }}>
+                          你的回答：{inputTextC[idx]}
+                        </div>
+                        <div style={{ fontSize: '12px', color: '#888' }}>
+                          参考答案：{q.en_answer}
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
           ))}
         </div>
@@ -1187,20 +1272,21 @@ export default function ListeningSpeakingPage() {
           
           <button
             onClick={() => setShowSample(!showSample)}
+            disabled={!scoreD}
             style={{
               width: '100%',
               padding: '12px',
-              background: showSample ? '#e8f5e9' : '#fff3e0',
-              border: `2px solid ${showSample ? '#4caf50' : '#ff9800'}`,
+              background: scoreD ? (showSample ? '#e8f5e9' : '#fff3e0') : '#f5f5f5',
+              border: `2px solid ${scoreD ? (showSample ? '#4caf50' : '#ff9800') : '#ddd'}`,
               borderRadius: '8px',
-              color: showSample ? '#2e7d32' : '#e65100',
+              color: scoreD ? (showSample ? '#2e7d32' : '#e65100') : '#bbb',
               fontSize: '14px',
               fontWeight: '600',
-              cursor: 'pointer',
+              cursor: scoreD ? 'pointer' : 'default',
               marginBottom: '16px'
             }}
           >
-            {showSample ? '🙈 隐藏参考范文' : '📖 查看参考范文'}
+            {scoreD ? (showSample ? '🙈 隐藏参考范文' : '📖 查看参考范文') : '✅ 先练习复述再看范文'}
           </button>
           
           {showSample && (

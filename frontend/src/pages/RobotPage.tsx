@@ -1,261 +1,245 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react'
-import RobotScene from '../components/digital-teacher/RobotScene'
-import type { AvatarType } from '../components/digital-teacher/RobotScene'
-import type { RobotAnim } from '../components/digital-teacher/RobotAvatar'
-import { TeacherAI } from '../components/digital-teacher/TeacherAI'
-import { speak, listen } from '../components/digital-teacher/TeacherVoice'
-import VirtualJoystick from '../components/digital-teacher/VirtualJoystick'
-
-const AVATAR_OPTIONS = [
-  { id: 'teacher-f', label: '女教师', icon: '👩‍🏫' },
-  { id: 'teacher-m', label: '男教师', icon: '👨‍🏫' },
-]
-
-const ROBOT_SYSTEM = `你是一个有趣的 AI 机器人助手，名字叫「小铁」。你的性格特点：
-- 活泼、热情、充满好奇心
-- 偶尔会发出机械音效（比如「哔哔——」「嘀！检测到信号！」）
-- 用中文回答，语气像机器人但很友好
-- 喜欢用颜文字和表情符号 (｡•ᴗ•｡)
-- 当被问到技术问题时回答得很专业
-- 会主动提供帮助，像真正的伙伴一样
-
-你是一个 3D 机器人，有金属外壳、蓝色发光眼睛和天线。
-你能走路、挥手、指路，还可以在舞台上移动。`
-
-const ANIM_OPTIONS: { key: RobotAnim; label: string; icon: string }[] = [
-  { key: 'idle', label: '待机', icon: '⚡' },
-  { key: 'walk', label: '行走', icon: '🚶' },
-  { key: 'talk', label: '说话', icon: '💬' },
-  { key: 'wave', label: '挥手', icon: '👋' },
-  { key: 'point', label: '指路', icon: '👉' },
-]
+import { useState, useEffect } from 'react'
+import SurvivalGame from '../components/digital-teacher/SurvivalGame'
+import TitleEvaluationGame from '../components/digital-teacher/TitleEvaluationGame'
+import LessonGame from '../components/digital-teacher/LessonGame'
+import StudentLessonGame from '../components/digital-teacher/StudentLessonGame'
+import DigitalClassGame from '../components/digital-teacher/DigitalClassGame'
+import GrowthDiary from '../components/digital-teacher/GrowthDiary'
 
 export default function RobotPage() {
-  const [anim, setAnim] = useState<RobotAnim>('idle')
-  const [speed, setSpeed] = useState(1)
-  const [walkDir, setWalkDir] = useState<[number, number]>([0, 0])
-  const [state, setState] = useState<string>('IDLE')
-  const [avatar, setAvatar] = useState<AvatarType>('teacher-f')
-  const [messages, setMessages] = useState<{ text: string; user: boolean }[]>([
-    { text: '哔哔——！你好，我是小铁 🤖 按 WASD 可以让我走动，也可以和我聊天！', user: false },
-  ])
-  const [input, setInput] = useState('')
-  const keysRef = useRef<Set<string>>(new Set())
-  const msgEndRef = useRef<HTMLDivElement>(null)
-  const aiRef = useRef(new TeacherAI())
-  const joystickDirRef = useRef<[number, number]>([0, 0])
+  const [tab, setTab] = useState<'lesson' | 'class' | 'career'>('lesson')
+  const [inGame, setInGame] = useState(false)
+  const [teachType, setTeachType] = useState<'teacher' | 'student'>('teacher')
+  const [mgType, setMgType] = useState<'survival' | 'title'>('survival')
+  const [showDiary, setShowDiary] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
 
-  // Override AI system prompt
   useEffect(() => {
-    const ai = aiRef.current
-    ;(ai as any).history = [{ role: 'system', content: ROBOT_SYSTEM }]
+    const check = () => setIsMobile(window.innerWidth < 600)
+    check()
+    window.addEventListener('resize', check)
+    return () => window.removeEventListener('resize', check)
   }, [])
 
-  useEffect(() => { msgEndRef.current?.scrollIntoView({ behavior: 'smooth' }) }, [messages])
+  if (showDiary) return <GrowthDiary onBack={() => setShowDiary(false)} />
 
-  // Keyboard movement
-  useEffect(() => {
-    const down = (e: KeyboardEvent) => {
-      keysRef.current.add(e.key.toLowerCase())
-      if (['w', 'a', 's', 'd', 'arrowup', 'arrowdown', 'arrowleft', 'arrowright'].includes(e.key.toLowerCase())) {
-        e.preventDefault()
-      }
+  if (inGame) {
+    if (tab === 'lesson') {
+      return teachType === 'teacher'
+        ? <LessonGame onBack={() => setInGame(false)} />
+        : <StudentLessonGame onBack={() => setInGame(false)} />
     }
-    const up = (e: KeyboardEvent) => keysRef.current.delete(e.key.toLowerCase())
-    window.addEventListener('keydown', down)
-    window.addEventListener('keyup', up)
-    return () => { window.removeEventListener('keydown', down); window.removeEventListener('keyup', up) }
-  }, [])
+    if (tab === 'class') return <DigitalClassGame onBack={() => setInGame(false)} />
+    return mgType === 'survival'
+      ? <SurvivalGame onBack={() => setInGame(false)} />
+      : <TitleEvaluationGame onBack={() => setInGame(false)} />
+  }
 
-
-
-  const handleSend = useCallback(async (text: string) => {
-    if (!text.trim()) return
-    setMessages(prev => [...prev, { text, user: true }])
-    setState('THINKING')
-    setInput('')
-    setAnim('talk')
-
-    try {
-      const reply = await aiRef.current.send(text)
-      if (reply) {
-        setState('TALKING')
-        setMessages(prev => [...prev, { text: reply, user: false }])
-        speak(reply, 'zh-CN', 1.0, 0.8).then(() => setState('IDLE'))
-      }
-    } catch (err: any) {
-      setMessages(prev => [...prev, { text: `⚠️ ${err.message}`, user: false }])
-    }
-    setAnim('idle')
-  }, [])
-
-  // Joystick movement (mobile)
-  const handleJoystick = useCallback((dir: [number, number]) => {
-    joystickDirRef.current = dir
-    const [fx, fz] = dir
-    if (fx !== 0 || fz !== 0) setAnim('walk')
-    else setAnim(a => a === 'walk' ? 'idle' : a)
-  }, [])
-
-  // Merge keyboard + joystick walkDir
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const jd = joystickDirRef.current
-      const k = keysRef.current
-      let fx = jd[0], fz = jd[1]
-      if (k.has('w') || k.has('arrowup')) fz = -1
-      if (k.has('s') || k.has('arrowdown')) fz = 1
-      if (k.has('a') || k.has('arrowleft')) fx = -1
-      if (k.has('d') || k.has('arrowright')) fx = 1
-      setWalkDir([fx, fz])
-    }, 50)
-    return () => clearInterval(interval)
-  }, [])
-
-  const handleVoice = useCallback(async () => {
-    setState('LISTENING')
-    try {
-      const text = await listen()
-      handleSend(text)
-    } catch {
-      setState('IDLE')
-    }
-  }, [handleSend])
+  const gradient = tab === 'lesson'
+    ? 'linear-gradient(135deg, #fef8f0 0%, #fce4d6 100%)'
+    : tab === 'class'
+    ? 'linear-gradient(135deg, #0d0d0d 0%, #1a1a2e 100%)'
+    : 'linear-gradient(135deg, #0f1923 0%, #1a2a3a 100%)'
+  const textColor = tab === 'lesson' ? '#8b6914' : '#e0d8c8'
 
   return (
-    <div style={{ width: '100vw', height: '100vh', position: 'relative', overflow: 'hidden', background: '#87CEEB' }}>
-      {/* 3D Scene */}
-      <div style={{ position: 'absolute', inset: 0 }}>
-        <RobotScene animation={anim} animSpeed={speed} walkDir={walkDir} avatar={avatar as AvatarType} />
-      </div>
-
-      {/* Top bar */}
+    <div style={{
+      width: '100vw', height: '100vh', display: 'flex', flexDirection: 'column',
+      alignItems: 'center', justifyContent: 'center', padding: '20px 12px',
+      boxSizing: 'border-box', background: gradient,
+      fontFamily: '"Noto Serif SC", serif', color: textColor,
+    }}>
+      {/* Tab switcher */}
       <div style={{
-        position: 'absolute', top: 16, left: '50%', transform: 'translateX(-50%)',
-        background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(12px)',
-        padding: '10px 24px', borderRadius: 16, border: '1px solid #86efac',
-        display: 'flex', gap: 16, alignItems: 'center', zIndex: 100, boxShadow: '0 2px 12px rgba(0,0,0,0.08)',
+        position: 'absolute', top: 16, left: '50%', transform: 'translateX(-50%)', zIndex: 10,
+        display: 'flex', gap: 4, background: 'rgba(255,255,255,0.15)', backdropFilter: 'blur(12px)',
+        padding: '5px 8px', borderRadius: 10, border: '1px solid rgba(255,255,255,0.1)',
       }}>
-        <span style={{ fontSize: 20 }}>🤖</span>
-        <b style={{ color: '#166534' }}>AI 数字教师</b>
-        <span style={{ color: '#16a34a', fontSize: 13 }}>
-          {ANIM_OPTIONS.find(o => o.key === anim)?.label}
-        </span>
-        <span style={{ color: '#6b7280', fontSize: 12 }}>{state}</span>
-        <div style={{ display: 'flex', gap: 4 }}>
-          {AVATAR_OPTIONS.map(opt => (
-            <button key={opt.id} onClick={() => setAvatar(opt.id)}
-              style={{
-                background: avatar === opt.id ? '#22c55e' : '#f0fdf4',
-                border: '1px solid #bbf7d0', color: avatar === opt.id ? 'white' : '#166534',
-                padding: '4px 10px', borderRadius: 6, cursor: 'pointer', fontSize: 12,
-              }}
-            >{opt.icon} {opt.label}</button>
-          ))}
-        </div>
-        <button onClick={handleVoice} style={{
-          background: '#22c55e', border: 'none', color: 'white', padding: '4px 14px',
-          borderRadius: 8, cursor: 'pointer', fontSize: 14,
-        }}>🎤 语音</button>
-      </div>
-
-      {/* Animation controls */}
-      <div style={{
-        position: 'absolute', bottom: 100, left: '50%', transform: 'translateX(-50%)',
-        zIndex: 100, display: 'flex', gap: 8,
-      }}>
-        {ANIM_OPTIONS.map(opt => (
-          <button
-            key={opt.key}
-            onClick={() => setAnim(opt.key)}
+        {[
+          { id: 'lesson', label: '我的一天', icon: '📖' },
+          { id: 'class', label: '班级风云录', icon: '👥' },
+          { id: 'career', label: '新人入职记', icon: '🚀' },
+        ].map(opt => (
+          <button key={opt.id} onClick={() => setTab(opt.id as any)}
             style={{
-              background: anim === opt.key ? '#22c55e' : 'rgba(255,255,255,0.85)',
-              border: anim === opt.key ? '1px solid #86efac' : '1px solid #d1d5db',
-              color: anim === opt.key ? 'white' : '#374151',
-              padding: '8px 16px', borderRadius: 10, cursor: 'pointer',
-              fontSize: 13, fontWeight: anim === opt.key ? 600 : 400,
-              backdropFilter: 'blur(8px)', boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
+              background: tab === opt.id ? (
+                opt.id === 'lesson' ? '#8b6914' : opt.id === 'class' ? '#4fc3f7' : '#ffab40'
+              ) : 'transparent',
+              border: '1px solid transparent',
+              color: tab === opt.id
+                ? (opt.id === 'lesson' ? 'white' : '#0a0a1a')
+                : (tab === 'lesson' ? '#8b6914' : '#666'),
+              padding: '8px 18px', borderRadius: 8, cursor: 'pointer', fontSize: 14,
+              fontWeight: tab === opt.id ? 600 : 400, fontFamily: '"Noto Serif SC", serif',
+              transition: 'all 0.15s', whiteSpace: 'nowrap',
             }}
-          >
-            {opt.icon} {opt.label}
-          </button>
+          >{opt.icon} {opt.label}</button>
         ))}
       </div>
 
-      {/* Speed control */}
-      <div style={{
-        position: 'absolute', bottom: 60, left: '50%', transform: 'translateX(-50%)',
-        zIndex: 100, display: 'flex', gap: 8, alignItems: 'center',
-        background: 'rgba(255,255,255,0.85)', backdropFilter: 'blur(8px)',
-        padding: '6px 16px', borderRadius: 10, border: '1px solid #d1d5db',
-        boxShadow: '0 1px 4px rgba(0,0,0,0.06)',
-      }}>
-        <span style={{ color: '#6b7280', fontSize: 12 }}>速度:</span>
-        {[0.5, 1, 1.5, 2].map(v => (
-          <button
-            key={v}
-            onClick={() => setSpeed(v)}
-            style={{
-              background: speed === v ? '#22c55e' : 'transparent',
-              border: 'none', color: speed === v ? 'white' : '#6b7280',
-              padding: '2px 10px', borderRadius: 6, cursor: 'pointer', fontSize: 12,
-            }}
-          >
-            {v}x
-          </button>
-        ))}
-      </div>
-
-      {/* Mobile virtual joystick */}
-      <VirtualJoystick onMove={handleJoystick} />
-
-      {/* Chat panel */}
-      <div style={{
-        position: 'absolute', bottom: 20, left: 20, right: 20, height: 200, zIndex: 100,
-        background: 'rgba(255,255,255,0.9)', backdropFilter: 'blur(12px)',
-        borderRadius: 16, border: '1px solid #86efac', display: 'flex', flexDirection: 'column',
-        boxShadow: '0 2px 12px rgba(0,0,0,0.08)',
-      }}>
-        <div style={{ flex: 1, overflow: 'auto', padding: '10px 16px', fontSize: 13, lineHeight: 1.6 }}>
-          {messages.map((msg, i) => (
-            <div key={i} style={{ margin: '4px 0', textAlign: msg.user ? 'right' : 'left' }}>
-              <span style={{
-                background: msg.user ? '#22c55e' : '#f0fdf4',
-                padding: '8px 12px', borderRadius: 10,
-                display: 'inline-block', maxWidth: '75%',
-                color: msg.user ? 'white' : '#166534',
-                border: msg.user ? 'none' : '1px solid #bbf7d0',
-              }}>{msg.text}</span>
+      {/* ===== 我的一天 ===== */}
+      {tab === 'lesson' && (
+        <>
+          <div style={{ fontSize: 64, marginBottom: 8 }}>👩‍🏫</div>
+          <h1 style={{
+            fontSize: isMobile ? 28 : 32, color: '#8b6914', fontWeight: 400,
+            marginBottom: 8, letterSpacing: 2,
+          }}>这节课</h1>
+          <p style={{
+            color: '#666', fontSize: isMobile ? 14 : 16, marginBottom: 24,
+            textAlign: 'center', maxWidth: 400, lineHeight: 2,
+          }}>
+            一节课，两种视角。<br />
+            你曾经是讲台下的那个人，<br />
+            后来也成了讲台上的那个人。
+          </p>
+          <div style={{
+            display: 'flex', flexDirection: isMobile ? 'column' : 'row',
+            gap: 14, alignItems: 'center', width: '100%', maxWidth: 500,
+          }}>
+            <div style={{
+              background: 'rgba(255,255,255,0.6)', border: '1px solid #e0d5c0',
+              borderRadius: 8, padding: isMobile ? '14px 16px' : '16px 18px',
+              width: isMobile ? '100%' : 220, textAlign: 'center',
+              boxSizing: 'border-box',
+            }}>
+              <div style={{ fontSize: 32, marginBottom: 6 }}>👨‍🏫</div>
+              <h3 style={{ color: '#8b6914', fontSize: 17, marginBottom: 10, margin: '4px 0 10px' }}>教师视角</h3>
+              <p style={{ fontSize: 13, color: '#666', lineHeight: 1.8, margin: 0 }}>
+                备课、上课、处理学生<br />
+                那些只有老师才知道的事
+              </p>
+              <button onClick={() => { setTeachType('teacher'); setInGame(true) }}
+                style={{
+                  marginTop: 12, background: 'linear-gradient(135deg, #8b6914, #a08030)',
+                  border: 'none', color: 'white', padding: '10px 28px', borderRadius: 6,
+                  cursor: 'pointer', fontSize: 14, fontWeight: 600,
+                  fontFamily: '"Noto Serif SC", serif',
+                }}>
+                教师视角 →
+              </button>
             </div>
-          ))}
-          {state === 'THINKING' && (
-            <div style={{ color: '#6b7280', fontSize: 12, margin: 4 }}>思考中...</div>
-          )}
-          <div ref={msgEndRef} />
-        </div>
-        <div style={{ display: 'flex', padding: '8px 12px', gap: 8, background: '#f0fdf4', borderRadius: '0 0 16px 16px' }}>
-          <input value={input} onChange={e => setInput(e.target.value)}
-            onKeyDown={e => e.key === 'Enter' && handleSend(input)}
-            placeholder="和小铁聊天..."
-            style={{
-              flex: 1, background: 'white', border: '1px solid #bbf7d0', borderRadius: 10,
-              padding: '10px 14px', color: '#1f2937', outline: 'none', fontSize: 13,
-            }}
-          />
-          <button onClick={() => handleSend(input)}
-            style={{ background: '#22c55e', border: 'none', color: 'white', padding: '0 20px', borderRadius: 10, cursor: 'pointer' }}>
-            发送
-          </button>
-        </div>
-      </div>
+            <div style={{
+              background: 'rgba(255,255,255,0.6)', border: '1px solid #e0d5c0',
+              borderRadius: 8, padding: isMobile ? '14px 16px' : '16px 18px',
+              width: isMobile ? '100%' : 220, textAlign: 'center',
+              boxSizing: 'border-box',
+            }}>
+              <div style={{ fontSize: 32, marginBottom: 6 }}>🧑‍🎓</div>
+              <h3 style={{ color: '#4fc3f7', fontSize: 17, marginBottom: 10, margin: '4px 0 10px' }}>学生视角</h3>
+              <p style={{ fontSize: 13, color: '#666', lineHeight: 1.8, margin: 0 }}>
+                走神、传纸条、看窗外<br />
+                回到那个坐在教室里的自己
+              </p>
+              <button onClick={() => { setTeachType('student'); setInGame(true) }}
+                style={{
+                  marginTop: 12, background: 'linear-gradient(135deg, #4fc3f7, #29b6f6)',
+                  border: 'none', color: '#0a0a1a', padding: '10px 28px', borderRadius: 6,
+                  cursor: 'pointer', fontSize: 14, fontWeight: 600,
+                  fontFamily: '"Noto Serif SC", serif',
+                }}>
+                学生视角 →
+              </button>
+            </div>
+          </div>
+        </>
+      )}
 
-      {/* Instructions */}
-      <div style={{
-        position: 'absolute', bottom: 230, left: '50%', transform: 'translateX(-50%)',
-        color: '#374151', fontSize: 11, zIndex: 80, textAlign: 'center',
-      }}>
-        🖱 拖拽旋转 · 滚轮缩放 · WASD/方向键/手机摇杆移动 · 🎤 语音对话
-      </div>
+      {/* ===== 数字班级 ===== */}
+      {tab === 'class' && (
+        <>
+          <div style={{ fontSize: isMobile ? 36 : 48, marginBottom: 4 }}>🏫</div>
+          <h1 style={{
+            fontSize: isMobile ? 24 : 30, color: '#f0e8d8', fontWeight: 400,
+            marginBottom: 6, letterSpacing: 2, textAlign: 'center',
+          }}>AI 数字班级</h1>
+          <p style={{
+            color: '#999', fontSize: 14, marginBottom: 20, textAlign: 'center',
+            maxWidth: 400, lineHeight: 1.8,
+          }}>
+            初一（42）班 · 50 个真实的人 · 3 年时光
+          </p>
+          <div style={{
+            display: 'flex', flexDirection: isMobile ? 'column' : 'row',
+            gap: 12, alignItems: 'center', width: '100%', maxWidth: 500,
+          }}>
+            <CardD isMobile={isMobile}
+              emoji="🧑‍🎓" title="我的42班" color="#4fc3f7"
+              desc={['入座 · 认识同学', '日常事件 · 真实生态', '三年毕业 · 自动结算']}
+              btnLabel="进入班级 →" btnColor="#4fc3f7"
+              onClick={() => setInGame(true)}
+            />
+            <CardD isMobile={isMobile}
+              emoji="🌱" title="成长日记" color="#ffab40"
+              desc={['每天一篇校园日记', '睡前回顾 · 写给未来', '毕业查看三年成长']}
+              btnLabel="翻开日记 →" btnColor="#ffab40" btnTextDark={false}
+              onClick={() => setShowDiary(true)}
+            />
+          </div>
+        </>
+      )}
+
+      {/* ===== 职场视角 ===== */}
+      {tab === 'career' && (
+        <>
+          <div style={{ fontSize: isMobile ? 36 : 48, marginBottom: 4 }}>💼</div>
+          <h1 style={{
+            fontSize: isMobile ? 24 : 30, color: '#f5e8c8', fontWeight: 400,
+            marginBottom: 6, letterSpacing: 2,
+          }}>职场视角</h1>
+          <p style={{ color: '#aaa', fontSize: 14, marginBottom: 20, textAlign: 'center', maxWidth: 400, lineHeight: 1.8 }}>
+            选择挑战模式
+          </p>
+          <div style={{
+            display: 'flex', flexDirection: isMobile ? 'column' : 'row',
+            gap: 12, alignItems: 'center', width: '100%', maxWidth: 500,
+          }}>
+            <CardD isMobile={isMobile}
+              emoji="⏰" title="生存挑战" color="#4fc3f7"
+              desc={['班主任24小时模式', '时间推进·事件选择']}
+              btnLabel="开始挑战 →" btnColor="#4fc3f7"
+              onClick={() => { setMgType('survival'); setInGame(true) }}
+            />
+            <CardD isMobile={isMobile}
+              emoji="📜" title="职称评定" color="#ffab40"
+              desc={['教师晋升之路', '7阶段·多属性·随机']}
+              btnLabel="开始评定 →" btnColor="#ffab40" btnTextDark={false}
+              onClick={() => { setMgType('title'); setInGame(true) }}
+            />
+          </div>
+        </>
+      )}
+    </div>
+  )
+}
+
+/* Dark card for 数字班级 & 职场视角 tabs */
+function CardD({ emoji, title, color, desc, btnLabel, btnColor, btnTextDark = true, isMobile, onClick }: {
+  emoji: string; title: string; color: string; desc: string[]
+  btnLabel: string; btnColor: string; btnTextDark?: boolean
+  isMobile: boolean; onClick: () => void
+}) {
+  return (
+    <div style={{
+      background: 'rgba(255,255,255,0.04)', border: '1px solid rgba(255,255,255,0.08)',
+      borderRadius: 10, padding: isMobile ? '14px 16px' : '18px 22px',
+      width: isMobile ? '100%' : 220, textAlign: 'center', boxSizing: 'border-box',
+    }}>
+      <div style={{ fontSize: isMobile ? 32 : 36, marginBottom: 4 }}>{emoji}</div>
+      <h3 style={{ color, fontSize: isMobile ? 17 : 18, marginBottom: 10, margin: '4px 0 10px' }}>{title}</h3>
+      {desc.map((d, i) => (
+        <p key={i} style={{ fontSize: 13, color: '#999', lineHeight: 1.8, margin: 0 }}>{d}</p>
+      ))}
+      <button onClick={onClick}
+        style={{
+          marginTop: 12,
+          background: `linear-gradient(135deg, ${btnColor}, ${btnColor})`,
+          border: 'none', color: btnTextDark ? '#0a0a1a' : 'white',
+          padding: '10px 28px', borderRadius: 6, cursor: 'pointer',
+          fontSize: 14, fontWeight: 600, fontFamily: '"Noto Serif SC", serif',
+        }}>
+        {btnLabel}
+      </button>
     </div>
   )
 }

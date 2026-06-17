@@ -130,6 +130,8 @@ export const PetChatPage: React.FC = () => {
   const [voiceEnabled, setVoiceEnabled] = useState(false);
   const [showUsageModal, setShowUsageModal] = useState(false);
   const [usageRemaining, setUsageRemaining] = useState(0);
+  const [usageBalance, setUsageBalance] = useState(0);
+  const [pendingPurchase, setPendingPurchase] = useState(false);
   
   // Refs
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -252,21 +254,21 @@ export const PetChatPage: React.FC = () => {
     const apiKey = getApiKey();
     const usingDefaultKey = !apiKey;
 
-    // Check free usage if using default key
-    if (usingDefaultKey && userId) {
-      const { ok, remaining } = await usageAPI.check(userId, 'pet_chat');
-      if (!ok) {
-        setUsageRemaining(remaining);
-        setShowUsageModal(true);
-        return;
-      }
-      if (remaining > 0) usageAPI.logUsage(userId, 'pet_chat');
-    }
-
+    // 游客用默认 key 可免费聊天，注册用户有限次数
     if (usingDefaultKey) {
-      setUsageRemaining(0);
-      setShowUsageModal(true);
-      return;
+      if (userId && !pendingPurchase) {
+        const { ok, remaining, canPayWithTokens, balance } = await usageAPI.check(userId, 'pet_chat');
+        if (!ok) {
+          setUsageRemaining(remaining);
+          setUsageBalance(balance);
+          setShowUsageModal(true);
+          return;
+        }
+        if (remaining > 0) usageAPI.logUsage(userId, 'pet_chat');
+        else if (canPayWithTokens) usageAPI.logUsage(userId, 'pet_chat', true);
+      }
+      setPendingPurchase(false);
+      // 游客没有 userId，直接放行不限制
     }
     
     const userMessage: Message = {
@@ -705,7 +707,19 @@ export const PetChatPage: React.FC = () => {
     </div>
 
     {showUsageModal && (
-      <FreeUsageModal remaining={usageRemaining} onClose={() => setShowUsageModal(false)} />
+      <FreeUsageModal
+        remaining={usageRemaining}
+        balance={usageBalance}
+        onPurchase={async () => {
+          const userId = JSON.parse(localStorage.getItem('user') || '{}')?.id;
+          if (userId) {
+            await usageAPI.logUsage(userId, 'pet_chat', true);
+            setPendingPurchase(true);
+            setShowUsageModal(false);
+          }
+        }}
+        onClose={() => setShowUsageModal(false)}
+      />
     )}
     </>
   );
