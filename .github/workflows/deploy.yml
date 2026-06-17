@@ -30,10 +30,7 @@ jobs:
         working-directory: frontend
 
       - name: Publish to Cloudflare Pages
-        uses: cloudflare/pages-action@v1
-        with:
-          apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-          accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: ai-wego-v3
-          directory: frontend/dist
-          branch: main
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+        run: npx --no-install wrangler pages deploy frontend/dist --project-name=ai-wego-v3 --branch=main
+        working-directory: frontend
