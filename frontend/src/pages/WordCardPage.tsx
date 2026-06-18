@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback, useMemo, useRef } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { ChevronLeft, Volume2, Check, X, RefreshCw, BookOpen, RotateCw, VolumeX, PenLine, ClipboardList, Speaker } from 'lucide-react';
 import { GRADE_CONFIG, WORD_DATA, Word } from '../data/wordData';
 
@@ -83,6 +83,7 @@ function generateOptions(correct: string, allMeanings: string[]): string[] {
 
 export default function WordCardPage() {
   const navigate = useNavigate();
+  const location = useLocation();
   const saved = useMemo(loadState, []);
   const answerRef = useRef<HTMLInputElement>(null);
 
@@ -94,6 +95,19 @@ export default function WordCardPage() {
   const [wrong, setWrong] = useState<Set<string>>(() => new Set(saved?.wrong ?? []));
   const [revealed, setRevealed] = useState(false);
   const [roundDone, setRoundDone] = useState(false);
+
+  // Auto-init mode & section from URL on mount
+  const initialRef = useRef(false);
+  useEffect(() => {
+    if (initialRef.current) return;
+    initialRef.current = true;
+    const path = location.pathname;
+    const params = new URLSearchParams(location.search);
+    if (path === '/dictation') setMode('dictation');
+    else if (path === '/test') setMode('test');
+    const unitParam = params.get('unit');
+    if (unitParam) setSection(Number(unitParam));
+  }, []);
 
   // Dictation state
   const [dictAnswer, setDictAnswer] = useState('');
@@ -115,8 +129,11 @@ export default function WordCardPage() {
   const wrongCount = wordList.filter(w => wrong.has(w.word)).length;
   const wrongWordsList = useMemo(() => wordList.filter(w => wrong.has(w.word)), [wordList, wrong]);
 
-  // Switch section -> reset to learn mode
-  useEffect(() => { setIndex(0); setRevealed(false); setRoundDone(false); setMode('learn'); }, [grade, section]);
+  // Switch section -> reset index and scores (keep current mode)
+  useEffect(() => {
+    setIndex(0); setRevealed(false); setRoundDone(false); setTestScore(0); setTestFeedback(null); setTestDone(false);
+    setTestShuffled([]); setDictFeedback(null); setDictAnswer(''); setDictResults([]);
+  }, [grade, section]);
 
   // Auto-switch from wrong mode when empty
   useEffect(() => {
@@ -319,7 +336,7 @@ export default function WordCardPage() {
             const gConfig = GRADE_CONFIG[g];
             return (
             <button key={g} onClick={() => { setGrade(g); setSection(0); }} style={s('gradeTab')(grade === g)}>
-              {gConfig?.label?.replace(/[上下]册$/, '') ?? g + '年级'}
+              {gConfig?.label?.replace(/年级上册$/, '上').replace(/年级下册$/, '下') ?? g + '年级'}
             </button>
             );
           })}

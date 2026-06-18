@@ -118,6 +118,8 @@ export default function App() {
       {/* Learning System */}
       <Route path="/learn" element={<LearnHub />} />
       <Route path="/learn/word-cards" element={<WordCardPage />} />
+      <Route path="/dictation" element={<WordCardPage />} />
+      <Route path="/test" element={<WordCardPage />} />
       <Route path="/learn/han-to-eng" element={<HanToEngPage />} />
       <Route path="/learn/listening-speaking" element={<ListeningSpeakingPage />} />
       <Route path="/learn/english-daily" element={<EnglishDailyPage />} />
