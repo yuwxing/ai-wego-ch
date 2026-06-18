@@ -238,7 +238,7 @@ export default function WordPassPage() {
 
         {/* Question Card */}
         <div className="bg-white rounded-2xl shadow-sm border border-slate-200 p-5 mb-4">
-          <p className="text-base text-slate-800 leading-relaxed mb-1">{q.q}</p>
+          <p style={{ fontFamily: '"Times New Roman", serif', fontSize: 20, lineHeight: 2, color: '#1e293b', marginBottom: 4 }}>{q.q}</p>
 
           <input type="text" value={input} onChange={e => setInput(e.target.value)}
             placeholder="输入答案（多个词用分号隔开）"

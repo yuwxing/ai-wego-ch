@@ -194,8 +194,8 @@ export default function HanToEngPage() {
       progressLabel: { fontSize: 11, color: '#94a3b8', whiteSpace: 'nowrap' as const, fontWeight: 500 },
       card: { background: '#fff', borderRadius: 20, padding: '28px 24px', border: '1px solid #e2e8f0', boxShadow: '0 2px 8px rgba(0,0,0,0.04)' },
       qNum: { fontSize: 12, color: '#94a3b8', marginBottom: 12 },
-      sentence: { fontSize: 17, lineHeight: 1.7, color: '#1e293b', marginBottom: 20 },
-      blank: { display: 'inline-block', minWidth: 120, borderBottom: '2px solid #6366f1', textAlign: 'center' as const, fontWeight: 600, color: '#4f46e5' },
+      sentence: { fontFamily: '"Times New Roman", serif', fontSize: 20, lineHeight: 2, color: '#1e293b', marginBottom: 20 },
+      blank: { display: 'inline-block', minWidth: 120, borderBottom: '2px solid #6366f1', textAlign: 'center' as const, color: 'transparent' },
       hint: { color: '#f59e0b', fontWeight: 600 },
       input: { width: '100%', padding: '10px 16px', borderRadius: 10, border: '2px solid #e2e8f0', fontSize: 16, outline: 'none', boxSizing: 'border-box' as const, textAlign: 'center' as const },
       btnRow: { display: 'flex', gap: 10, marginTop: 16 },
@@ -285,7 +285,7 @@ export default function HanToEngPage() {
             <div style={s('qNum')}>第 {index + 1} / {total} 题 (Unit {unit})</div>
             <div style={s('sentence')}>
               {sentenceParts.before}
-              <span style={s('blank')}>______</span>
+              <span style={s('blank')}>{'\u00A0'}</span>
               {sentenceParts.after && <span> {sentenceParts.after}</span>}
             </div>
             <div style={{ fontSize: 13, color: '#94a3b8', marginBottom: 12 }}>
