@@ -16,7 +16,7 @@ function normalize(s: string) {
 }
 
 function normalizeMulti(v: string): string[] {
-  return v.split('/').map(s => s.trim().toLowerCase())
+  return v.split('/').map(s => s.trim().toLowerCase().replace(/[（(][^）)]*[）)]/g, '').trim())
 }
 
 function matchAnswer(input: string, answer: string): boolean {
