@@ -230,7 +230,7 @@ const G8D: VerbEntry[] = [
   { base: 'wake', past: 'woke', pp: 'woken', meaning: '醒来', level: 2 },
   { base: 'wear', past: 'wore', pp: 'worn', meaning: '穿', level: 1 },
   { base: 'write', past: 'wrote', pp: 'written', meaning: '写', level: 1 },
-  { base: 'be (am, is, are)', past: 'was, were', pp: 'been', meaning: '是', level: 1 },
+  { base: 'be (am, is, are)', past: 'was/were', pp: 'been', meaning: '是', level: 1 },
   { base: 'bear', past: 'bore', pp: 'born/borne', meaning: '承受；生（孩子）', level: 2 },
   { base: 'begin', past: 'began', pp: 'begun', meaning: '开始', level: 1 },
   { base: 'break', past: 'broke', pp: 'broken', meaning: '打破；折断', level: 1 },
