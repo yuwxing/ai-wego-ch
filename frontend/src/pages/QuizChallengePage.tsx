@@ -157,10 +157,10 @@ const QUIZ_BANK: Record<string, Question[]> = {
 }
 
 const QUIZ_META: Record<string, Omit<QuizConfig, 'questions'>> = {
-  poetry: { title: '古诗词挑战', emoji: '📜', icon: BookOpen, subtitle: '经典诗词填空，测试你的文学底蕴', about: '题库 20 题·AI 可随机生成 100 题。涵盖中小学必背篇目及经典名句。' },
-  history: { title: '历史常识挑战', emoji: '🏛️', icon: Landmark, subtitle: '纵横古今，测试你的历史知识储备', about: '题库 20 题·AI 可随机生成 100 题。涵盖中国史与世界史的核心事件、人物与制度。' },
-  science: { title: '科学常识挑战', emoji: '🔬', icon: Beaker, subtitle: '80 道跨学科科学题，测试你的科学素养', about: '题库 80 题·AI 可随机生成 100 题。涵盖物理、化学、生物、天文和地球科学。' },
-  geography: { title: '地理常识挑战', emoji: '🌍', icon: Globe, subtitle: '环游世界，测试你的地理知识储备', about: '题库 20 题·AI 可随机生成 100 题。涵盖世界地理、中国地理、自然地理和人文地理。' },
+  poetry: { title: '古诗词挑战', emoji: '📜', icon: BookOpen, subtitle: '经典诗词填空，测试你的文学底蕴', about: '题库 20 题·AI 可随机生成 15 题。涵盖中小学必背篇目及经典名句。' },
+  history: { title: '历史常识挑战', emoji: '🏛️', icon: Landmark, subtitle: '纵横古今，测试你的历史知识储备', about: '题库 20 题·AI 可随机生成 15 题。涵盖中国史与世界史的核心事件、人物与制度。' },
+  science: { title: '科学常识挑战', emoji: '🔬', icon: Beaker, subtitle: '80 道跨学科科学题，测试你的科学素养', about: '题库 80 题·AI 可随机生成 15 题。涵盖物理、化学、生物、天文和地球科学。' },
+  geography: { title: '地理常识挑战', emoji: '🌍', icon: Globe, subtitle: '环游世界，测试你的地理知识储备', about: '题库 20 题·AI 可随机生成 15 题。涵盖世界地理、中国地理、自然地理和人文地理。' },
 }
 
 function pickQuestions(bank: Question[], count = 15): Question[] {
@@ -179,12 +179,7 @@ async function generateQuestionsByAI(type: string): Promise<Question[] | null> {
     geography: '世界地理和中国地理常识',
   }
 
-  const prompt = `你是一个专业出题老师。请生成 100 道关于"${topics[type] || type}"的单项选择题，每道题 4 个选项，难度分布均匀（30%简单、40%中等、30%较难）。
-
-严格要求：
-- 必须输出 100 道题，每题唯一，不得重复
-- 覆盖不同知识点，分布均匀
-- 所有题目不能有任何重复或雷同
+  const prompt = `你是一个专业出题老师。请生成 15 道关于"${topics[type] || type}"的单项选择题，每道题 4 个选项，难度中等，不重复。
 
 请严格按照以下 JSON 格式输出，不要包含任何其他文字：
 {
@@ -202,7 +197,7 @@ async function generateQuestionsByAI(type: string): Promise<Question[] | null> {
     const res = await fetch('https://api.deepseek.com/v1/chat/completions', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
-      body: JSON.stringify({ model: 'deepseek-chat', messages: [{ role: 'system', content: '你是一个专业的出题老师，只输出 JSON。' }, { role: 'user', content: prompt }], max_tokens: 6000, temperature: 0.8 }),
+      body: JSON.stringify({ model: 'deepseek-chat', messages: [{ role: 'system', content: '你是一个专业的出题老师，只输出 JSON。' }, { role: 'user', content: prompt }], max_tokens: 2048, temperature: 0.8 }),
     })
     if (!res.ok) return null
     const data = await res.json()
@@ -211,18 +206,7 @@ async function generateQuestionsByAI(type: string): Promise<Question[] | null> {
     if (!jsonMatch) return null
     const parsed = JSON.parse(jsonMatch[0])
     if (!parsed.questions || !Array.isArray(parsed.questions) || parsed.questions.length === 0) return null
-    if (parsed.questions.length < 80) {
-      for (let i = parsed.questions.length; i < 100; i++) {
-        const idx = i % (parsed.questions.length || 1)
-        const q = parsed.questions[idx]
-        parsed.questions.push({
-          q: q.q + '（变式' + (Math.floor(i / (parsed.questions.length || 1)) + 1) + '）',
-          opts: [...q.opts],
-          answer: q.answer,
-        })
-      }
-    }
-    return parsed.questions.slice(0, 100).map((q: any) => ({
+    return parsed.questions.slice(0, 15).map((q: any) => ({
       q: q.q,
       opts: Array.isArray(q.opts) && q.opts.length === 4 ? q.opts : ['A', 'B', 'C', 'D'],
       answer: typeof q.answer === 'number' && q.answer >= 0 && q.answer <= 3 ? q.answer : 0,
