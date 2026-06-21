@@ -756,6 +756,7 @@ export default function WritingGrowthPage() {
   const [error, setError] = useState<string | null>(null)
   const [activeTab, setActiveTab] = useState<'write' | 'leaderboard' | 'works'>('write')
   const [showTeacherTasks, setShowTeacherTasks] = useState(false)
+  const [viewingWork, setViewingWork] = useState<ExcellentWork | null>(null)
   const [teacherTaskList, setTeacherTaskList] = useState<WritingTask[]>([])
   const [showTeacherPanel, setShowTeacherPanel] = useState(false)
   const [showTaskForm, setShowTaskForm] = useState(false)
@@ -797,10 +798,9 @@ export default function WritingGrowthPage() {
     try {
       const data = await writingRankingAPI.fetchAll()
       if (data) {
-        const today = new Date().toDateString()
         const filtered = {
-          junior: (data.junior || []).filter((r: RankEntry) => r.submissionId?.startsWith(today)),
-          senior: (data.senior || []).filter((r: RankEntry) => r.submissionId?.startsWith(today)),
+          junior: (data.junior || []).filter((r: RankEntry) => r.studentName && r.studentName !== '匿名同学'),
+          senior: (data.senior || []).filter((r: RankEntry) => r.studentName && r.studentName !== '匿名同学'),
         }
         setLeaderboard(filtered)
       }
@@ -831,10 +831,11 @@ export default function WritingGrowthPage() {
   }
 
   async function addToLeaderboard(name: string, score: number, total: number) {
+    if (!name || name === '匿名同学') return
     try {
       const today = new Date().toDateString()
       const entry: RankEntry = {
-        studentName: name || '匿名同学',
+        studentName: name,
         score,
         total,
         taskTitle: task?.title || '',
@@ -849,10 +850,11 @@ export default function WritingGrowthPage() {
   async function checkExcellentWork(scores: ReviewResult, essayContent: string) {
     const pct = scores.total / scores.maxTotal
     if (pct >= 0.85) {
-      const name = prompt('优秀作文！请输入你的名字上榜：') || '匿名同学'
+      const name = prompt('优秀作文！请输入你的名字上榜：')
+      if (!name || name.trim() === '' || name === '匿名同学') return
       const work: ExcellentWork = {
         id: genId(),
-        studentName: name,
+        studentName: name.trim(),
         taskTitle: task?.title || '',
         content: essayContent,
         scores,
@@ -861,7 +863,7 @@ export default function WritingGrowthPage() {
       }
       await writingExcellentAPI.save(work)
       loadExcellentWorks()
-      addToLeaderboard(name, scores.total, scores.maxTotal)
+      addToLeaderboard(name.trim(), scores.total, scores.maxTotal)
     }
   }
 
@@ -1445,15 +1447,16 @@ ________________________________________________________
                     <BarChart3 className="w-3 h-3" /> 历届优秀作文 {showAllRankings ? '收起' : `(${excellentWorks.length}篇)`}
                   </button>
                   {showAllRankings && (
-                    <div className="mt-2 space-y-2 max-h-48 overflow-y-auto">
+                    <div className="mt-2 space-y-2 max-h-64 overflow-y-auto">
                       {excellentWorks.map(work => (
-                        <div key={work.id} className="p-2.5 rounded-xl bg-gradient-to-r from-amber-50 to-yellow-50 border border-amber-100">
+                        <button key={work.id} onClick={() => setViewingWork(work)}
+                          className="w-full text-left p-2.5 rounded-xl bg-gradient-to-r from-amber-50 to-yellow-50 border border-amber-100 hover:shadow-md transition-shadow cursor-pointer">
                           <div className="flex items-center justify-between">
                             <span className="text-sm font-medium text-slate-700">{work.studentName}</span>
                             <span className="text-xs font-bold text-amber-600">{work.scores.total}/{work.scores.maxTotal}分</span>
                           </div>
                           <p className="text-xs text-slate-500 truncate">{work.taskTitle} · {new Date(work.date).toLocaleDateString()}</p>
-                        </div>
+                        </button>
                       ))}
                     </div>
                   )}
@@ -1465,6 +1468,26 @@ ________________________________________________________
             {showTeacherView && (
               <TeacherView grade={grade} />
             )}
+          </div>
+        )}
+
+        {/* 优秀作文详情弹窗 */}
+        {viewingWork && (
+          <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4" onClick={() => setViewingWork(null)}>
+            <div className="w-full max-w-2xl bg-white rounded-3xl shadow-2xl p-6 max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
+              <div className="flex items-center justify-between mb-4">
+                <div>
+                  <h3 className="text-lg font-bold text-slate-800">{viewingWork.studentName}</h3>
+                  <p className="text-xs text-slate-500 mt-0.5">
+                    {viewingWork.taskTitle} · {new Date(viewingWork.date).toLocaleDateString()} · {viewingWork.scores.total}/{viewingWork.scores.maxTotal}分
+                  </p>
+                </div>
+                <button onClick={() => setViewingWork(null)} className="w-8 h-8 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center hover:bg-slate-200 text-lg leading-none">&times;</button>
+              </div>
+              <div className="bg-slate-50 rounded-2xl p-4 whitespace-pre-wrap text-sm text-slate-700 leading-relaxed">
+                {viewingWork.content}
+              </div>
+            </div>
           </div>
         )}
 
