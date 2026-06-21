@@ -1130,3 +1130,88 @@ export const writingTasksAPI = {
     }
   },
 };
+
+// Store excellent works in the `tasks` table with source='writing_excellent'
+export const writingExcellentAPI = {
+  async fetchAll(): Promise<any[]> {
+    try {
+      const raw = await supabaseFetch(`tasks?source=eq.writing_excellent&order=id.desc`)
+      if (!raw) return []
+      return (Array.isArray(raw) ? raw : []).map((t: any) => {
+        const desc = typeof t.description === 'string' ? JSON.parse(t.description) : t.description || {}
+        return desc
+      })
+    } catch {
+      try {
+        const raw = localStorage.getItem('writing_excellent_works')
+        return raw ? JSON.parse(raw) : []
+      } catch { return [] }
+    }
+  },
+  async save(work: any): Promise<void> {
+    const uid = 3
+    const payload = {
+      title: 'excellent_' + (work.id || Date.now().toString(36)),
+      description: JSON.stringify(work),
+      publisher_id: uid,
+      requirements: [],
+      budget: 0,
+      status: 'open',
+      source: 'writing_excellent',
+    }
+    try {
+      await supabaseFetch('tasks', { method: 'POST', body: JSON.stringify(payload) })
+    } catch {
+      const list = JSON.parse(localStorage.getItem('writing_excellent_works') || '[]')
+      list.unshift(work)
+      localStorage.setItem('writing_excellent_works', JSON.stringify(list))
+    }
+  },
+}
+
+// Store rankings in the `tasks` table with source='writing_ranking'
+export const writingRankingAPI = {
+  async fetchAll(): Promise<{ junior: any[]; senior: any[] }> {
+    try {
+      const raw = await supabaseFetch(`tasks?source=eq.writing_ranking&order=id.desc`)
+      if (!raw) return { junior: [], senior: [] }
+      const data = Array.isArray(raw) ? raw : []
+      const all = data.map((t: any) => {
+        const desc = typeof t.description === 'string' ? JSON.parse(t.description) : t.description || {}
+        return desc
+      })
+      return {
+        junior: all.filter((r: any) => r.grade === 'junior').sort((a: any, b: any) => b.score - a.score).slice(0, 10),
+        senior: all.filter((r: any) => r.grade === 'senior').sort((a: any, b: any) => b.score - a.score).slice(0, 10),
+      }
+    } catch {
+      try {
+        const raw = localStorage.getItem('writing_rankings')
+        return raw ? JSON.parse(raw) : { junior: [], senior: [] }
+      } catch { return { junior: [], senior: [] } }
+    }
+  },
+  async save(entry: any): Promise<void> {
+    const uid = 3
+    const payload = {
+      title: 'rank_' + (entry.submissionId || Date.now().toString(36)),
+      description: JSON.stringify(entry),
+      publisher_id: uid,
+      requirements: [],
+      budget: 0,
+      status: 'open',
+      source: 'writing_ranking',
+    }
+    try {
+      await supabaseFetch('tasks', { method: 'POST', body: JSON.stringify(payload) })
+    } catch {
+      const raw = localStorage.getItem('writing_rankings')
+      const data = raw ? JSON.parse(raw) : { junior: [], senior: [] }
+      const grade = entry.grade || 'junior'
+      data[grade].push(entry)
+      data[grade].sort((a: any, b: any) => b.score - a.score)
+      data[grade] = data[grade].slice(0, 10)
+      localStorage.setItem('writing_rankings', JSON.stringify(data))
+    }
+  },
+}

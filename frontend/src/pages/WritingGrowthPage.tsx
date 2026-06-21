@@ -2,7 +2,7 @@ import { useState, useEffect, useRef, useCallback } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowLeft, BookOpen, Sparkles, Send, ListChecks, RefreshCw, Trophy, Medal, Eye, ChevronDown, ChevronUp, BarChart3, Users, Clock, TrendingUp, Award, PenLine, CheckCircle2, ArrowDown, Star } from 'lucide-react'
 import { sendToDeepSeek, sendToDeepSeekSync, getSharedApiKey, setSharedApiKey, getApiKey } from '../utils/deepseek'
-import { writingTasksAPI, sharedConfigAPI } from '../utils/supabase'
+import { writingTasksAPI, sharedConfigAPI, writingExcellentAPI, writingRankingAPI } from '../utils/supabase'
 
 interface WritingTask {
   id: string
@@ -793,25 +793,24 @@ export default function WritingGrowthPage() {
     setTask(getTodaysTask(grade))
   }, [grade])
 
-  function loadLeaderboard() {
+  async function loadLeaderboard() {
     try {
-      const data = localStorage.getItem(STORAGE_KEYS.rankings)
+      const data = await writingRankingAPI.fetchAll()
       if (data) {
-        const parsed = JSON.parse(data)
         const today = new Date().toDateString()
         const filtered = {
-          junior: (parsed.junior || []).filter((r: RankEntry) => r.submissionId.startsWith(today)),
-          senior: (parsed.senior || []).filter((r: RankEntry) => r.submissionId.startsWith(today)),
+          junior: (data.junior || []).filter((r: RankEntry) => r.submissionId?.startsWith(today)),
+          senior: (data.senior || []).filter((r: RankEntry) => r.submissionId?.startsWith(today)),
         }
         setLeaderboard(filtered)
       }
     } catch {}
   }
 
-  function loadExcellentWorks() {
+  async function loadExcellentWorks() {
     try {
-      const data = localStorage.getItem(STORAGE_KEYS.excellentWorks)
-      if (data) setExcellentWorks(JSON.parse(data))
+      const data = await writingExcellentAPI.fetchAll()
+      if (data) setExcellentWorks(data)
     } catch {}
   }
 
@@ -831,26 +830,23 @@ export default function WritingGrowthPage() {
     } catch {}
   }
 
-  function addToLeaderboard(name: string, score: number, total: number) {
+  async function addToLeaderboard(name: string, score: number, total: number) {
     try {
       const today = new Date().toDateString()
-      const data = JSON.parse(localStorage.getItem(STORAGE_KEYS.rankings) || JSON.stringify({ junior: [], senior: [] }))
       const entry: RankEntry = {
         studentName: name || '匿名同学',
         score,
         total,
         taskTitle: task?.title || '',
         submissionId: today + '_' + genId(),
+        grade,
       }
-      data[grade].push(entry)
-      data[grade].sort((a: RankEntry, b: RankEntry) => b.score - a.score)
-      data[grade] = data[grade].slice(0, 10)
-      localStorage.setItem(STORAGE_KEYS.rankings, JSON.stringify(data))
+      await writingRankingAPI.save(entry)
       loadLeaderboard()
     } catch {}
   }
 
-  function checkExcellentWork(scores: ReviewResult, essayContent: string) {
+  async function checkExcellentWork(scores: ReviewResult, essayContent: string) {
     const pct = scores.total / scores.maxTotal
     if (pct >= 0.85) {
       const name = prompt('优秀作文！请输入你的名字上榜：') || '匿名同学'
@@ -863,9 +859,7 @@ export default function WritingGrowthPage() {
         highlights: [],
         date: new Date().toISOString(),
       }
-      const existing = JSON.parse(localStorage.getItem(STORAGE_KEYS.excellentWorks) || '[]')
-      existing.unshift(work)
-      localStorage.setItem(STORAGE_KEYS.excellentWorks, JSON.stringify(existing))
+      await writingExcellentAPI.save(work)
       loadExcellentWorks()
       addToLeaderboard(name, scores.total, scores.maxTotal)
     }
