@@ -75,6 +75,62 @@ const QUIZ_BANK: Record<string, Question[]> = {
     { q: '相对论是由谁提出的？', opts: ['牛顿', '爱因斯坦', '普朗克', '霍金'], answer: 1 },
     { q: '人体最大的内脏器官是？', opts: ['心脏', '胃', '肝脏', '肺'], answer: 2 },
     { q: '光年是衡量什么的单位？', opts: ['时间', '速度', '距离', '亮度'], answer: 2 },
+    { q: '原子核由什么组成？', opts: ['质子和电子', '中子和电子', '质子和中子', '夸克和胶子'], answer: 2 },
+    { q: '电流的单位是？', opts: ['伏特', '安培', '欧姆', '瓦特'], answer: 1 },
+    { q: '人体内含量最多的物质是？', opts: ['蛋白质', '脂肪', '水', '无机盐'], answer: 2 },
+    { q: '太阳系中离太阳最近的行星是？', opts: ['金星', '水星', '地球', '火星'], answer: 1 },
+    { q: '植物的根主要功能是？', opts: ['进行光合作用', '吸收水分和无机盐', '繁殖后代', '运输有机物'], answer: 1 },
+    { q: '以下哪种是导体？', opts: ['橡胶', '玻璃', '铜', '塑料'], answer: 2 },
+    { q: '人体呼吸作用产生的主要气体是？', opts: ['氧气', '氮气', '二氧化碳', '氢气'], answer: 2 },
+    { q: '地球的大气层中含量最多的气体是？', opts: ['氧气', '氮气', '二氧化碳', '氩气'], answer: 1 },
+    { q: '声音在空气中的传播速度约为？', opts: ['340 m/s', '500 m/s', '700 m/s', '1000 m/s'], answer: 0 },
+    { q: '以下哪种不是清洁能源？', opts: ['太阳能', '风能', '煤炭', '水能'], answer: 2 },
+    { q: '人体小肠的主要功能是？', opts: ['消化和吸收', '储存粪便', '分泌胃酸', '过滤血液'], answer: 0 },
+    { q: '磁铁有几极？', opts: ['一极', '两极', '三极', '四极'], answer: 1 },
+    { q: '以下哪种动物属于哺乳动物？', opts: ['鳄鱼', '企鹅', '海豚', '乌龟'], answer: 2 },
+    { q: '化学变化与物理变化的本质区别是？', opts: ['颜色变化', '有无新物质生成', '状态变化', '温度变化'], answer: 1 },
+    { q: '地球的结构从外到内依次是？', opts: ['地核-地幔-地壳', '地壳-地幔-地核', '地幔-地壳-地核', '地壳-地核-地幔'], answer: 1 },
+    { q: '植物通过什么结构吸收水分？', opts: ['叶片', '茎', '根毛', '花朵'], answer: 2 },
+    { q: '以下哪项属于物理变化？', opts: ['铁生锈', '木柴燃烧', '冰融化', '食物腐烂'], answer: 2 },
+    { q: '人体的呼吸中枢位于？', opts: ['大脑', '小脑', '脑干', '脊髓'], answer: 2 },
+    { q: '太阳的内部主要发生什么反应？', opts: ['化学燃烧', '核裂变', '核聚变', '电离反应'], answer: 2 },
+    { q: '以下哪种维生素缺乏会导致坏血病？', opts: ['维生素A', '维生素B', '维生素C', '维生素D'], answer: 2 },
+    { q: '杠杆的平衡条件是什么？', opts: ['动力×动力臂=阻力×阻力臂', '动力=阻力', '动力臂=阻力臂', '动力+动力臂=阻力+阻力臂'], answer: 0 },
+    { q: '人体血液中红细胞的寿命约为？', opts: ['7天', '30天', '120天', '365天'], answer: 2 },
+    { q: '以下哪种岩石属于火成岩？', opts: ['石灰岩', '花岗岩', '砂岩', '页岩'], answer: 1 },
+    { q: '酸碱指示剂石蕊在酸性溶液中呈什么颜色？', opts: ['蓝色', '红色', '紫色', '绿色'], answer: 1 },
+    { q: '植物蒸腾作用的主要器官是？', opts: ['根', '茎', '叶', '花'], answer: 2 },
+    { q: '以下哪个不是基本力的种类？', opts: ['万有引力', '电磁力', '摩擦力', '强相互作用力'], answer: 2 },
+    { q: '人体中最长的骨骼是？', opts: ['胫骨', '股骨', '肱骨', '脊柱'], answer: 1 },
+    { q: 'pH 值小于 7 的溶液呈？', opts: ['中性', '碱性', '酸性', '不确定'], answer: 2 },
+    { q: '以下哪种是单细胞生物？', opts: ['大象', '草履虫', '蚂蚁', '玫瑰'], answer: 1 },
+    { q: '力的单位是？', opts: ['牛顿', '焦耳', '帕斯卡', '瓦特'], answer: 0 },
+    { q: '变压器的工作原理是？', opts: ['欧姆定律', '电磁感应', '光电效应', '热效应'], answer: 1 },
+    { q: '人体眼睛的晶状体相当于什么？', opts: ['凹透镜', '凸透镜', '平面镜', '三棱镜'], answer: 1 },
+    { q: '以下哪个星球被称为"红色星球"？', opts: ['金星', '木星', '火星', '土星'], answer: 2 },
+    { q: '功的计算公式是？', opts: ['W=FS', 'W=Pt', 'W=FScosθ', '以上都是'], answer: 3 },
+    { q: '植物通过什么过程释放氧气？', opts: ['呼吸作用', '蒸腾作用', '光合作用', '发酵作用'], answer: 2 },
+    { q: '以下哪种不是温室气体？', opts: ['二氧化碳', '甲烷', '氧气', '水蒸气'], answer: 2 },
+    { q: '人体内胰岛素分泌不足会导致？', opts: ['甲亢', '糖尿病', '侏儒症', '大脖子病'], answer: 1 },
+    { q: '声音的音调由什么决定？', opts: ['振幅', '频率', '波形', '速度'], answer: 1 },
+    { q: '以下哪种材料属于半导体？', opts: ['铜', '硅', '橡胶', '铁'], answer: 1 },
+    { q: '地壳中含量最多的元素是？', opts: ['铁', '硅', '氧', '铝'], answer: 2 },
+    { q: '植物的种子是由什么发育而来的？', opts: ['子房', '胚珠', '花粉', '花药'], answer: 1 },
+    { q: '以下哪种属于可再生能源？', opts: ['石油', '天然气', '太阳能', '核能'], answer: 2 },
+    { q: '惯性的大小与什么有关？', opts: ['速度', '质量', '加速度', '力'], answer: 1 },
+    { q: '人体味觉感受器位于？', opts: ['鼻腔', '口腔', '舌', '咽喉'], answer: 2 },
+    { q: '以下哪个是矢量？', opts: ['时间', '温度', '速度', '质量'], answer: 2 },
+    { q: '光合作用发生的场所是？', opts: ['线粒体', '叶绿体', '细胞核', '液泡'], answer: 1 },
+    { q: '银河系属于哪种星系？', opts: ['椭圆星系', '漩涡星系', '不规则星系', '棒旋星系'], answer: 3 },
+    { q: '以下哪种化合物是碱？', opts: ['HCl', 'NaOH', 'NaCl', 'CO₂'], answer: 1 },
+    { q: '人体通过什么调节体温？', opts: ['神经系统', '内分泌系统', '汗腺和血管', '以上都是'], answer: 3 },
+    { q: '摩擦力的方向与什么有关？', opts: ['物体运动方向', '相对运动趋势方向', '重力方向', '支持力方向'], answer: 1 },
+    { q: '细胞分裂过程中，遗传物质复制发生在？', opts: ['前期', '中期', '间期', '后期'], answer: 2 },
+    { q: '以下哪种是混合物？', opts: ['蒸馏水', '空气', '氯化钠', '冰'], answer: 1 },
+    { q: '月球表面最显著的特征是？', opts: ['海洋', '环形山', '山脉', '河流'], answer: 1 },
+    { q: '串联电路中，电流大小如何？', opts: ['各处相等', '逐渐减小', '逐渐增大', '先大后小'], answer: 0 },
+    { q: '人体内氧气与血红蛋白结合发生在？', opts: ['组织细胞', '肺泡', '心脏', '动脉'], answer: 1 },
+    { q: '以下哪种力属于保守力？', opts: ['摩擦力', '重力', '空气阻力', '拉力'], answer: 1 },
   ]),
   geography: shuffle([
     { q: '世界上面积最大的国家是？', opts: ['中国', '美国', '俄罗斯', '加拿大'], answer: 2 },
@@ -101,10 +157,10 @@ const QUIZ_BANK: Record<string, Question[]> = {
 }
 
 const QUIZ_META: Record<string, Omit<QuizConfig, 'questions'>> = {
-  poetry: { title: '古诗词挑战', emoji: '📜', icon: BookOpen, subtitle: '经典诗词填空，测试你的文学底蕴', about: '本测试包含 15 道古诗词填空题目，涵盖中小学必背篇目及经典名句。' },
-  history: { title: '历史常识挑战', emoji: '🏛️', icon: Landmark, subtitle: '纵横古今，测试你的历史知识储备', about: '本测试包含 15 道历史常识题目，涵盖中国史与世界史的核心事件、人物与制度。' },
-  science: { title: '科学常识挑战', emoji: '🔬', icon: Beaker, subtitle: '30 道跨学科科学题，测试你的科学素养', about: '本测试包含 15 道跨学科科学题目，涵盖物理、化学、生物、天文和地球科学。' },
-  geography: { title: '地理常识挑战', emoji: '🌍', icon: Globe, subtitle: '环游世界，测试你的地理知识储备', about: '本测试包含 15 道地理常识题目，涵盖世界地理、中国地理、自然地理和人文地理。' },
+  poetry: { title: '古诗词挑战', emoji: '📜', icon: BookOpen, subtitle: '经典诗词填空，测试你的文学底蕴', about: '题库 20 题·AI 可随机生成 100 题。涵盖中小学必背篇目及经典名句。' },
+  history: { title: '历史常识挑战', emoji: '🏛️', icon: Landmark, subtitle: '纵横古今，测试你的历史知识储备', about: '题库 20 题·AI 可随机生成 100 题。涵盖中国史与世界史的核心事件、人物与制度。' },
+  science: { title: '科学常识挑战', emoji: '🔬', icon: Beaker, subtitle: '80 道跨学科科学题，测试你的科学素养', about: '题库 80 题·AI 可随机生成 100 题。涵盖物理、化学、生物、天文和地球科学。' },
+  geography: { title: '地理常识挑战', emoji: '🌍', icon: Globe, subtitle: '环游世界，测试你的地理知识储备', about: '题库 20 题·AI 可随机生成 100 题。涵盖世界地理、中国地理、自然地理和人文地理。' },
 }
 
 function pickQuestions(bank: Question[], count = 15): Question[] {
@@ -123,7 +179,7 @@ async function generateQuestionsByAI(type: string): Promise<Question[] | null> {
     geography: '世界地理和中国地理常识',
   }
 
-  const prompt = `你是一个出题老师。请生成 15 道关于"${topics[type] || type}"的选择题，每道题 4 个选项，难度中等。
+  const prompt = `你是一个出题老师。请生成 100 道关于"${topics[type] || type}"的选择题，每道题 4 个选项，难度中等。
 
 请严格按照以下 JSON 格式输出，不要包含任何其他文字：
 {
@@ -150,7 +206,7 @@ async function generateQuestionsByAI(type: string): Promise<Question[] | null> {
     if (!jsonMatch) return null
     const parsed = JSON.parse(jsonMatch[0])
     if (!parsed.questions || !Array.isArray(parsed.questions) || parsed.questions.length === 0) return null
-    return parsed.questions.slice(0, 15).map((q: any) => ({
+    return parsed.questions.slice(0, 100).map((q: any) => ({
       q: q.q,
       opts: Array.isArray(q.opts) && q.opts.length === 4 ? q.opts : ['A', 'B', 'C', 'D'],
       answer: typeof q.answer === 'number' && q.answer >= 0 && q.answer <= 3 ? q.answer : 0,
@@ -240,28 +296,38 @@ export default function QuizChallengePage() {
             {source === 'ai' && <span className="text-xs px-2 py-0.5 rounded-full bg-green-500/20 text-green-400 border border-green-500/30">AI 生成</span>}
             {source === 'bank' && <span className="text-xs px-2 py-0.5 rounded-full bg-white/10 text-white/40 border border-white/10">题库</span>}
           </div>
-          {generating ? (
-            <div className="w-full py-4 rounded-2xl bg-white/5 text-white/50 flex items-center justify-center gap-2">
-              <Loader2 className="w-5 h-5 animate-spin" /> AI 生成题目中...
-            </div>
-          ) : (
-            <>
-              <button onClick={() => setPhase('playing')}
-                className="w-full py-4 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold text-lg hover:shadow-lg hover:shadow-amber-500/30 transition-all flex items-center justify-center gap-2">
-                开始测试
-              </button>
-              <button onClick={handleGenerate} disabled={generating}
-                className="mt-3 w-full py-3 rounded-2xl bg-white/5 text-white/60 text-sm hover:bg-white/10 transition-all flex items-center justify-center gap-2">
-                <Shuffle className="w-4 h-4" /> AI 随机生成新题目
-              </button>
-              {source === 'ai' && (
-                <button onClick={handleUseBank}
-                  className="mt-2 w-full py-2.5 rounded-2xl bg-white/5 text-white/40 text-xs hover:bg-white/10 transition-all flex items-center justify-center gap-1.5">
-                  切换回题库
+          {(() => {
+            const hasApiKey = !!(localStorage.getItem('deepseek_api_key') || localStorage.getItem('deepseek-api-key'))
+            return generating ? (
+              <div className="w-full py-4 rounded-2xl bg-white/5 text-white/50 flex items-center justify-center gap-2">
+                <Loader2 className="w-5 h-5 animate-spin" /> AI 生成题目中...
+              </div>
+            ) : (
+              <>
+                <button onClick={() => setPhase('playing')}
+                  className="w-full py-4 rounded-2xl bg-gradient-to-r from-amber-500 to-orange-500 text-white font-bold text-lg hover:shadow-lg hover:shadow-amber-500/30 transition-all flex items-center justify-center gap-2">
+                  开始测试
                 </button>
-              )}
-            </>
-          )}
+                <button onClick={handleGenerate} disabled={generating}
+                  className="mt-3 w-full py-3 rounded-2xl bg-white/5 text-white/60 text-sm hover:bg-white/10 transition-all flex items-center justify-center gap-2">
+                  <Shuffle className="w-4 h-4" /> AI 随机生成新题目
+                </button>
+                {!hasApiKey && (
+                  <a href="/settings/api-key"
+                    className="mt-2 block w-full py-2.5 rounded-2xl bg-amber-500/10 text-amber-400/80 text-xs hover:bg-amber-500/20 transition-all text-center border border-amber-500/20">
+                    ⚠️ 未配置 DeepSeek API 密钥，AI 出题不可用。
+                    <span className="underline ml-1">去设置 →</span>
+                  </a>
+                )}
+                {source === 'ai' && (
+                  <button onClick={handleUseBank}
+                    className="mt-2 w-full py-2.5 rounded-2xl bg-white/5 text-white/40 text-xs hover:bg-white/10 transition-all flex items-center justify-center gap-1.5">
+                    切换回题库
+                  </button>
+                )}
+              </>
+            )
+          })()}
           <button onClick={() => navigate('/')} className="mt-3 w-full py-2.5 rounded-2xl bg-white/5 text-white/50 text-sm hover:bg-white/10 transition-all">
             返回首页
           </button>
