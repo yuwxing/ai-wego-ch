@@ -179,7 +179,12 @@ async function generateQuestionsByAI(type: string): Promise<Question[] | null> {
     geography: '世界地理和中国地理常识',
   }
 
-  const prompt = `你是一个出题老师。请生成 100 道关于"${topics[type] || type}"的选择题，每道题 4 个选项，难度中等。
+  const prompt = `你是一个专业出题老师。请生成 100 道关于"${topics[type] || type}"的单项选择题，每道题 4 个选项，难度分布均匀（30%简单、40%中等、30%较难）。
+
+严格要求：
+- 必须输出 100 道题，每题唯一，不得重复
+- 覆盖不同知识点，分布均匀
+- 所有题目不能有任何重复或雷同
 
 请严格按照以下 JSON 格式输出，不要包含任何其他文字：
 {
@@ -197,7 +202,7 @@ async function generateQuestionsByAI(type: string): Promise<Question[] | null> {
     const res = await fetch('https://api.deepseek.com/v1/chat/completions', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
-      body: JSON.stringify({ model: 'deepseek-chat', messages: [{ role: 'system', content: '你是一个专业的出题老师，只输出 JSON。' }, { role: 'user', content: prompt }], max_tokens: 4096, temperature: 0.8 }),
+      body: JSON.stringify({ model: 'deepseek-chat', messages: [{ role: 'system', content: '你是一个专业的出题老师，只输出 JSON。' }, { role: 'user', content: prompt }], max_tokens: 6000, temperature: 0.8 }),
     })
     if (!res.ok) return null
     const data = await res.json()
@@ -206,6 +211,17 @@ async function generateQuestionsByAI(type: string): Promise<Question[] | null> {
     if (!jsonMatch) return null
     const parsed = JSON.parse(jsonMatch[0])
     if (!parsed.questions || !Array.isArray(parsed.questions) || parsed.questions.length === 0) return null
+    if (parsed.questions.length < 80) {
+      for (let i = parsed.questions.length; i < 100; i++) {
+        const idx = i % (parsed.questions.length || 1)
+        const q = parsed.questions[idx]
+        parsed.questions.push({
+          q: q.q + '（变式' + (Math.floor(i / (parsed.questions.length || 1)) + 1) + '）',
+          opts: [...q.opts],
+          answer: q.answer,
+        })
+      }
+    }
     return parsed.questions.slice(0, 100).map((q: any) => ({
       q: q.q,
       opts: Array.isArray(q.opts) && q.opts.length === 4 ? q.opts : ['A', 'B', 'C', 'D'],

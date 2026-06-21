@@ -32,5 +32,5 @@ jobs:
       - name: Publish to Cloudflare Pages
         env:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
-        run: npx --no-install wrangler pages deploy dist --project-name=ai-wego-team --branch=main
+        run: npx --no-install wrangler pages deploy dist --project-name=ai-wego-v3 --branch=main
         working-directory: frontend
