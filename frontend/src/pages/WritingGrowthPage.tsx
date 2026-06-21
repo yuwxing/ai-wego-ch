@@ -810,7 +810,7 @@ export default function WritingGrowthPage() {
   async function loadExcellentWorks() {
     try {
       const data = await writingExcellentAPI.fetchAll()
-      if (data) setExcellentWorks(data)
+      if (data) setExcellentWorks(data.filter((w: ExcellentWork) => w.studentName && w.studentName !== '匿名同学'))
     } catch {}
   }
 

@@ -1181,8 +1181,8 @@ export const writingRankingAPI = {
         return desc
       })
       return {
-        junior: all.filter((r: any) => r.grade === 'junior').sort((a: any, b: any) => b.score - a.score).slice(0, 10),
-        senior: all.filter((r: any) => r.grade === 'senior').sort((a: any, b: any) => b.score - a.score).slice(0, 10),
+        junior: all.filter((r: any) => r.grade === 'junior').sort((a: any, b: any) => b.score - a.score || (a.studentName || '').localeCompare(b.studentName || '')).slice(0, 20),
+        senior: all.filter((r: any) => r.grade === 'senior').sort((a: any, b: any) => b.score - a.score || (a.studentName || '').localeCompare(b.studentName || '')).slice(0, 20),
       }
     } catch {
       try {
@@ -1209,8 +1209,8 @@ export const writingRankingAPI = {
       const data = raw ? JSON.parse(raw) : { junior: [], senior: [] }
       const grade = entry.grade || 'junior'
       data[grade].push(entry)
-      data[grade].sort((a: any, b: any) => b.score - a.score)
-      data[grade] = data[grade].slice(0, 10)
+      data[grade].sort((a: any, b: any) => b.score - a.score || (a.studentName || '').localeCompare(b.studentName || ''))
+      data[grade] = data[grade].slice(0, 20)
       localStorage.setItem('writing_rankings', JSON.stringify(data))
     }
   },
