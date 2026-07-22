@@ -55,16 +55,6 @@ const aiCapabilities = [
     highlight: '模板中心',
     link: '/aigc-templates',
     agentId: null
-  },
-  {
-    icon: <GraduationCap className="w-8 h-8" />,
-    title: 'AI-Wego 写作教练',
-    description: 'AI智能写作辅导：多轮对话、四维评分、手写识别、短语推荐，中考/高考英语写作提分利器',
-    gradient: 'from-pink-400 via-fuchsia-400 to-rose-400',
-    highlight: '写作辅导',
-    link: '/writing-coach/',
-    agentId: null,
-    external: true
   }
 ];
 
@@ -690,11 +680,7 @@ export const HomePage: React.FC = () => {
                   className="group glass-card rounded-2xl p-6 cursor-pointer card-hover-enhanced border border-purple-100/30"
                   onClick={() => {
                     if (cap.link) {
-                      if (cap.external) {
-                        window.location.href = cap.link;
-                      } else {
-                        navigate(cap.link);
-                      }
+                      navigate(cap.link);
                     }
                   }}
                 >
