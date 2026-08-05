@@ -69,6 +69,7 @@ import MultiAgentTeamPage from './pages/MultiAgentTeamPage'
 import MathVisualPage from './pages/MathVisualPage'
 import WordPassPage from './pages/WordPassPage'
 import GrammarQuestPage from './pages/GrammarQuestPage'
+import GameCarnivalPage from './pages/GameCarnivalPage'
 import LiteraryClubHall from './pages/literature/LiteraryClubHall'
 import LiteratureWritePage from './pages/literature/LiteratureWritePage'
 import PaperShortWritePage from './pages/literature/PaperShortWritePage'
@@ -118,6 +119,9 @@ export default function App() {
     <Routes>
       {/* Home */}
       <Route path="/" element={<Home />} />
+
+      {/* English Game Carnival */}
+      <Route path="/games" element={<GameCarnivalPage />} />
 
       {/* Learning System */}
       <Route path="/learn" element={<LearnHub />} />

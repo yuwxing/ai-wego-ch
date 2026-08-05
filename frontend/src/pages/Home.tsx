@@ -83,6 +83,19 @@ const sections = [
     ]
   },
   {
+    title: '英语游戏嘉年华', icon: Sparkles, desc: '翻卡配对 · 幸运大转盘 · 快闪PK · 课堂工具',
+    color: 'from-emerald-400 to-teal-500',
+    links: [
+      { to: '/games', label: '游戏嘉年华首页', desc: '443个经典课堂游戏Web化' },
+      { to: '/games?tab=flip', label: '翻卡配对' },
+      { to: '/games?tab=wheel', label: '幸运大转盘' },
+      { to: '/games?tab=quiz', label: '快闪答题PK' },
+      { to: '/games?tab=timer', label: '课堂计时器' },
+      { to: '/games?tab=picker', label: '随机点名' },
+      { to: '/games?tab=score', label: '分组计分板' },
+    ]
+  },
+  {
     title: '菁华大学', icon: GraduationCap, desc: '高阶成长 · 项目实践',
     color: 'from-violet-400 to-purple-500',
     links: [
