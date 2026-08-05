@@ -33,13 +33,19 @@ export default function FlipCards() {
       const availW = el.clientWidth - gap * (gridN - 1)
       const availH = el.clientHeight - gap * (gridN - 1)
       const size = Math.floor(Math.min(availW / gridN, availH / gridN))
-      setCardSize(Math.max(size, 60))
+      setCardSize(Math.max(size, 40))
     }
     measure()
     const ro = new ResizeObserver(measure)
     ro.observe(el)
     return () => ro.disconnect()
   }, [gridN])
+
+  const fitFont = (text: string, maxFrac: number) => {
+    const base = Math.max(12, cardSize * maxFrac)
+    const maxPx = Math.max(10, (cardSize - 12) / text.length)
+    return Math.min(base, maxPx * 1.6)
+  }
 
   const initGame = (n = pairs) => {
     const words = getRandomWords(n)
@@ -143,15 +149,15 @@ export default function FlipCards() {
             {card.flipped || card.matched ? (
               <>
                 <span
-                  style={{ fontSize: card.type === 'word' ? Math.max(14, cardSize * 0.34) : Math.max(12, cardSize * 0.16) }}
-                  className={`${card.type === 'word' ? 'font-extrabold text-emerald-700 break-all px-1 leading-tight' : 'text-slate-700 leading-snug font-semibold px-1'} ${card.matched ? 'line-through opacity-60' : ''}`}
+                  style={{ fontSize: card.type === 'word' ? fitFont(card.text, 0.3) : Math.max(11, cardSize * 0.15) }}
+                  className={`${card.type === 'word' ? 'font-extrabold text-emerald-700 break-words px-1 leading-tight' : 'text-slate-700 leading-snug font-semibold px-1'} ${card.matched ? 'line-through opacity-60' : ''}`}
                 >
                   {card.text}
                 </span>
                 {card.matched && <CheckCircle2 className="w-6 h-6 text-emerald-400 shrink-0 ml-1" />}
               </>
             ) : (
-              <span style={{ fontSize: Math.max(20, cardSize * 0.4) }} className="text-white/80 font-bold">?</span>
+              <span style={{ fontSize: Math.max(18, cardSize * 0.35) }} className="text-white/80 font-bold">?</span>
             )}
           </button>
         ))}
