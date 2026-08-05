@@ -103,18 +103,18 @@ export default function FlipCards() {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
         {cards.map((card, idx) => (
           <button
             key={card.id}
             onClick={() => handleFlip(idx)}
-            className={`aspect-[4/5] rounded-2xl p-2 flex flex-col items-center justify-center text-center transition-all duration-300 shadow-sm border-2
+            className={`aspect-[4/5] rounded-2xl p-3 sm:p-4 flex flex-col items-center justify-center text-center transition-all duration-300 shadow-sm border-2
               ${card.matched ? 'bg-emerald-50 border-emerald-300 opacity-80' :
                 card.flipped ? 'bg-white border-emerald-400 shadow-md scale-[1.02]' : 'bg-gradient-to-br from-emerald-400 to-teal-500 border-transparent hover:shadow-lg hover:scale-[1.03]'}`}
           >
             {card.flipped || card.matched ? (
               <>
-                <span className={`${card.type === 'word' ? 'text-base sm:text-lg font-bold text-emerald-700' : 'text-[11px] sm:text-xs text-slate-600 leading-snug'} ${card.matched ? 'line-through opacity-60' : ''}`}>
+                <span className={`${card.type === 'word' ? 'text-2xl sm:text-3xl font-extrabold text-emerald-700 break-all' : 'text-sm sm:text-base text-slate-700 leading-snug font-medium'} ${card.matched ? 'line-through opacity-60' : ''}`}>
                   {card.text}
                 </span>
                 {card.matched && <CheckCircle2 className="w-5 h-5 text-emerald-400 mt-1" />}
