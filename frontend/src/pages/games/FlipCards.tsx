@@ -20,6 +20,28 @@ export default function FlipCards() {
   const [done, setDone] = useState(false)
   const [pronounce, setPronounce] = useState<Word | null>(null)
   const lockRef = useRef(false)
+  const boardRef = useRef<HTMLDivElement>(null)
+  const [cardSize, setCardSize] = useState(0)
+
+  const totalCards = cards.length || pairs * 2
+  const cols = Math.ceil(Math.sqrt(totalCards))
+  const rows = Math.ceil(totalCards / cols)
+
+  useEffect(() => {
+    const el = boardRef.current
+    if (!el) return
+    const measure = () => {
+      const gap = 10
+      const availW = el.clientWidth - gap * (cols - 1)
+      const availH = el.clientHeight - gap * (rows - 1)
+      const size = Math.floor(Math.min(availW / cols, availH / rows))
+      setCardSize(Math.max(size, 60))
+    }
+    measure()
+    const ro = new ResizeObserver(measure)
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [cols, rows])
 
   const initGame = (n = pairs) => {
     const words = getRandomWords(n)
@@ -79,10 +101,8 @@ export default function FlipCards() {
     }
   }
 
-  const cols = pairs <= 4 ? 2 : pairs <= 8 ? 3 : 4
-
   return (
-    <div className="h-[calc(100dvh-110px)] max-w-5xl mx-auto p-3 sm:p-4 flex flex-col gap-3">
+    <div className="h-[calc(100dvh-120px)] max-w-6xl mx-auto p-3 sm:p-4 flex flex-col gap-2 overflow-hidden">
       <div className="flex flex-wrap items-center justify-between gap-2 shrink-0">
         <div>
           <h2 className="text-lg sm:text-xl font-bold text-slate-800 flex items-center gap-2">
@@ -106,26 +126,27 @@ export default function FlipCards() {
       </div>
 
       <div
-        className="flex-1 min-h-0 grid gap-2 sm:gap-3"
-        style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`, gridAutoRows: '1fr' }}
+        ref={boardRef}
+        className="flex-1 min-h-0 flex flex-wrap content-start justify-center items-start gap-2.5 overflow-hidden"
       >
         {cards.map((card, idx) => (
           <button
             key={card.id}
             onClick={() => handleFlip(idx)}
-            className={`rounded-2xl p-2 flex items-center justify-center text-center transition-all duration-300 shadow-sm border-2 overflow-hidden
+            style={{ width: cardSize, height: cardSize }}
+            className={`rounded-2xl p-2 flex items-center justify-center text-center transition-all duration-300 shadow-sm border-2 overflow-hidden shrink-0
               ${card.matched ? 'bg-emerald-50 border-emerald-300 opacity-80' :
                 card.flipped ? 'bg-white border-emerald-400 shadow-md scale-[1.01]' : 'bg-gradient-to-br from-emerald-400 to-teal-500 border-transparent hover:shadow-lg hover:scale-[1.01]'}`}
           >
             {card.flipped || card.matched ? (
               <>
-                <span className={`${card.type === 'word' ? 'text-2xl sm:text-3xl lg:text-4xl font-extrabold text-emerald-700 break-all px-1' : 'text-base sm:text-xl lg:text-2xl text-slate-700 leading-snug font-semibold px-1'} ${card.matched ? 'line-through opacity-60' : ''}`}>
+                <span className={`${card.type === 'word' ? 'text-[clamp(1.1rem,2.2vw,2.6rem)] font-extrabold text-emerald-700 break-all px-1' : 'text-[clamp(0.7rem,1.3vw,1.5rem)] text-slate-700 leading-snug font-semibold px-1'} ${card.matched ? 'line-through opacity-60' : ''}`}>
                   {card.text}
                 </span>
-                {card.matched && <CheckCircle2 className="w-6 h-6 text-emerald-400 shrink-0" />}
+                {card.matched && <CheckCircle2 className="w-6 h-6 text-emerald-400 shrink-0 ml-1" />}
               </>
             ) : (
-              <span className="text-3xl sm:text-4xl text-white/80 font-bold">?</span>
+              <span className="text-[clamp(1.5rem,3.5vw,3.5rem)] text-white/80 font-bold">?</span>
             )}
           </button>
         ))}

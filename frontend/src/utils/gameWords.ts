@@ -23,7 +23,7 @@ export function getRandomWords(count: number, grade?: number): Word[] {
   } else {
     pool = Object.values(WORD_DATA).flat()
   }
-  return shuffle(pool).slice(0, Math.max(count, pool.length))
+  return shuffle(pool).slice(0, Math.min(count, pool.length))
 }
 
 export function getMeaningPool(words: Word[], target: Word): string[] {
