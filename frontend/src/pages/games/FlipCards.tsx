@@ -14,7 +14,7 @@ interface Card {
 export default function FlipCards() {
   const [cards, setCards] = useState<Card[]>([])
   const [selected, setSelected] = useState<number | null>(null)
-  const [gridN, setGridN] = useState(4)
+  const [gridN, setGridN] = useState(3)
   const [moves, setMoves] = useState(0)
   const [matches, setMatches] = useState(0)
   const [done, setDone] = useState(false)
@@ -23,7 +23,7 @@ export default function FlipCards() {
   const boardRef = useRef<HTMLDivElement>(null)
   const [cardSize, setCardSize] = useState(0)
 
-  const pairs = (gridN * gridN) / 2
+  const pairs = gridN === 3 ? 4 : 8
 
   useEffect(() => {
     const el = boardRef.current
@@ -62,7 +62,7 @@ export default function FlipCards() {
     setPronounce(null)
   }
 
-  useEffect(() => { initGame(8) }, [])
+  useEffect(() => { initGame(4) }, [])
 
   const speak = (text: string) => {
     try {
@@ -117,10 +117,10 @@ export default function FlipCards() {
         <div className="flex items-center gap-2">
           <select
             value={gridN}
-            onChange={e => { setGridN(Number(e.target.value)); initGame((Number(e.target.value) ** 2) / 2) }}
+            onChange={e => { setGridN(Number(e.target.value)); initGame(Number(e.target.value) === 3 ? 4 : 8) }}
             className="px-3 py-1.5 rounded-xl border border-slate-200 bg-white text-sm focus:outline-none focus:ring-2 focus:ring-emerald-300"
           >
-            {[4, 6, 8].map(n => <option key={n} value={n}>{n}×{n} 网格</option>)}
+            {[3, 4].map(n => <option key={n} value={n}>{n}×{n} 网格</option>)}
           </select>
           <button onClick={() => initGame(pairs)}
             className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 text-white text-sm font-medium hover:from-emerald-600 hover:to-teal-600 transition-all">
@@ -160,6 +160,9 @@ export default function FlipCards() {
               <span style={{ fontSize: Math.max(18, cardSize * 0.35) }} className="text-white/80 font-bold">?</span>
             )}
           </button>
+        ))}
+        {Array.from({ length: gridN * gridN - cards.length }).map((_, i) => (
+          <div key={`empty-${i}`} className="w-full h-full" />
         ))}
       </div>
 

@@ -16,6 +16,15 @@ export function shuffle<T>(arr: T[]): T[] {
   return a
 }
 
+const POS_TAG = /^(n|v|adj|adv|pron|prep|conj|interj|num|art|aux|modal)\./
+
+function isCleanWord(w: Word): boolean {
+  if (!w.word || w.word.includes('/') || /[\u4e00-\u9fff]/.test(w.word)) return false
+  if (!w.meaning) return false
+  if (w.meaning.startsWith(',') || w.meaning.startsWith('/')) return false
+  return POS_TAG.test(w.meaning) || /^[\u4e00-\u9fff]/.test(w.meaning)
+}
+
 export function getRandomWords(count: number, grade?: number): Word[] {
   let pool: Word[]
   if (grade && WORD_DATA[grade]) {
@@ -23,7 +32,8 @@ export function getRandomWords(count: number, grade?: number): Word[] {
   } else {
     pool = Object.values(WORD_DATA).flat()
   }
-  return shuffle(pool).slice(0, Math.min(count, pool.length))
+  const clean = pool.filter(isCleanWord)
+  return shuffle(clean).slice(0, Math.min(count, clean.length))
 }
 
 export function getMeaningPool(words: Word[], target: Word): string[] {
