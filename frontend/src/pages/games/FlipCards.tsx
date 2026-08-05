@@ -162,7 +162,13 @@ export default function FlipCards() {
           </button>
         ))}
         {Array.from({ length: gridN * gridN - cards.length }).map((_, i) => (
-          <div key={`empty-${i}`} className="w-full h-full" />
+          <div
+            key={`empty-${i}`}
+            className="w-full h-full rounded-2xl border-2 border-dashed border-slate-200 bg-slate-50/50 flex flex-col items-center justify-center gap-1 opacity-70"
+          >
+            <span style={{ fontSize: Math.max(12, cardSize * 0.16) }} className="font-bold text-slate-400">共 {pairs} 对</span>
+            <span style={{ fontSize: Math.max(9, cardSize * 0.1) }} className="text-slate-300">配对成功即获胜</span>
+          </div>
         ))}
       </div>
 
