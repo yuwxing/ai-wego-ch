@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { Link, useSearchParams } from 'react-router-dom'
 import {
   Sparkles, Grid3x3, Hourglass, Dices, Trophy,
-  ChevronRight, BookOpen, Zap, MessagesSquare, Music2, PartyPopper,
+  ChevronRight, BookOpen, Zap, MessagesSquare, Music2, PartyPopper, GraduationCap,
 } from 'lucide-react'
 import FlipCards from './games/FlipCards'
 import LuckyWheel from './games/LuckyWheel'
@@ -24,6 +24,14 @@ const toolTabs: { id: Tab; label: string; icon: any }[] = [
   { id: 'picker', label: '随机点名', icon: Dices },
   { id: 'score', label: '分组计分板', icon: Trophy },
 ]
+
+const textbookEntry = {
+  to: '/textbook',
+  label: '课本游戏',
+  desc: '人教版七上/八上 16 个单元互动游戏，跟随教材同步开玩',
+  icon: GraduationCap,
+  gradient: 'from-indigo-400 to-violet-500',
+}
 
 const categories = [
   { title: '单词游戏', icon: BookOpen, desc: '翻卡配对 · 单词大转盘 · 快闪PK', color: 'from-emerald-400 to-teal-500', ids: ['flip', 'wheel', 'quiz'] as Tab[] },
@@ -59,6 +67,10 @@ export default function GameCarnivalPage() {
               <t.icon className="w-4 h-4" /> {t.label}
             </button>
           ))}
+          <Link to="/textbook"
+            className="flex-shrink-0 px-4 py-2 rounded-xl text-sm font-medium transition-all inline-flex items-center gap-1.5 text-slate-600 hover:bg-slate-100">
+            <textbookEntry.icon className="w-4 h-4" /> {textbookEntry.label}
+          </Link>
           <div className="w-px h-6 bg-slate-200 flex-shrink-0" />
           <span className="text-xs text-slate-400 font-medium flex-shrink-0">课堂工具</span>
           {toolTabs.map(t => (
@@ -109,7 +121,7 @@ export default function GameCarnivalPage() {
             {[
               { num: '443', label: '经典游戏资源' },
               { num: '1,745', label: '教材词汇' },
-              { num: '3+1', label: '即玩游戏 + 课堂工具' },
+              { num: '3+1+16', label: '即玩游戏 + 课堂工具 + 课本游戏' },
             ].map(s => (
               <div key={s.label} className="bg-white rounded-2xl border border-slate-200 p-4 text-center shadow-sm">
                 <p className="text-2xl md:text-3xl font-extrabold text-emerald-600">{s.num}</p>
@@ -137,7 +149,7 @@ export default function GameCarnivalPage() {
 
           {/* 即时游戏 */}
           <h2 className="text-lg font-bold text-slate-800 mb-4">🎮 立即开玩</h2>
-          <div className="grid md:grid-cols-3 gap-4 mb-10">
+          <div className="grid md:grid-cols-3 gap-4 mb-4">
             {gameTabs.map((t, i) => (
               <button key={t.id} onClick={() => goTab(t.id)}
                 className="group bg-white rounded-2xl border border-slate-200 p-6 text-left shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all">
@@ -155,6 +167,25 @@ export default function GameCarnivalPage() {
                 </span>
               </button>
             ))}
+          </div>
+
+          {/* 课本游戏入口 */}
+          <div className="grid md:grid-cols-3 gap-4 mb-10">
+            <Link to={textbookEntry.to}
+              className="group bg-white rounded-2xl border-2 border-indigo-200 p-6 text-left shadow-sm hover:shadow-xl hover:-translate-y-1 transition-all md:col-span-3 bg-gradient-to-r from-indigo-50 to-violet-50">
+              <div className="flex items-center gap-4">
+                <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${textbookEntry.gradient} flex items-center justify-center text-white shadow-lg flex-shrink-0 group-hover:scale-110 group-hover:rotate-6 transition-all`}>
+                  <textbookEntry.icon className="w-7 h-7" />
+                </div>
+                <div className="min-w-0">
+                  <h3 className="font-bold text-slate-800 text-lg mb-1">{textbookEntry.label}</h3>
+                  <p className="text-xs text-slate-500">{textbookEntry.desc}</p>
+                </div>
+                <span className="ml-auto inline-flex items-center gap-1 text-indigo-500 text-sm font-bold flex-shrink-0">
+                  进入 <ChevronRight className="w-4 h-4 group-hover:translate-x-0.5 transition-all" />
+                </span>
+              </div>
+            </Link>
           </div>
 
           {/* 课堂工具 */}

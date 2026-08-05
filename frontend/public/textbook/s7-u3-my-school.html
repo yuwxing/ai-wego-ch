@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit 3 - My School - LEGO Map!</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  :root {
+    --bg:#f8f9fa; --grid:#e9ecef;
+    --lego-red:#e32121; --lego-blue:#006cb7; --lego-yellow:#ffd400; --lego-green:#009640;
+    --lego-orange:#ff7d00; --lego-purple:#97007d;
+    --text:#1c1c1e; --muted:#8e8e93;
+  }
+  html,body { width:100%; height:100%; font-family:"Comic Sans MS","Comic Neue","PingFang SC","Microsoft YaHei",sans-serif; background:var(--bg); overflow:hidden; }
+
+  /* Start */
+  #start { position:fixed; inset:0; background:linear-gradient(135deg,#006cb7,#5ac8fa); z-index:1000; display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer; transition:opacity .6s; color:#fff; }
+  #start.hidden { opacity:0; pointer-events:none; }
+  .logo { font-size:clamp(60px,10vw,120px); font-weight:900; letter-spacing:4px; color:#fff; margin-bottom:10px; text-shadow:6px 6px 0 #004f83; transform:skewX(-6deg); }
+  .st { font-size:clamp(20px,3vw,40px); font-weight:800; color:#fff; margin-bottom:24px; }
+  .blocks { display:flex; gap:10px; margin-bottom:20px; }
+  .t-block { width:clamp(40px,7vw,80px); height:clamp(40px,7vw,80px); background:var(--lego-yellow); border-radius:10px; position:relative; display:flex; align-items:center; justify-content:center; box-shadow:inset 0 -8px 0 rgba(0,0,0,.18), inset 0 8px 0 rgba(255,255,255,.2), 0 12px 0 #c7a100,0 18px 20px rgba(0,0,0,.25); animation:bounce 1.2s infinite; }
+  .t-block.red { background:var(--lego-red); animation-delay:.15s; box-shadow:inset 0 -8px 0 rgba(0,0,0,.18), inset 0 8px 0 rgba(255,255,255,.2), 0 12px 0 #b51a1a,0 18px 20px rgba(0,0,0,.25); }
+  .t-block.green { background:var(--lego-green); animation-delay:.3s; box-shadow:inset 0 -8px 0 rgba(0,0,0,.18), inset 0 8px 0 rgba(255,255,255,.2), 0 12px 0 #006b2e,0 18px 20px rgba(0,0,0,.25); }
+  .t-block::after { content:''; width:50%; height:50%; border:3px solid rgba(255,255,255,.35); border-radius:50%; box-shadow:inset 0 2px 0 rgba(255,255,255,.3); }
+  @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-14px)} }
+  .hint { font-size:clamp(16px,2vw,24px); color:rgba(255,255,255,.7); margin-top:20px; animation:pulse 1.6s infinite; }
+  @keyframes pulse { 0%,100%{opacity:.6} 50%{opacity:1} }
+
+  /* UI */
+  #ui { width:100%; height:100%; display:none; flex-direction:column; padding:clamp(10px,1.5vh,20px) clamp(10px,2vw,30px); }
+  .top { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:10px; }
+  .chip { background:#fff; border:3px solid #000; border-radius:14px; padding:clamp(6px,1vh,12px) clamp(14px,2vw,24px); font-size:clamp(14px,1.8vw,22px); font-weight:800; box-shadow:0 6px 0 #000; display:flex; align-items:center; gap:8px; }
+  .chip .lab { color:#8e8e93; font-weight:600; }
+  .chip .val { color:var(--lego-red); font-size:clamp(18px,2.5vw,30px); }
+
+  /* Game area */
+  .game { flex:1; display:grid; grid-template-columns:1fr 1fr; gap:clamp(12px,2vw,28px); min-height:0; }
+  @media (max-width:900px){ .game{grid-template-columns:1fr; grid-template-rows:1fr 1fr} }
+  .col { background:#fff; border:4px solid #000; border-radius:18px; padding:clamp(14px,2vw,28px); box-shadow:0 12px 0 #000; display:flex; flex-direction:column; min-height:0; }
+  .col-title { font-size:clamp(16px,2.2vw,26px); font-weight:900; margin-bottom:12px; text-align:center; }
+
+  /* Map */
+  .map { flex:1; display:grid; grid-template-columns:repeat(3,1fr); gap:10px; }
+  .room { background:#f8f9fa; border:3px solid #000; border-radius:14px; padding:12px 10px; font-size:clamp(14px,1.8vw,20px); font-weight:800; display:flex; flex-direction:column; align-items:center; justify-content:center; box-shadow:0 8px 0 #000; transition:transform .08s, background .2s; cursor:pointer; }
+  .room:hover { transform:translateY(-3px); }
+  .room:active { transform:translateY(4px); box-shadow:0 4px 0 #000; }
+  .room .icon { font-size:clamp(28px,4vw,44px); margin-bottom:4px; }
+  .room .label { font-size:clamp(12px,1.6vw,18px); color:#8e8e93; }
+  .room.selected { background:var(--lego-yellow); }
+  .room.correct { background:var(--lego-green); color:#fff; pointer-events:none; }
+
+  /* Questions */
+  .q-area { display:flex; flex-direction:column; gap:10px; }
+  .q-card { background:#f8f9fa; border:3px solid #000; border-radius:14px; padding:14px; font-size:clamp(14px,1.8vw,22px); font-weight:800; }
+  .q-card .q-text { margin-bottom:10px; }
+
+  /* Lego buttons */
+  .lego { position:relative; display:flex; align-items:center; justify-content:center; padding:clamp(10px,1.4vh,16px) clamp(14px,1.8vw,26px); font-size:clamp(14px,1.8vw,22px); font-weight:900; color:#fff; border:none; cursor:pointer; border-radius:12px; box-shadow:inset 0 -10px 0 rgba(0,0,0,.18), inset 0 10px 0 rgba(255,255,255,.18), 0 10px 0 #000; transition:transform .08s, box-shadow .08s, opacity .2s; }
+  .lego:hover { transform:translateY(-3px); }
+  .lego:active { transform:translateY(6px); box-shadow:inset 0 -10px 0 rgba(0,0,0,.18), inset 0 10px 0 rgba(255,255,255,.18), 0 4px 0 #000; }
+  .lego.red { background:var(--lego-red); }
+  .lego.blue { background:var(--lego-blue); }
+  .lego.yellow { background:var(--lego-yellow); color:#000; }
+  .lego.green { background:var(--lego-green); }
+  .lego.orange { background:var(--lego-orange); }
+  .lego.purple { background:var(--lego-purple); }
+
+  .studs { position:absolute; top:-8px; left:50%; transform:translateX(-50%); display:flex; gap:8px; }
+  .stud { width:16px; height:12px; border-radius:6px 6px 0 0; background:inherit; border:3px solid rgba(0,0,0,.12); border-bottom:none; box-shadow:inset 0 2px 0 rgba(255,255,255,.25); }
+
+  /* Bottom controls */
+  .bottom { display:flex; justify-content:center; gap:12px; margin-top:10px; }
+
+  /* Modal */
+  .modal { position:fixed; inset:0; background:rgba(0,0,0,.5); display:none; align-items:center; justify-content:center; z-index:500; }
+  .modal.show { display:flex; }
+  .m-card { background:#fff; border:5px solid #000; border-radius:20px; padding:30px 40px; box-shadow:0 18px 0 #000; text-align:center; max-width:90vw; animation:scaleIn .3s cubic-bezier(.175,.885,.32,1.275); }
+  @keyframes scaleIn { from{transform:scale(.8);opacity:0} to{transform:scale(1);opacity:1} }
+  .m-emoji { font-size:clamp(50px,8vw,80px); margin-bottom:10px; }
+  .m-title { font-size:clamp(24px,3.5vw,40px); font-weight:900; color:#000; margin-bottom:8px; }
+  .m-sub { font-size:clamp(16px,2vw,24px); color:#555; margin-bottom:16px; font-weight:700; }
+  .m-btns { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
+
+  /* Effects */
+  .star { position:fixed; pointer-events:none; font-size:clamp(22px,3.5vw,40px); animation:starPop .8s ease-out forwards; z-index:999; }
+  @keyframes starPop { 0%{transform:scale(0) rotate(0);opacity:1} 100%{transform:scale(1.6) rotate(200deg);opacity:0} }
+
+</style>
+</head>
+<body>
+
+<div id="start">
+  <div class="logo">MY SCHOOL</div>
+  <div class="st">校园地图找位置</div>
+  <div class="blocks">
+    <div class="t-block green"></div>
+    <div class="t-block yellow"></div>
+    <div class="t-block red"></div>
+  </div>
+  <div class="hint">点击任意处开始</div>
+</div>
+
+<div id="ui">
+  <div class="top">
+    <div class="chip"><span class="lab">得分</span><span class="val" id="score">0</span></div>
+    <div class="chip"><span class="lab">正确</span><span class="val" id="correct">0/7</span></div>
+    <div class="chip"><span class="lab">连击</span><span class="val" id="combo">🔥 0</span></div>
+  </div>
+
+  <div class="game">
+    <!-- Map -->
+    <div class="col">
+      <div class="col-title">🗺️ 校园地图</div>
+      <div class="map" id="map"></div>
+    </div>
+
+    <!-- Question -->
+    <div class="col">
+      <div class="col-title">❓ 问题</div>
+      <div class="q-area" id="qArea"></div>
+    </div>
+  </div>
+
+  <div class="bottom">
+    <button class="lego blue" id="resetBtn">
+      <span class="studs"><span class="stud"></span><span class="stud"></span></span>
+      重置
+    </button>
+  </div>
+</div>
+
+<div class="modal" id="modal">
+  <div class="m-card">
+    <div class="m-emoji" id="mEmoji">🎉</div>
+    <div class="m-title" id="mTitle">太棒了！</div>
+    <div class="m-sub" id="mSub">你完成了所有题目！</div>
+    <div class="m-btns">
+      <button class="lego green" id="againBtn">
+        <span class="studs"><span class="stud"></span><span class="stud"></span></span>
+        再来一轮
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ===================== Sound ===================== */
+class SoundEngine {
+  constructor(){ this.ctx=null; this.ready=false; }
+  init(){ if(this.ready) return; try{ this.ctx=new(window.AudioContext||window.webkitAudioContext)(); this.ready=true; }catch(e){} }
+  play(type){
+    if(!this.ctx) return; const now=this.ctx.currentTime;
+    switch(type){
+      case 'click': this.tone(700,0.06,'sine',0.08,now); break;
+      case 'correct':
+        this.tone(523,.12,'sine',.18,now); this.tone(659,.12,'sine',.18,now+.08); this.tone(784,.18,'sine',.18,now+.16); break;
+      case 'win': [523,659,784,1047,784,1047].forEach((f,i)=>this.tone(f,.3,'sine',.14,now+i*.14)); break;
+    }
+  }
+  tone(freq,dur,type,vol,t){
+    const o=this.ctx.createOscillator(),g=this.ctx.createGain();
+    o.connect(g); g.connect(this.ctx.destination); o.type=type; o.frequency.value=freq;
+    g.gain.setValueAtTime(vol,t); g.gain.exponentialRampToValueAtTime(.001,t+dur);
+    o.start(t); o.stop(t+dur);
+  }
+}
+const sound=new SoundEngine();
+
+/* ===================== Data ===================== */
+const ROOMS = [
+  {icon:"📚", name:"library"},
+  {icon:"🏀", name:"gym"},
+  {icon:"🔬", name:"lab"},
+  {icon:"🏫", name:"classroom"},
+  {icon:"🎨", name:"art room"},
+  {icon:"🎵", name:"music room"},
+  {icon:"🍔", name:"dining hall"},
+];
+
+const QUESTIONS = [
+  {q:"Where is the library?", a:"library"},
+  {q:"Where do we play basketball?", a:"gym"},
+  {q:"Where do we do science experiments?", a:"lab"},
+  {q:"Where do we have classes?", a:"classroom"},
+  {q:"Where do we draw pictures?", a:"art room"},
+  {q:"Where do we sing songs?", a:"music room"},
+  {q:"Where do we eat lunch?", a:"dining hall"},
+];
+
+/* ===================== State ===================== */
+let state = { qIdx:0, correct:new Set(), score:0, combo:0, waiting:false };
+
+/* ===================== DOM ===================== */
+const startEl=document.getElementById('start');
+const uiEl=document.getElementById('ui');
+const mapEl=document.getElementById('map');
+const qAreaEl=document.getElementById('qArea');
+const scoreEl=document.getElementById('score');
+const correctEl=document.getElementById('correct');
+const comboEl=document.getElementById('combo');
+const resetBtn=document.getElementById('resetBtn');
+const modal=document.getElementById('modal');
+const mEmoji=document.getElementById('mEmoji');
+const mTitle=document.getElementById('mTitle');
+const mSub=document.getElementById('mSub');
+const againBtn=document.getElementById('againBtn');
+
+/* ===================== Init ===================== */
+function init(){
+  buildMap();
+  loadQ(0);
+  updateUI();
+}
+
+function buildMap(){
+  mapEl.innerHTML='';
+  const shuffled=[...ROOMS].sort(()=>Math.random()-.5);
+  shuffled.forEach((r,i)=>{
+    const el=document.createElement('div'); el.className='room';
+    el.innerHTML=`<div class="icon">${r.icon}</div><div class="label">${r.name}</div>`;
+    el.dataset.name=r.name;
+    el.addEventListener('click',()=>tryRoom(r.name,el));
+    mapEl.appendChild(el);
+  });
+}
+
+function loadQ(i){
+  const q=QUESTIONS[i];
+  qAreaEl.innerHTML=`
+    <div class="q-card">
+      <div class="q-text">${q.q}</div>
+      <div style="color:#8e8e93;font-size:clamp(12px,1.6vw,18px);">💡 点击地图上正确的房间</div>
+    </div>
+  `;
+}
+
+function tryRoom(name,el){
+  if(state.waiting) return;
+  if(state.correct.has(name)) return;
+
+  sound.init(); sound.play('click');
+
+  mapEl.querySelectorAll('.room.selected').forEach(x=>x.classList.remove('selected'));
+  el.classList.add('selected');
+
+  if(name===QUESTIONS[state.qIdx].a){
+    state.correct.add(name);
+    state.combo++;
+    let pts=10; if(state.combo>=3) pts=15; if(state.combo>=5) pts=20;
+    state.score+=pts;
+    el.classList.add('correct');
+    sound.play('correct');
+    spawnStars();
+    updateUI();
+    state.waiting=true;
+    setTimeout(()=>{
+      state.qIdx++;
+      if(state.qIdx>=QUESTIONS.length){
+        sound.play('win');
+        showModal();
+      }else{
+        loadQ(state.qIdx);
+      }
+      state.waiting=false;
+    }, 500);
+  }else{
+    state.combo=0;
+    el.style.animation='shake .4s ease';
+    setTimeout(()=>el.style.animation='',400);
+    updateUI();
+  }
+}
+
+function updateUI(){
+  scoreEl.textContent=state.score;
+  correctEl.textContent=state.correct.size+'/'+QUESTIONS.length;
+  comboEl.textContent='🔥 '+state.combo;
+}
+
+function spawnStars(){
+  const rect=mapEl.getBoundingClientRect();
+  for(let i=0;i<10;i++){
+    const s=document.createElement('div'); s.className='star';
+    s.textContent=['⭐','✨','🌟','💫'][Math.floor(Math.random()*4)];
+    s.style.left=(rect.left+Math.random()*rect.width)+'px';
+    s.style.top=(rect.top+Math.random()*rect.height)+'px';
+    document.body.appendChild(s);
+    setTimeout(()=>s.remove(),800);
+  }
+}
+
+function showModal(){
+  mEmoji.textContent='🎉';
+  mTitle.textContent='太棒了！';
+  mSub.textContent='你得到 '+state.score+' 分！';
+  modal.classList.add('show');
+}
+
+/* ===================== Events ===================== */
+startEl.addEventListener('click',()=>{
+  sound.init(); sound.play('click');
+  startEl.classList.add('hidden');
+  uiEl.style.display='flex';
+  init();
+});
+
+resetBtn.addEventListener('click',()=>{
+  sound.init(); sound.play('click');
+  state={ qIdx:0, correct:new Set(), score:0, combo:0, waiting:false };
+  buildMap();
+  loadQ(0);
+  updateUI();
+});
+
+againBtn.addEventListener('click',()=>{
+  sound.init(); sound.play('click');
+  modal.classList.remove('show');
+  state={ qIdx:0, correct:new Set(), score:0, combo:0, waiting:false };
+  buildMap();
+  loadQ(0);
+  updateUI();
+});
+
+/* Shake keyframe */
+const style=document.createElement('style');
+style.textContent='@keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-10px)} 40%{transform:translateX(10px)} 60%{transform:translateX(-6px)} 80%{transform:translateX(6px)} }';
+document.head.appendChild(style);
+
+</script>
+</body>
+</html>

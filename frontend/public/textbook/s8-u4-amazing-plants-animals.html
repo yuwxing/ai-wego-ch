@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unit 4 Amazing Plants and Animals!</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  :root {
+    --bg:#ecfdf5; --paper:#f0fdf4; --border:#064e3b; --accent:#10b981;
+    --accent2:#6ee7b7; --green:#22c55e; --muted:#547f6c;
+  }
+  html,body { width:100%; height:100%; font-family:"Comic Sans MS","Comic Neue","PingFang SC","Microsoft YaHei",sans-serif; background:var(--bg); overflow:hidden; }
+
+  /* Start */
+  #start { position:fixed; inset:0; background:linear-gradient(135deg,#d1fae5,#ecfdf5); z-index:1000; display:flex; flex-direction:column; align-items:center; justify-content:center; cursor:pointer; transition:opacity .6s; }
+  #start.hidden { opacity:0; pointer-events:none; }
+  .cover { background:var(--paper); border:5px solid var(--border); border-radius:24px; padding:40px 60px; box-shadow:0 14px 0 var(--border); text-align:center; transform:rotate(-0.6deg); }
+  .title { font-size:clamp(34px,6vw,60px); font-weight:900; color:var(--accent); margin-bottom:8px; }
+  .subtitle { font-size:clamp(16px,2.5vw,28px); color:var(--border); font-weight:800; }
+  .stickers { display:flex; gap:14px; justify-content:center; margin-top:18px; }
+  .sticker { font-size:clamp(26px,4vw,44px); filter:drop-shadow(0 4px 0 rgba(0,0,0,.15)); animation:float 2.2s ease-in-out infinite; }
+  .sticker:nth-child(2){ animation-delay:.25s }
+  .sticker:nth-child(3){ animation-delay:.5s }
+  @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-8px)} }
+  .hint { font-size:clamp(14px,2vw,22px); color:var(--muted); margin-top:28px; animation:pulse 1.6s infinite; }
+  @keyframes pulse { 0%,100%{opacity:.6} 50%{opacity:1} }
+
+  /* UI */
+  #ui { width:100%; height:100%; display:none; flex-direction:column; padding:clamp(8px,1.2vh,16px) clamp(10px,1.8vw,28px); }
+  .top { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:10px; }
+  .tag { background:#fff; border:3px solid var(--border); border-radius:18px; padding:8px 16px; font-size:clamp(13px,1.8vw,20px); font-weight:800; box-shadow:0 6px 0 var(--border); display:flex; align-items:center; gap:8px; }
+  .tag .lab { color:var(--muted); font-weight:700; }
+  .tag .val { color:var(--accent); font-size:clamp(15px,2vw,24px); }
+
+  /* Content */
+  .board { flex:1; display:grid; grid-template-columns:1fr; gap:14px; min-height:0; }
+  @media (min-width:1000px){ .board{grid-template-columns:1.15fr .85fr;} }
+
+  .fieldnote { background:var(--paper); border:5px solid var(--border); border-radius:24px; padding:clamp(16px,2.2vw,34px); box-shadow:0 14px 0 var(--border); display:flex; flex-direction:column; min-height:0; overflow:auto; }
+  .fieldnote-title { display:flex; align-items:center; gap:10px; margin-bottom:12px; }
+  .emoji-big { font-size:clamp(34px,5vw,54px); }
+  .title-text { font-size:clamp(18px,2.6vw,30px); font-weight:900; color:var(--border); }
+  .content { flex:1; display:flex; flex-direction:column; justify-content:center; gap:10px; }
+  .note { background:#fff; border:4px solid var(--border); border-radius:16px; padding:14px 16px; font-size:clamp(14px,1.9vw,21px); font-weight:800; color:var(--border); box-shadow:0 8px 0 var(--border); line-height:1.55; }
+  .context { font-size:clamp(12px,1.6vw,17px); color:var(--muted); margin-bottom:8px; font-weight:700; }
+  .note .gap { display:inline-flex; align-items:center; justify-content:center; min-width:160px; border-bottom:4px solid var(--border); padding:0 8px; color:var(--accent); }
+
+  .panel { background:var(--paper); border:5px solid var(--border); border-radius:24px; padding:clamp(16px,2.2vw,34px); box-shadow:0 14px 0 var(--border); display:flex; flex-direction:column; gap:10px; min-height:0; }
+  .panel-title { font-size:clamp(16px,2.2vw,26px); font-weight:900; color:var(--border); text-align:center; margin-bottom:6px; }
+  .btn { background:#fff; border:4px solid var(--border); border-radius:16px; padding:14px 16px; font-size:clamp(14px,1.8vw,20px); font-weight:900; color:var(--border); box-shadow:0 8px 0 var(--border); cursor:pointer; transition:transform .08s, box-shadow .08s; text-align:left; }
+  .btn:hover { transform:translateY(-3px); box-shadow:0 11px 0 var(--border); }
+  .btn:active { transform:translateY(6px); box-shadow:0 4px 0 var(--border); }
+  .btn.correct { background:var(--green); color:#fff; pointer-events:none; }
+  .btn.wrong { background:#ff9e9e; color:#5c1a1a; animation:shake .35s ease; pointer-events:none; }
+
+  .controls { display:flex; gap:10px; justify-content:center; margin-top:8px; flex-wrap:wrap; }
+  .next { background:var(--accent2); color:#fff; }
+  .restart { background:var(--accent); color:#fff; }
+
+  /* Progress */
+  .progress { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; margin-top:6px; }
+  .dot { width:22px; height:22px; border-radius:50%; border:3px solid var(--border); background:#fff; box-shadow:0 4px 0 var(--border); }
+  .dot.done { background:var(--green); }
+  .dot.now { background:var(--accent); transform:scale(1.1); }
+
+  /* Modal */
+  .modal { position:fixed; inset:0; background:rgba(0,0,0,.45); display:none; align-items:center; justify-content:center; z-index:500; }
+  .modal.show { display:flex; }
+  .m-card { background:var(--paper); border:5px solid var(--border); border-radius:24px; padding:36px 50px; box-shadow:0 16px 0 var(--border); text-align:center; max-width:90vw; animation:pop .35s ease; }
+  @keyframes pop { from{transform:scale(.8);opacity:0} to{transform:scale(1);opacity:1} }
+  .m-emoji { font-size:clamp(48px,8vw,80px); margin-bottom:8px; }
+  .m-title { font-size:clamp(22px,3.2vw,36px); font-weight:900; color:var(--border); margin-bottom:6px; }
+  .m-sub { font-size:clamp(15px,2vw,22px); color:var(--muted); font-weight:800; margin-bottom:16px; }
+  .m-btns { display:flex; gap:10px; justify-content:center; flex-wrap:wrap; }
+
+  /* Effects */
+  .star { position:fixed; pointer-events:none; font-size:clamp(20px,3.5vw,40px); animation:starPop .8s ease-out forwards; z-index:999; }
+  @keyframes starPop { 0%{transform:scale(0) rotate(0);opacity:1} 100%{transform:scale(1.6) rotate(200deg);opacity:0} }
+
+</style>
+</head>
+<body>
+
+<div id="start">
+  <div class="cover">
+    <div class="title">🌿 Amazing Plants & Animals!</div>
+    <div class="subtitle">最高级/描述 — 高级挑战版</div>
+    <div class="stickers">
+      <div class="sticker">🐘</div><div class="sticker">🌻</div><div class="sticker">🦋</div>
+    </div>
+  </div>
+  <div class="hint">点击打开野外笔记！</div>
+</div>
+
+<div id="ui">
+  <div class="top">
+    <div class="tag"><span class="lab">得分</span><span class="val" id="score">0</span></div>
+    <div class="tag"><span class="lab">笔记</span><span class="val" id="note">1/10</span></div>
+    <div class="tag"><span class="lab">连击</span><span class="val" id="combo">🔥 0</span></div>
+  </div>
+
+  <div class="board">
+    <div class="fieldnote">
+      <div class="fieldnote-title">
+        <div class="emoji-big" id="noteEmoji">📝</div>
+        <div class="title-text" id="noteTitle">Field Note</div>
+      </div>
+      <div class="content" id="content"></div>
+      <div class="progress" id="progress"></div>
+    </div>
+
+    <div class="panel">
+      <div class="panel-title">选择正确的表达</div>
+      <div id="btns"></div>
+      <div class="controls">
+        <button class="btn next" id="nextBtn" style="display:none">下一个 →</button>
+        <button class="btn restart" id="restartBtn">重新开始</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="modal">
+  <div class="m-card">
+    <div class="m-emoji" id="mEmoji">🎊</div>
+    <div class="m-title" id="mTitle">野外笔记完成！</div>
+    <div class="m-sub" id="mSub">你得到 0 分！</div>
+    <div class="m-btns">
+      <button class="btn next" id="againBtn">再玩一次</button>
+    </div>
+  </div>
+</div>
+
+<script>
+/* ===================== Sound ===================== */
+class SoundEngine {
+  constructor(){ this.ctx=null; this.ready=false; }
+  init(){ if(this.ready) return; try{ this.ctx=new(window.AudioContext||window.webkitAudioContext)(); this.ready=true; }catch(e){} }
+  play(type){
+    if(!this.ctx) return; const now=this.ctx.currentTime;
+    switch(type){
+      case 'click': this.tone(700,0.06,'sine',0.08,now); break;
+      case 'correct':
+        this.tone(523,.12,'sine',.18,now); this.tone(659,.12,'sine',.18,now+.08); this.tone(784,.18,'sine',.18,now+.16); break;
+      case 'win': [523,659,784,1047,784,1047].forEach((f,i)=>this.tone(f,.3,'sine',.14,now+i*.14)); break;
+      case 'wrong':
+        const o=this.ctx.createOscillator(),g=this.ctx.createGain(); o.connect(g); g.connect(this.ctx.destination); o.type='sawtooth'; o.frequency.setValueAtTime(200,now); o.frequency.linearRampToValueAtTime(100,now+.25); g.gain.setValueAtTime(.12,now); g.gain.exponentialRampToValueAtTime(.001,now+.25); o.start(now); o.stop(now+.25); break;
+    }
+  }
+  tone(freq,dur,type,vol,t){
+    const o=this.ctx.createOscillator(),g=this.ctx.createGain();
+    o.connect(g); g.connect(this.ctx.destination); o.type=type; o.frequency.value=freq;
+    g.gain.setValueAtTime(vol,t); g.gain.exponentialRampToValueAtTime(.001,t+dur);
+    o.start(t); o.stop(t+dur);
+  }
+}
+const sound=new SoundEngine();
+
+/* ===================== Data (High Difficulty) */
+const NOTES = [
+  {
+    emoji:"🐘", title:"The Blue Whale",
+    context:"你在科普文章里读到关于蓝鲸的知识，记录最大、最重、声音最大等特征。",
+    text:"Blue whales are <span class='gap' id='gap'></span> animals on Earth — they are also <span class='gap' id='gap2'></span> and their calls are louder than any other animal.",
+    answer:"the largest, the heaviest",
+    opts:["the largest, the heaviest","largest, heaviest","the most large, the most heavy","most largest, most heaviest"]
+  },
+  {
+    emoji:"🦒", title:"The Giraffe",
+    context:"你和同学讨论长颈鹿：它是最高的动物，但脖子骨头数量和人类一样多。",
+    text:"Giraffes have <span class='gap' id='gap'></span> necks of all animals, but surprisingly, the number of neck bones is <span class='gap' id='gap2'></span> that in humans!",
+    answer:"the longest, the same as",
+    opts:["the longest, the same as","the longer, same as","longest, same","the most long, the same like"]
+  },
+  {
+    emoji:"🌻", title:"The Sunflower",
+    context:"你观察花园里的植物：向日葵长得最快，玫瑰最香，仙人掌最耐旱。",
+    text:"Sunflowers grow <span class='gap' id='gap'></span>, roses smell <span class='gap' id='gap2'></span>, and cacti are the best at surviving without water.",
+    answer:"the fastest, the sweetest",
+    opts:["the fastest, the sweetest","fastest, sweetest","the most fast, the most sweet","faster, sweeter"]
+  },
+  {
+    emoji:"🦅", title:"Bird Facts",
+    context:"你在做鸟类研究报告：蜂鸟最小，鹰飞得最高，信天翁飞得最远。",
+    text:"Hummingbirds are <span class='gap' id='gap'></span>, eagles fly <span class='gap' id='gap2'></span>, and albatrosses can travel the farthest without resting.",
+    answer:"the smallest, the highest",
+    opts:["the smallest, the highest","smallest, highest","the most small, the most high","smaller, higher"]
+  },
+  {
+    emoji:"🐢", title:"Turtles and Tortoises",
+    context:"你对比乌龟和海龟：海龟游得更快，乌龟活得更长，有些能超过150岁。",
+    text:"Sea turtles swim <span class='gap' id='gap'></span>, but tortoises live <span class='gap' id='gap2'></span> — some can live to over 150 years old!",
+    answer:"much faster, much longer",
+    opts:["much faster, much longer","more fast, more long","faster, longer","much more faster, much more longer"]
+  },
+  {
+    emoji:"🌺", title:"Tropical Rainforest",
+    context:"你在写关于热带雨林的作文：那里的植物最多，动物种类也最丰富。",
+    text:"Tropical rainforests have <span class='gap' id='gap'></span> plant species and are home to <span class='gap' id='gap2'></span> kinds of animals on land.",
+    answer:"the most, the most diverse",
+    opts:["the most, the most diverse","most, most diverse","the many, the diverse","more, more diverse"]
+  },
+  {
+    emoji:"🐆", title:"The Cheetah",
+    context:"你看动物纪录片：猎豹是跑得最快的动物，但只能短距离冲刺。",
+    text:"Cheetahs are <span class='gap' id='gap'></span> runners in the world — but they can only keep this speed for <span class='gap' id='gap2'></span> distances.",
+    answer:"the fastest, short",
+    opts:["the fastest, short","the faster, shorter","fastest, shortest","the most fast, short"]
+  },
+  {
+    emoji:"🦜", title:"Colorful Birds",
+    context:"你和朋友去动物园：你们都认为鹦鹉是最漂亮、最聪明的鸟之一。",
+    text:"We all agreed that parrots are among <span class='gap' id='gap'></span> and <span class='gap' id='gap2'></span> birds in the zoo.",
+    answer:"the most beautiful, the most intelligent",
+    opts:["the most beautiful, the most intelligent","beautifulest, intelligentest","more beautiful, more intelligent","the beautifulest, the intelligentest"]
+  },
+  {
+    emoji:"🌳", title:"The Redwood Tree",
+    context:"你参观红杉林：红杉是最高、最古老的树种之一，有些超过2000岁。",
+    text:"Redwood trees are among <span class='gap' id='gap'></span> and <span class='gap' id='gap2'></span> tree species — some are over 2000 years old!",
+    answer:"the tallest, the oldest",
+    opts:["the tallest, the oldest","tallest, oldest","the most tall, the most old","taller, older"]
+  },
+  {
+    emoji:"🐝", title:"Busy Bees",
+    context:"你观察蜜蜂：它们是最勤劳的昆虫，能看见人类看不见的颜色。",
+    text:"Bees are <span class='gap' id='gap'></span> insects in many people's eyes, and they can see colors that are <span class='gap' id='gap2'></span> to humans.",
+    answer:"the hardest-working, invisible",
+    opts:["the hardest-working, invisible","the most hard-working, invisiblest","hardest working, not visible","the harder-working, invisible"]
+  }
+];
+
+/* ===================== State */
+let state = { note:0, score:0, combo:0, waiting:false };
+
+/* ===================== DOM */
+const startEl=document.getElementById('start');
+const uiEl=document.getElementById('ui');
+const scoreEl=document.getElementById('score');
+const noteEl=document.getElementById('note');
+const comboEl=document.getElementById('combo');
+const noteEmojiEl=document.getElementById('noteEmoji');
+const noteTitleEl=document.getElementById('noteTitle');
+const contentEl=document.getElementById('content');
+const btnsEl=document.getElementById('btns');
+const nextBtn=document.getElementById('nextBtn');
+const restartBtn=document.getElementById('restartBtn');
+const progressEl=document.getElementById('progress');
+const modal=document.getElementById('modal');
+const mEmoji=document.getElementById('mEmoji');
+const mTitle=document.getElementById('mTitle');
+const mSub=document.getElementById('mSub');
+const againBtn=document.getElementById('againBtn');
+
+/* ===================== Init */
+function init(){
+  state={ note:0, score:0, combo:0, waiting:false };
+  loadNote(0);
+  updateUI();
+}
+
+function loadNote(noteIdx){
+  const n=NOTES[noteIdx];
+  noteEmojiEl.textContent=n.emoji;
+  noteTitleEl.textContent=n.title;
+  contentEl.innerHTML=`
+    <div class="context">${n.context}</div>
+    <div class="note">${n.text}</div>
+  `;
+
+  const shuffled=n.opts.slice().sort(()=>Math.random()-.5);
+  btnsEl.innerHTML='';
+  shuffled.forEach(o=>{
+    const b=document.createElement('div'); b.className='btn'; b.textContent=o;
+    b.addEventListener('click',()=>onChoice(o,b,n.answer));
+    btnsEl.appendChild(b);
+  });
+
+  nextBtn.style.display='none';
+  updateProgress();
+  updateUI();
+}
+
+function onChoice(o,el,ans){
+  if(state.waiting) return;
+  state.waiting=true; sound.init();
+  if(o===ans){
+    el.classList.add('correct');
+    state.combo++;
+    let pts=10; if(state.combo>=3) pts=15; if(state.combo>=5) pts=20; state.score+=pts;
+    sound.play('correct'); spawnStars(); updateUI();
+    const gaps=contentEl.querySelectorAll('.gap');
+    const parts=ans.split(', ');
+    gaps.forEach((gap,i)=>{ if(parts[i]){ gap.textContent=parts[i]; gap.style.borderBottomColor='var(--green)'; gap.style.color='var(--green)'; } });
+    setTimeout(()=>{ nextBtn.style.display='inline-flex'; state.waiting=false; },450);
+  }else{
+    el.classList.add('wrong'); state.combo=0; sound.play('wrong');
+    setTimeout(()=>{
+      const all=btnsEl.querySelectorAll('.btn');
+      all.forEach(x=>{ if(x.textContent===ans) x.classList.add('correct'); });
+      setTimeout(()=>{ nextBtn.style.display='inline-flex'; state.waiting=false; updateUI(); },500);
+    },300);
+  }
+}
+
+/* ===================== UI */
+function updateUI(){
+  scoreEl.textContent=state.score;
+  noteEl.textContent=(state.note+1)+'/'+NOTES.length;
+  comboEl.textContent='🔥 '+state.combo;
+}
+
+function updateProgress(){
+  progressEl.innerHTML='';
+  NOTES.forEach((d,i)=>{
+    const el=document.createElement('div'); el.className='dot'+(i<state.note?' done':'')+(i===state.note?' now':'');
+    progressEl.appendChild(el);
+  });
+}
+
+function spawnStars(){
+  const rect=contentEl.getBoundingClientRect();
+  for(let i=0;i<12;i++){
+    const s=document.createElement('div'); s.className='star';
+    s.textContent=['⭐','✨','🌟','💫'][Math.floor(Math.random()*4)];
+    s.style.left=(rect.left+Math.random()*rect.width)+'px';
+    s.style.top=(rect.top+Math.random()*rect.height)+'px';
+    document.body.appendChild(s); setTimeout(()=>s.remove(),800);
+  }
+}
+
+function showModal(){
+  mEmoji.textContent='🎊'; mTitle.textContent='野外笔记完成！'; mSub.textContent='你得到 '+state.score+' 分！';
+  modal.classList.add('show');
+}
+
+/* ===================== Events */
+startEl.addEventListener('click',()=>{
+  sound.init(); sound.play('click');
+  startEl.classList.add('hidden'); uiEl.style.display='flex'; init();
+});
+
+nextBtn.addEventListener('click',()=>{
+  sound.init(); sound.play('click');
+  state.note++;
+  if(state.note>=NOTES.length){ setTimeout(()=>{ sound.play('win'); showModal(); },400); return; }
+  loadNote(state.note);
+});
+
+restartBtn.addEventListener('click',()=>{
+  sound.init(); sound.play('click'); init();
+});
+
+againBtn.addEventListener('click',()=>{
+  sound.init(); sound.play('click'); modal.classList.remove('show'); init();
+});
+
+/* Shake keyframe */
+const style=document.createElement('style');
+style.textContent='@keyframes shake { 0%,100%{transform:translateX(0)} 20%{transform:translateX(-10px)} 40%{transform:translateX(10px)} 60%{transform:translateX(-6px)} 80%{transform:translateX(6px)} }';
+document.head.appendChild(style);
+
+</script>
+</body>
+</html>
