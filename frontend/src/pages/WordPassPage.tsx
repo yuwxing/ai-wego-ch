@@ -91,7 +91,7 @@ const questionsCn = [
 const allQuestions = [...questions, ...questionsCn]
 
 function normalize(a: string) {
-  return a.toLowerCase().replace(/[;，]/g, ';').split(';').map(s => s.trim()).filter(Boolean).join('; ')
+  return a.toLowerCase().replace(/[;；，]/g, ';').split(';').map(s => s.trim()).filter(Boolean).join('; ')
 }
 
 export default function WordPassPage() {
@@ -260,7 +260,7 @@ export default function WordPassPage() {
 
           {result && (
             <div className={`mt-3 p-3 rounded-xl text-sm font-medium ${result === 'correct' ? 'bg-green-50 text-green-700' : 'bg-red-50 text-red-700'}`}>
-              {result === 'correct' ? '✅ 正确！ +10经验' : `❌ 错误！正确答案：${q.a}`}
+              {result === 'correct' ? '✅ 正确！ +10经验' : `❌ 错误！正确答案：${normalize(q.a)}`}
             </div>
           )}
         </div>

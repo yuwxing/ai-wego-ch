@@ -1,6 +1,29 @@
-import React, { useState, createContext, useContext, ReactNode } from 'react'
+import React, { useState, useRef, createContext, useContext, ReactNode, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { ArrowLeft, Swords, Heart, Zap, Shield, Star, ChevronRight, BookOpen, RotateCcw } from 'lucide-react'
+
+const SAVE_KEY = 'grammar_quest_progress'
+
+interface SaveData {
+  clearedStages: number[]
+  completedWorlds: number[]
+  xp: number
+  level: number
+  wrongList: { q: string; a: string; user: string }[]
+  totalAnswered: number
+  totalCorrect: number
+}
+
+function loadSave(): SaveData | null {
+  try {
+    const raw = localStorage.getItem(SAVE_KEY)
+    return raw ? JSON.parse(raw) : null
+  } catch { return null }
+}
+
+function writeSave(data: SaveData) {
+  localStorage.setItem(SAVE_KEY, JSON.stringify(data))
+}
 
 /* ========== 游戏状态 Context ========== */
 interface GameState {
@@ -52,7 +75,7 @@ const grammarData: World[] = [
         questions: [
           { q: 'Tom 和 Jerry 共有的房间 → Tom _____ Jerry', a: 'and' },
           { q: '老师的书 → the _____ book', a: "teacher's" },
-          { q: '"我朋友的一本书" 英语', a: 'a friend of mine' },
+          { q: '"我朋友的一本书" 英语', a: "my friend's book" },
           { q: 'the _____ of the hill (山顶)', a: 'top' },
         ]
       },
@@ -580,24 +603,42 @@ function VictoryScreen({ onRestart, worlds }: { onRestart: () => void; worlds: W
 type View = 'map' | 'battle' | 'victory' | 'gameover'
 
 export default function GrammarQuestPage() {
+  const saved = useRef(loadSave()).current
   const [view, setView] = useState<View>('map')
   const [currentWorld, setCurrentWorld] = useState<World | null>(null)
   const [currentStage, setCurrentStage] = useState<Stage | null>(null)
-  const [clearedStages, setClearedStages] = useState<Set<number>>(new Set())
-  const [completedWorlds, setCompletedWorlds] = useState<Set<number>>(new Set())
+  const [clearedStages, setClearedStages] = useState<Set<number>>(
+    new Set(saved?.clearedStages ?? [])
+  )
+  const [completedWorlds, setCompletedWorlds] = useState<Set<number>>(
+    new Set(saved?.completedWorlds ?? [])
+  )
 
   /* 游戏状态 */
-  const [xp, setXp] = useState(0)
-  const [level, setLevel] = useState(1)
+  const [xp, setXp] = useState(saved?.xp ?? 0)
+  const [level, setLevel] = useState(saved?.level ?? 1)
   const [combo, setCombo] = useState(0)
   const [hp, setHp] = useState(100)
   const maxHp = 100
-  const [wrongList, setWrongList] = useState<{ q: string; a: string; user: string }[]>([])
-  const [totalAnswered, setTotalAnswered] = useState(0)
-  const [totalCorrect, setTotalCorrect] = useState(0)
+  const [wrongList, setWrongList] = useState<{ q: string; a: string; user: string }[]>(
+    saved?.wrongList ?? []
+  )
+  const [totalAnswered, setTotalAnswered] = useState(saved?.totalAnswered ?? 0)
+  const [totalCorrect, setTotalCorrect] = useState(saved?.totalCorrect ?? 0)
   const [stageIndex, setStageIndex] = useState(0)
 
+  /* 自动保存进度 */
+  useEffect(() => {
+    writeSave({
+      clearedStages: [...clearedStages],
+      completedWorlds: [...completedWorlds],
+      xp, level, wrongList,
+      totalAnswered, totalCorrect,
+    })
+  }, [clearedStages, completedWorlds, xp, level, wrongList, totalAnswered, totalCorrect])
+
   const resetGame = () => {
+    localStorage.removeItem(SAVE_KEY)
     setXp(0); setLevel(1); setCombo(0); setHp(100); setWrongList([])
     setTotalAnswered(0); setTotalCorrect(0); setStageIndex(0)
     setClearedStages(new Set()); setCompletedWorlds(new Set())

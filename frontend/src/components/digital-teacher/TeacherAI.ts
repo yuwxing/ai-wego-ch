@@ -38,7 +38,7 @@ export class TeacherAI {
 
   setApiKey(key: string) {
     this.apiKey = key
-    localStorage.setItem('deepseek-api-key', key)
+    localStorage.setItem('deepseek_api_key', key)
   }
 
   /** Send a message and get response */
@@ -66,7 +66,7 @@ export class TeacherAI {
           'Authorization': `Bearer ${this.apiKey}`,
         },
         body: JSON.stringify({
-          model: 'deepseek-chat',
+          model: 'deepseek-v4-flash',
           messages: this.history,
           temperature: 0.7,
           max_tokens: 1024,

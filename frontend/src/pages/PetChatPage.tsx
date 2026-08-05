@@ -9,7 +9,7 @@ import FreeUsageModal from '../components/FreeUsageModal';
 
 // DeepSeek API 配置
 const DEEPSEEK_BASE_URL = 'https://api.deepseek.com';
-const DEEPSEEK_MODEL = 'deepseek-chat';
+const DEEPSEEK_MODEL = 'deepseek-v4-flash';
 
 // 宠物性格配置
 // 宠物语音风格：young-girl / young-boy

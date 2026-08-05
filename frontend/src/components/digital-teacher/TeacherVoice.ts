@@ -1,34 +1,62 @@
-// ── Text-To-Speech ──
-export function speak(text: string, lang = 'zh-CN', rate = 1.1, pitch = 1.0, gender: 'female' | 'male' = 'female'): Promise<void> {
+let _voicesLoaded = false
+let _voiceResolve: (() => void) | null = null
+
+function ensureVoices(): Promise<void> {
+  if (_voicesLoaded) return Promise.resolve()
+  if (window.speechSynthesis.getVoices().length > 0) {
+    _voicesLoaded = true
+    return Promise.resolve()
+  }
   return new Promise((resolve) => {
-    if (!window.speechSynthesis) {
-      console.warn('SpeechSynthesis not supported')
+    _voiceResolve = resolve
+    window.speechSynthesis.onvoiceschanged = () => {
+      _voicesLoaded = true
+      window.speechSynthesis.onvoiceschanged = null
       resolve()
-      return
     }
+    setTimeout(() => { _voicesLoaded = true; resolve() }, 3000)
+  })
+}
 
-    // Cancel any ongoing speech
-    window.speechSynthesis.cancel()
+// Chrome workaround: speechSynthesis sometimes enters a bad state
+let _chromeFixInterval: ReturnType<typeof setInterval> | null = null
+function chromeSpeechFix() {
+  if (_chromeFixInterval) return
+  _chromeFixInterval = setInterval(() => {
+    if (window.speechSynthesis && window.speechSynthesis.paused) {
+      window.speechSynthesis.resume()
+    }
+  }, 5000)
+}
 
+// ── Text-To-Speech ──
+export async function speak(text: string, lang = 'zh-CN', rate = 1.1, pitch = 1.0, gender: 'female' | 'male' = 'female'): Promise<void> {
+  if (!window.speechSynthesis) {
+    console.warn('SpeechSynthesis not supported')
+    return
+  }
+
+  window.speechSynthesis.cancel()
+  await ensureVoices()
+  chromeSpeechFix()
+
+  return new Promise((resolve) => {
     const utterance = new SpeechSynthesisUtterance(text)
     utterance.lang = lang
     utterance.rate = rate
     utterance.pitch = gender === 'female' ? 1.2 : 0.9
 
-    // Try to find a matching voice
     const voices = window.speechSynthesis.getVoices()
-    const zhVoice = voices.find(v => v.lang.startsWith('zh') && v.name.includes('Natural'))
+    const zhVoice = voices.find(v => v.lang.startsWith('zh') && (v.name.includes('Natural') || v.name.includes('Xiaoxiao') || v.name.includes('Yunxi')))
+      || voices.find(v => v.lang.startsWith('zh') && v.name.includes('Female'))
       || voices.find(v => v.lang.startsWith('zh'))
       || voices.find(v => v.lang.startsWith('en') && v.name.includes(gender === 'female' ? 'Female' : 'Male'))
     if (zhVoice) utterance.voice = zhVoice
 
-    utterance.onend = () => resolve()
-    utterance.onerror = () => resolve()
-
-    window.speechSynthesis.speak(utterance)
-
-    // Fallback timeout
-    setTimeout(resolve, text.length * 80 + 2000)
+    utterance.onend = resolve
+    utterance.onerror = resolve
+    try { window.speechSynthesis.speak(utterance) } catch { resolve() }
+    setTimeout(resolve, text.length * 80 + 3000)
   })
 }
 

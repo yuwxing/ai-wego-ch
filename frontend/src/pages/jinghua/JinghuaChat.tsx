@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Bot, Send, Loader2, Key, Bookmark, BookmarkCheck, GraduationCap } from 'lucide-react';
-import { getApiKey, getApiBaseUrl } from '../../utils/deepseek';
+import { getApiKey, getSharedApiKey, DEEPSEEK_API_URL } from '../../utils/deepseek';
 
 const CORE_MENTORS: Record<string, { name: string; prompt: string; color: string }> = {
   'mentor-math': {
@@ -94,7 +94,7 @@ const JinghuaChat: React.FC = () => {
 
   const handleSend = async () => {
     if (!input.trim() || loading) return;
-    const key = getApiKey();
+    const key = getApiKey() || getSharedApiKey();
     if (!key) {
       setNoKey(true);
       setTimeout(() => setNoKey(false), 3000);
@@ -106,11 +106,11 @@ const JinghuaChat: React.FC = () => {
     setLoading(true);
 
     try {
-      const res = await fetch(`${getApiBaseUrl()}/chat/completions`, {
+      const res = await fetch(DEEPSEEK_API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${key}` },
         body: JSON.stringify({
-          model: 'deepseek-chat',
+          model: 'deepseek-v4-flash',
           messages: [
             ...(systemPrompt ? [{ role: 'system' as const, content: systemPrompt }] : []),
             ...messages.slice(-10).map(m => ({ role: m.role, content: m.content })),
@@ -121,9 +121,16 @@ const JinghuaChat: React.FC = () => {
         })
       });
       const data = await res.json();
-      const reply = data.choices?.[0]?.message?.content || '抱歉，暂时无法回复。';
-      setMessages(prev => [...prev, { id: generateId(), role: 'assistant', content: reply }]);
-    } catch {
+      console.log('[DeepSeek]', res.status, data);
+      if (!res.ok) {
+        const errMsg = data.error?.message || `HTTP ${res.status}`;
+        setMessages(prev => [...prev, { id: generateId(), role: 'assistant', content: `调用失败：${errMsg}` }]);
+      } else {
+        const reply = data.choices?.[0]?.message?.content || '抱歉，暂时无法回复。';
+        setMessages(prev => [...prev, { id: generateId(), role: 'assistant', content: reply }]);
+      }
+    } catch (e) {
+      console.error('[DeepSeek]', e);
       setMessages(prev => [...prev, { id: generateId(), role: 'assistant', content: '网络出错了，请稍后重试。' }]);
     }
     setLoading(false);

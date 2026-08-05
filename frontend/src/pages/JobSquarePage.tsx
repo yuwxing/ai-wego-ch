@@ -1302,7 +1302,7 @@ export const JobSquarePage: React.FC = () => {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
         body: JSON.stringify({
-          model: 'deepseek-chat',
+          model: 'deepseek-v4-flash',
           messages: [
             { role: 'system', content: systemPrompt },
             ...chatMessages.slice(-10).map(m => ({ role: m.role, content: m.content })),

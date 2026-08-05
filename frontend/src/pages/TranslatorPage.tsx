@@ -38,7 +38,7 @@ export default function TranslatorPage() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
         body: JSON.stringify({
-          model: 'deepseek-chat',
+          model: 'deepseek-v4-flash',
           messages: [
             { role: 'system', content: `翻译助手：将${target === 'en' ? '中文' : '英文'}翻译成${target === 'en' ? '英文' : '中文'}，只返回结果不要解释。` },
             { role: 'user', content: text }

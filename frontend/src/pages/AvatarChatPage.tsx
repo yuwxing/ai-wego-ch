@@ -6,7 +6,7 @@ import { digitalAvatarAPI } from '../utils/supabase'
 import { useUser } from '../contexts/UserContext'
 
 const DEEPSEEK_BASE_URL = 'https://api.deepseek.com'
-const DEEPSEEK_MODEL = 'deepseek-chat'
+const DEEPSEEK_MODEL = 'deepseek-v4-flash'
 const chatHistoryKey = (id: string) => `avatarChatHistory_${id}`
 
 interface Message {

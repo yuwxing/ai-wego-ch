@@ -10,6 +10,41 @@ export function setApiKey(key: string): void {
   }
 }
 
+export function getGoogleApiKey(): string | null {
+  return localStorage.getItem('google_api_key');
+}
+
+export function setGoogleApiKey(key: string): void {
+  if (key && key.trim()) {
+    localStorage.setItem('google_api_key', key.trim());
+  } else {
+    localStorage.removeItem('google_api_key');
+  }
+}
+
+export function getGoogleCx(): string | null {
+  return localStorage.getItem('google_cx');
+}
+
+export function getOpenAiKey(): string | null {
+  return localStorage.getItem('openai_api_key');
+}
+export function setOpenAiKey(key: string): void {
+  if (key && key.trim()) {
+    localStorage.setItem('openai_api_key', key.trim());
+  } else {
+    localStorage.removeItem('openai_api_key');
+  }
+}
+
+export function setGoogleCx(cx: string): void {
+  if (cx && cx.trim()) {
+    localStorage.setItem('google_cx', cx.trim());
+  } else {
+    localStorage.removeItem('google_cx');
+  }
+}
+
 export function getSharedApiKey(): string | null {
   return localStorage.getItem('shared_deepseek_api_key');
 }
@@ -32,7 +67,7 @@ function getKey() {
 
 export const DEEPSEEK_API_URL = 'https://api.deepseek.com/v1/chat/completions';
 export const DEEPSEEK_API_KEY = '';
-export const DEEPSEEK_MODEL = 'deepseek-chat';
+export const DEEPSEEK_MODEL = 'deepseek-v4-flash';
 
 export interface Message {
   id: string;
@@ -144,5 +179,43 @@ export async function sendToDeepSeekSync(
   }
 
   const data: DeepSeekResponse = await response.json();
+  return data.choices[0]?.message?.content || '';
+}
+
+export async function sendVisionToOpenAi(
+  imageBase64: string,
+  prompt: string,
+  apiKey: string,
+  signal?: AbortSignal
+): Promise<string> {
+  const response = await fetch('https://api.openai.com/v1/chat/completions', {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': `Bearer ${apiKey}`,
+    },
+    body: JSON.stringify({
+      model: 'gpt-4o-mini',
+      messages: [
+        {
+          role: 'user',
+          content: [
+            { type: 'text', text: prompt },
+            { type: 'image_url', image_url: { url: `data:image/jpeg;base64,${imageBase64}` } },
+          ],
+        },
+      ],
+      temperature: 0.3,
+      max_tokens: 4096,
+    }),
+    signal,
+  });
+
+  if (!response.ok) {
+    const error = await response.text();
+    throw new Error(`OpenAI Vision API 错误: ${response.status} - ${error}`);
+  }
+
+  const data = await response.json();
   return data.choices[0]?.message?.content || '';
 }

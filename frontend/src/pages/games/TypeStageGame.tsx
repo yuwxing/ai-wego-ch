@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback, useRef } from 'react'
+import { useState, useEffect, useCallback, useRef, useMemo } from 'react'
 import { RefreshCw, ChevronRight } from 'lucide-react'
 import type { VerbEntry } from '../../utils/irregularVerbsData'
 
@@ -16,11 +16,13 @@ function normalize(s: string) {
 }
 
 function normalizeMulti(v: string): string[] {
-  return v.split('/').map(s => s.trim().toLowerCase().replace(/[（(][^）)]*[）)]/g, '').trim())
+  return v.split('/').map(s => s.trim().toLowerCase().replace(/[（(][^）)]*[）)]/g, '').trim()).filter(Boolean)
 }
 
 function matchAnswer(input: string, answer: string): boolean {
-  return normalizeMulti(answer).some(a => normalize(input) === a)
+  const inputs = normalizeMulti(input)
+  const answers = normalizeMulti(answer)
+  return inputs.some(i => answers.some(a => i === a))
 }
 
 function playTone(freq: number, duration: number, type: OscillatorType = 'sine') {
@@ -56,6 +58,7 @@ export default function TypeStageGame({
   onBack,
   showPp = true,
   timeLimit,
+  allGradeVerbs,
 }: {
   verbs: VerbEntry[]
   stageName: string
@@ -63,6 +66,7 @@ export default function TypeStageGame({
   onBack: () => void
   showPp?: boolean
   timeLimit?: number
+  allGradeVerbs?: VerbEntry[]
 }) {
   const [shuffledVerbs, setShuffledVerbs] = useState<VerbEntry[]>([])
   const [currentQ, setCurrentQ] = useState(0)
@@ -78,6 +82,16 @@ export default function TypeStageGame({
   const [timeLeft, setTimeLeft] = useState(timeLimit || 0)
   const scoreRef = useRef(0)
   const onCompleteRef = useRef(onComplete)
+
+  const meaningGroups = useMemo(() => {
+    const map: Record<string, VerbEntry[]> = {}
+    const source = allGradeVerbs && allGradeVerbs.length > 0 ? allGradeVerbs : verbs
+    for (const v of source) {
+      if (!map[v.meaning]) map[v.meaning] = []
+      map[v.meaning].push(v)
+    }
+    return map
+  }, [verbs, allGradeVerbs])
 
   useEffect(() => { scoreRef.current = stageScore }, [stageScore])
   useEffect(() => { onCompleteRef.current = onComplete }, [onComplete])
@@ -123,9 +137,22 @@ export default function TypeStageGame({
   const handleSubmit = () => {
     if (showingResult || !shuffledVerbs[currentQ]) return
     const verb = shuffledVerbs[currentQ]
-    const baseCorrect = matchAnswer(baseInput, verb.base)
-    const pastCorrect = matchAnswer(pastInput, verb.past)
-    const ppCorrect = showPp ? matchAnswer(ppInput, verb.pp) : true
+    const group = meaningGroups[verb.meaning]
+    const isGroup = group && group.length > 1
+    let baseCorrect: boolean, pastCorrect: boolean, ppCorrect: boolean
+    if (isGroup) {
+      baseCorrect = pastCorrect = ppCorrect = false
+      for (const v of group) {
+        const b = matchAnswer(baseInput, v.base)
+        const p = matchAnswer(pastInput, v.past)
+        const pp = showPp ? matchAnswer(ppInput, v.pp) : true
+        if (b && p && pp) { baseCorrect = b; pastCorrect = p; ppCorrect = pp; break }
+      }
+    } else {
+      baseCorrect = matchAnswer(baseInput, verb.base)
+      pastCorrect = matchAnswer(pastInput, verb.past)
+      ppCorrect = showPp ? matchAnswer(ppInput, verb.pp) : true
+    }
 
     setFeedback({ base: baseCorrect, past: pastCorrect, pp: showPp ? ppCorrect : null })
 

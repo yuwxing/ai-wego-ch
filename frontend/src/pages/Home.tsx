@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { BookOpen, Award, Trophy, Sparkles, GraduationCap, Shield, Briefcase, Sun, User, LogIn, UserPlus, Monitor, Wand2, Loader2, Share2, X, Download, Brain, Users } from 'lucide-react'
+import { BookOpen, Award, Trophy, Sparkles, GraduationCap, Shield, Briefcase, Sun, User, LogIn, UserPlus, Monitor, Wand2, Loader2, Share2, X, Download, Brain, Users, ExternalLink } from 'lucide-react'
 import { useUser } from '../contexts/UserContext'
 import VisitorCounter from '../components/VisitorCounter'
 import { digitalAvatarAPI } from '../utils/supabase'
@@ -22,18 +22,38 @@ const sections = [
     links: [
       { to: '/learn/writing', label: '英语写作', desc: '中考/高考作文 · AI批改 · 二次提交 · 习作榜' },
       { to: '/learn/word-cards', label: '背单词' },
+      { to: 'https://vocabulary-os.ai-wego-v3.pages.dev', label: '单词OS', desc: '新人教词汇 · SRS间隔重复 · AI助学' },
       { to: '/learn/word-pass', label: '词汇训练营' },
       { to: '/learn/listening-speaking', label: '听说' },
       { to: '/learn/english-daily', label: '每日英语' },
       { to: '/learn/grammar', label: '语法训练营' },
       { to: '/learn/online-classroom', label: '在线教室' },
       { to: '/learn/classroom', label: 'AI学习助手' },
-      { to: '/learn/teacher', label: '数字教师' },
       { to: '/learn/textbook-challenge', label: '课本闯关' },
       { to: '/learn/story-academy', label: '故事学院' },
       { to: '/learn/robot', label: '数字校园' },
       { to: '/learn/irregular-verbs', label: '不规则动词' },
       { to: '/learn/study-notes', label: '学霸笔记' },
+    ]
+  },
+  {
+    title: 'AI解题技巧', icon: Brain, desc: '语法选择 · 完形填空 · 阅读理解 · AI分析',
+    color: 'from-fuchsia-400 to-pink-500',
+    links: [
+      { to: 'https://237691df9cf24d7da7d5e4494eabb5aa.app.codebuddy.work', label: '写作教练', desc: '中考/高考写作 · AI批改 · 多轮辅导' },
+      { to: 'https://english.we-aigo.cn/grammar.html', label: '语法选择', desc: '12道AI解析语法题' },
+      { to: 'https://english.we-aigo.cn/cloze.html', label: '完形填空', desc: '8篇AI解析完形' },
+      { to: 'https://english.we-aigo.cn/reading.html', label: '阅读理解', desc: '8篇AI解析阅读' },
+      { to: 'https://english.we-aigo.cn', label: 'AI解题中心', desc: '汇总页' },
+    ]
+  },
+  {
+    title: '3D沉浸课堂', icon: Monitor, desc: 'VR · 3D · 互动英语',
+    color: 'from-teal-400 to-cyan-500',
+    links: [
+      { to: '/learn/teacher', label: '数字教师', desc: 'AI数字分身 · 24小时学习陪伴' },
+      { to: 'https://vr-classroom.ai-wego-v3.pages.dev', label: 'VR课堂', desc: '3D沉浸式英语故事学习' },
+      { to: 'https://science.we-aigo.cn', label: '科学世界', desc: '3D科学探索 · 物理化学实验' },
     ]
   },
   {
@@ -50,6 +70,7 @@ const sections = [
       { to: '/community/quiz/history', label: '历史常识' },
       { to: '/community/quiz/science', label: '科学常识' },
       { to: '/community/quiz/geography', label: '地理常识' },
+      { to: 'https://play.we-aigo.cn', label: '科普剧大赛' },
     ]
   },
   {
@@ -57,6 +78,7 @@ const sections = [
     color: 'from-purple-400 to-pink-500',
     links: [
       { to: '/community/brain-train', label: '脑力训练', desc: '13种小游戏' },
+      { to: '/community/math-visual', label: '数形结合', desc: '加减乘除可视化' },
       { to: '/community/psych-test', label: '心理测试', desc: '11种测评' },
     ]
   },
@@ -78,6 +100,13 @@ const sections = [
     ]
   },
   {
+    title: 'AI-Wego阅卷', icon: GraduationCap, desc: '自动批改 · 全学科支持',
+    color: 'from-amber-400 to-orange-500',
+    links: [
+      { to: '/grading', label: 'AI-Wego阅卷', desc: '智能批改 · 支持所有网阅系统 · 自动提交' },
+    ]
+  },
+  {
     title: '系统中心', icon: Shield, desc: '公告 · 反馈 · 积分 · 设置',
     color: 'from-sky-400 to-blue-400',
     links: [
@@ -87,6 +116,7 @@ const sections = [
       { to: '/settings/api-key', label: 'API密钥' },
       { to: '/register', label: '注册/登录' },
       { to: '/weg', label: '积分中心' },
+      { to: '/weg/shop', label: '积分商城' },
       { to: '/tools/translator', label: '翻译器下载' },
     ]
   },
@@ -379,8 +409,75 @@ export default function HomePageNav() {
                 <a href="https://console.we-aigo.cn" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl border border-slate-200 text-slate-600 text-xs font-semibold hover:bg-slate-50 hover:border-slate-300 transition-all active:scale-[0.97]">
                   AI学校行政控制台
                 </a>
+                <a href="https://ai-headteacher-os.pages.dev" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl border border-slate-200 text-slate-600 text-xs font-semibold hover:bg-slate-50 hover:border-slate-300 transition-all active:scale-[0.97]">
+                  班主任AI助理
+                </a>
                 <a href="https://city.we-aigo.cn" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl border border-slate-200 text-slate-600 text-xs font-semibold hover:bg-slate-50 hover:border-slate-300 transition-all active:scale-[0.97]">
                   平权城市
+                </a>
+                 <a href="https://v3.we-aigo.cn/" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-indigo-500 to-violet-500 text-white text-xs font-semibold hover:from-indigo-600 hover:to-violet-600 transition-all shadow-sm hover:shadow-md active:scale-[0.97]">
+                   智慧校园AI治理平台 v3
+                 </a>
+                 <a href="https://schoolmate.we-aigo.cn" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-green-400 to-emerald-500 text-white text-xs font-semibold hover:from-green-500 hover:to-emerald-600 transition-all shadow-sm hover:shadow-md active:scale-[0.97]">
+                   校友会 AI
+                 </a>
+                 <a href="https://ppt-master.pages.dev" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-orange-400 to-red-500 text-white text-xs font-semibold hover:from-orange-500 hover:to-red-600 transition-all shadow-sm hover:shadow-md active:scale-[0.97]">
+                   PPT AI OS v3
+                 </a>
+               </div>
+            </div>
+          </div>
+        </div>
+
+        {/* AI 高考决策中心 */}
+        <div className="mb-6">
+          <div className="glass-card rounded-2xl overflow-hidden">
+            <div className="h-1 bg-gradient-to-r from-amber-400 via-orange-400 to-red-400" />
+            <div className="p-5">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-400 to-orange-500 flex items-center justify-center text-white shadow-md shadow-amber-200">
+                  <GraduationCap className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-slate-800">AI 高考决策中心</h3>
+                  <p className="text-xs text-slate-400">高考分数已出，AI 帮你选大学选专业</p>
+                </div>
+              </div>
+              <p className="text-xs text-slate-500 leading-relaxed mb-4">
+                输入你的高考分数和省份，AI 智能推荐冲稳保院校和专业。基于历年录取数据，结合位次分析、专业前景评估，帮你做出最优高考志愿决策。
+              </p>
+              <div className="flex flex-wrap gap-2.5">
+                <a href="https://gaokao.we-aigo.cn" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-amber-500 to-orange-500 text-white text-xs font-semibold hover:from-amber-600 hover:to-orange-600 transition-all shadow-sm hover:shadow-md active:scale-[0.97]">
+                  <ExternalLink className="w-3.5 h-3.5" /> 立即体验
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* VR 课堂 */}
+        <div className="mb-6">
+          <div className="glass-card rounded-2xl overflow-hidden">
+            <div className="h-1 bg-gradient-to-r from-teal-400 via-cyan-400 to-sky-400" />
+            <div className="p-5">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-teal-400 to-cyan-500 flex items-center justify-center text-white shadow-md shadow-teal-200">
+                  <Monitor className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-slate-800">VR 课堂</h3>
+                  <p className="text-xs text-slate-400">3D 沉浸式英语故事学习体验</p>
+                </div>
+              </div>
+              <p className="text-xs text-slate-500 leading-relaxed mb-4">
+                在 Three.js 3D 世界中探索英语故事。支持 AI 课文解析、角色对话、词汇学习、口语评测、XP 成长系统。上传任意课文自动生成互动故事世界。
+              </p>
+              <div className="flex flex-wrap gap-2.5">
+                <a href="https://vr-classroom.ai-wego-v3.pages.dev" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-teal-500 to-cyan-500 text-white text-xs font-semibold hover:from-teal-600 hover:to-cyan-600 transition-all shadow-sm hover:shadow-md active:scale-[0.97]">
+                  <ExternalLink className="w-3.5 h-3.5" /> 进入 VR 课堂
+                </a>
+                <a href="https://vr-classroom.ai-wego-v3.pages.dev/upload" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl border border-slate-200 text-slate-600 text-xs font-semibold hover:bg-slate-50 hover:border-slate-300 transition-all active:scale-[0.97]">
+                  上传课文生成
                 </a>
               </div>
             </div>
@@ -500,9 +597,15 @@ export default function HomePageNav() {
                 <p className="text-slate-400 text-sm mb-4">{s.desc}</p>
                 <div className="flex flex-wrap gap-2">
                   {s.links.map(l => (
-                    <Link key={l.to} to={l.to} className="px-3 py-1.5 bg-white rounded-full text-xs text-slate-600 border border-slate-200 shadow-sm font-medium hover:bg-slate-50 hover:border-slate-300 hover:text-slate-800 transition-all">
-                      {l.label}
-                    </Link>
+                    l.to.startsWith('http') ? (
+                      <a key={l.to} href={l.to} target="_blank" rel="noopener noreferrer" className="px-3 py-1.5 bg-white rounded-full text-xs text-slate-600 border border-slate-200 shadow-sm font-medium hover:bg-slate-50 hover:border-slate-300 hover:text-slate-800 transition-all">
+                        {l.label}
+                      </a>
+                    ) : (
+                      <Link key={l.to} to={l.to} className="px-3 py-1.5 bg-white rounded-full text-xs text-slate-600 border border-slate-200 shadow-sm font-medium hover:bg-slate-50 hover:border-slate-300 hover:text-slate-800 transition-all">
+                        {l.label}
+                      </Link>
+                    )
                   ))}
                 </div>
               </div>

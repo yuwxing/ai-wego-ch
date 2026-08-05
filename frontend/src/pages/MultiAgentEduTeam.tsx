@@ -147,7 +147,7 @@ export default function MultiAgentEduTeam() {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
         body: JSON.stringify({
-          model: 'deepseek-chat',
+          model: 'deepseek-v4-flash',
           messages: [
             { role: 'system', content: SYSTEM_PROMPT },
             { role: 'user', content: text }
@@ -406,7 +406,7 @@ export default function MultiAgentEduTeam() {
             </select>
             <div style={{ display: 'flex', gap: 10 }}>
               <button onClick={() => {
-                if (apiInput) localStorage.setItem('ds_api_key', apiInput)
+                if (apiInput) localStorage.setItem('deepseek_api_key', apiInput)
                 setApiModal(false)
               }}
                 style={{ borderRadius: 12, background: '#f59e0b', color: '#fff', border: 'none', padding: '10px 24px', fontSize: 13, cursor: 'pointer' }}>

@@ -141,19 +141,20 @@ export default function IrregularVerbsPage() {
       onComplete: handleStageComplete,
       onBack: () => setCurrentStageIdx(-1),
     }
+    const gradeVerbs = GRADE_VERBS[grade] || []
     if (isFinal) {
       const shuffled = [...stage.verbs]
       for (let i = shuffled.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
       }
-      return <TypeStageGame {...gameProps} verbs={shuffled.slice(0, 20)} showPp={grade !== '七下'} timeLimit={600} />
+      return <TypeStageGame {...gameProps} verbs={shuffled.slice(0, 20)} allGradeVerbs={gradeVerbs} showPp={grade !== '七下'} timeLimit={600} />
     }
     const mode = getGameMode(grade)
     switch (mode) {
       case 'card': return <CardMatchGame {...gameProps} />
-      case 'typing': return <TypingRaceGame {...gameProps} />
-      case 'typeStage': return <TypeStageGame {...gameProps} />
+      case 'typing': return <TypingRaceGame {...gameProps} allGradeVerbs={gradeVerbs} />
+      case 'typeStage': return <TypeStageGame {...gameProps} allGradeVerbs={gradeVerbs} />
     }
   }
 

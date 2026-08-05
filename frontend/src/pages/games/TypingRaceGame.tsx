@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef, useCallback } from 'react'
+import { useState, useEffect, useRef, useCallback, useMemo } from 'react'
 import { RefreshCw } from 'lucide-react'
 import type { VerbEntry } from '../../utils/irregularVerbsData'
 
@@ -16,11 +16,13 @@ function normalize(s: string) {
 }
 
 function normalizeMulti(v: string): string[] {
-  return v.split('/').map(s => s.trim().toLowerCase().replace(/[（(][^）)]*[）)]/g, '').trim())
+  return v.split('/').map(s => s.trim().toLowerCase().replace(/[（(][^）)]*[）)]/g, '').trim()).filter(Boolean)
 }
 
 function matchAnswer(input: string, answer: string): boolean {
-  return normalizeMulti(answer).some(a => normalize(input) === a)
+  const inputs = normalizeMulti(input)
+  const answers = normalizeMulti(answer)
+  return inputs.some(i => answers.some(a => i === a))
 }
 
 function playTone(freq: number, duration: number, type: OscillatorType = 'sine') {
@@ -46,11 +48,13 @@ export default function TypingRaceGame({
   stageName,
   onComplete,
   onBack,
+  allGradeVerbs,
 }: {
   verbs: VerbEntry[]
   stageName: string
   onComplete: (score: number) => void
   onBack: () => void
+  allGradeVerbs?: VerbEntry[]
 }) {
   const [shuffledVerbs, setShuffledVerbs] = useState<VerbEntry[]>([])
   const [currentQ, setCurrentQ] = useState(0)
@@ -67,6 +71,16 @@ export default function TypingRaceGame({
   const inputRef = useRef<HTMLInputElement>(null)
   const scoreRef = useRef(score)
   const onCompleteRef = useRef(onComplete)
+
+  const meaningGroups = useMemo(() => {
+    const map: Record<string, VerbEntry[]> = {}
+    const source = allGradeVerbs && allGradeVerbs.length > 0 ? allGradeVerbs : verbs
+    for (const v of source) {
+      if (!map[v.meaning]) map[v.meaning] = []
+      map[v.meaning].push(v)
+    }
+    return map
+  }, [verbs, allGradeVerbs])
 
   useEffect(() => { scoreRef.current = score }, [score])
   useEffect(() => { onCompleteRef.current = onComplete }, [onComplete])
@@ -114,8 +128,20 @@ export default function TypingRaceGame({
   const handleSubmit = () => {
     if (showingResult || !shuffledVerbs[currentQ]) return
     const verb = shuffledVerbs[currentQ]
-    const pastCorrect = matchAnswer(pastInput, verb.past)
-    const ppCorrect = matchAnswer(ppInput, verb.pp)
+    const group = meaningGroups[verb.meaning]
+    const isGroup = group && group.length > 1
+    let pastCorrect: boolean, ppCorrect: boolean
+    if (isGroup) {
+      pastCorrect = ppCorrect = false
+      for (const v of group) {
+        const p = matchAnswer(pastInput, v.past)
+        const pp = matchAnswer(ppInput, v.pp)
+        if (p && pp) { pastCorrect = p; ppCorrect = pp; break }
+      }
+    } else {
+      pastCorrect = matchAnswer(pastInput, verb.past)
+      ppCorrect = matchAnswer(ppInput, verb.pp)
+    }
 
     setFeedback({ past: pastCorrect, pp: ppCorrect })
     setShowingResult(true)

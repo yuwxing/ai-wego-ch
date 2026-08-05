@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
-import { useNavigate } from 'react-router-dom'
-import { Sparkles, Zap, BookOpen, Mic, Target, Bug, MessageSquare, Edit3, ChevronRight, Award, TrendingUp } from 'lucide-react'
+import { useNavigate, Link } from 'react-router-dom'
+import { Sparkles, Zap, BookOpen, Mic, Target, Bug, MessageSquare, Edit3, ChevronRight, Award, TrendingUp, ShoppingBag } from 'lucide-react'
 import { useUser } from '../contexts/UserContext'
 import { usersAPI } from '../utils/supabase'
 
@@ -24,6 +24,8 @@ const earnRules = [
   { icon: TrendingUp, label: '完成不规则动词', earn: '+10/关', desc: '不规则动词闯关每关+10', link: '/learn/irregular-verbs', color: '#f43f5e' },
   { icon: Bug, label: '反馈Bug', earn: '+50～500', desc: '提交有效Bug反馈奖励', link: '/feedback', color: '#ef4444' },
 ]
+
+const shopLink = { icon: ShoppingBag, label: '积分商城', cost: '', desc: '称号 · 特权 · 装饰', link: '/weg/shop', color: '#f59e0b' }
 
 const spendRules = [
   { icon: MessageSquare, label: 'AI对话', cost: '10 积分/次', desc: '与AI老师对话、宠物聊天', color: '#6366f1' },
@@ -156,6 +158,18 @@ export default function WegHub() {
         {/* Spend section */}
         <div style={{ background: 'rgba(255,248,240,0.75)', borderRadius: 14, padding: 20, marginBottom: 14, backdropFilter: 'blur(8px)', border: '1px solid rgba(180,150,120,0.2)' }}>
           <div style={{ fontSize: 15, fontWeight: 700, color: '#5d4a36', marginBottom: 12 }}>花积分</div>
+          <Link to={shopLink.link} style={{ textDecoration: 'none' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '12px 0', borderBottom: '1px solid rgba(180,150,120,0.15)', cursor: 'pointer' }}>
+              <div style={{ width: 32, height: 32, borderRadius: 8, background: `${shopLink.color}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                <ShoppingBag size={16} style={{ color: shopLink.color }} />
+              </div>
+              <div style={{ flex: 1 }}>
+                <div style={{ fontSize: 13, fontWeight: 700, color: '#5d4a36' }}>{shopLink.label}</div>
+                <div style={{ fontSize: 11, color: '#8a7a6a' }}>{shopLink.desc}</div>
+              </div>
+              <ChevronRight size={16} style={{ color: '#c4b5a5' }} />
+            </div>
+          </Link>
           {spendRules.map((r, i) => (
             <div key={i} style={{ display: 'flex', alignItems: 'center', gap: 12, padding: '10px 0', borderBottom: i < spendRules.length - 1 ? '1px solid rgba(180,150,120,0.15)' : 'none' }}>
               <div style={{ width: 32, height: 32, borderRadius: 8, background: `${r.color}15`, display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>

@@ -248,7 +248,7 @@ const LIBRARY_BOOKS: Record<string, Array<{title: string; author: string; summar
 // ============ DeepSeek API ============
 const DEEPSEEK_CONFIG = {
   baseUrl: 'https://api.deepseek.com',
-  model: 'deepseek-chat'
+  model: 'deepseek-v4-flash'
 };
 
 async function callDeepSeek(systemPrompt: string, userMessage: string, timeout = 30000): Promise<string> {

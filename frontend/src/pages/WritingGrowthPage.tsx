@@ -1473,19 +1473,25 @@ ________________________________________________________
 
         {/* 优秀作文详情弹窗 */}
         {viewingWork && (
-          <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center p-4" onClick={() => setViewingWork(null)}>
-            <div className="w-full max-w-2xl bg-white rounded-3xl shadow-2xl p-6 max-h-[80vh] overflow-y-auto" onClick={e => e.stopPropagation()}>
-              <div className="flex items-center justify-between mb-4">
-                <div>
-                  <h3 className="text-lg font-bold text-slate-800">{viewingWork.studentName}</h3>
-                  <p className="text-xs text-slate-500 mt-0.5">
-                    {viewingWork.taskTitle} · {new Date(viewingWork.date).toLocaleDateString()} · {viewingWork.scores.total}/{viewingWork.scores.maxTotal}分
-                  </p>
+          <div className="fixed inset-0 z-50 bg-black/40 flex items-center justify-center" onClick={() => setViewingWork(null)}>
+            <div className="
+              w-screen h-screen max-w-none max-h-none
+              sm:w-[95vw] sm:h-auto sm:max-w-4xl
+              bg-white sm:rounded-3xl shadow-2xl p-6 overflow-y-auto
+            " onClick={e => e.stopPropagation()}>
+              <div className="h-full sm:h-auto flex flex-col">
+                <div className="flex items-center justify-between mb-4 shrink-0">
+                  <div className="min-w-0">
+                    <h3 className="text-lg font-bold text-slate-800 truncate">{viewingWork.studentName}</h3>
+                    <p className="text-xs text-slate-500 mt-0.5 truncate">
+                      {viewingWork.taskTitle} · {new Date(viewingWork.date).toLocaleDateString()} · {viewingWork.scores.total}/{viewingWork.scores.maxTotal}分
+                    </p>
+                  </div>
+                  <button onClick={() => setViewingWork(null)} className="w-8 h-8 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center hover:bg-slate-200 text-lg leading-none shrink-0 ml-2">&times;</button>
                 </div>
-                <button onClick={() => setViewingWork(null)} className="w-8 h-8 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center hover:bg-slate-200 text-lg leading-none">&times;</button>
-              </div>
-              <div className="bg-slate-50 rounded-2xl p-4 whitespace-pre-wrap text-sm text-slate-700 leading-relaxed">
-                {viewingWork.content}
+                <div className="bg-slate-50 rounded-2xl p-4 whitespace-pre-wrap text-sm text-slate-700 leading-relaxed flex-1 overflow-y-auto sm:max-h-[60vh]">
+                  {viewingWork.content}
+                </div>
               </div>
             </div>
           </div>

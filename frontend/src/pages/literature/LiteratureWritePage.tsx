@@ -6,7 +6,7 @@ import { literatureAPI, sharedStoryAPI } from '../../utils/supabase'
 import { useUser } from '../../contexts/UserContext'
 
 const DEEPSEEK_BASE_URL = 'https://api.deepseek.com'
-const DEEPSEEK_MODEL = 'deepseek-chat'
+const DEEPSEEK_MODEL = 'deepseek-v4-flash'
 
 const REVIEW_PROMPT = `你是一位严格的语文老师，正在评审学生的文学续写作品。
 请从以下三个维度打分（每项满分100）：

@@ -135,7 +135,7 @@ export default function DailyEnglishAdmin() {
           'Authorization': `Bearer ${apiKey}`,
         },
         body: JSON.stringify({
-          model: 'deepseek-chat',
+          model: 'deepseek-v4-flash',
           messages: [{ role: 'user', content: prompt }],
           temperature: 0.8,
           max_tokens: 4096,

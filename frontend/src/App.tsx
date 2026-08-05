@@ -63,15 +63,18 @@ import QuizChallengePage from './pages/QuizChallengePage'
 import PsychologyTestPage from './pages/PsychologyTestPage'
 import StudyNotesPage from './pages/StudyNotesPage'
 import TranslatorPage from './pages/TranslatorPage'
+import GradingPage from './pages/GradingPage'
+import ShopPage from './pages/ShopPage'
 import MultiAgentTeamPage from './pages/MultiAgentTeamPage'
+import MathVisualPage from './pages/MathVisualPage'
 import WordPassPage from './pages/WordPassPage'
 import GrammarQuestPage from './pages/GrammarQuestPage'
-
 import LiteraryClubHall from './pages/literature/LiteraryClubHall'
 import LiteratureWritePage from './pages/literature/LiteratureWritePage'
 import PaperShortWritePage from './pages/literature/PaperShortWritePage'
 import NotFound from './pages/NotFound'
 import ErrorBoundary from './components/ErrorBoundary'
+import { Toaster } from 'react-hot-toast'
 
 function ParamRedirect({ to }: { to: string }) {
   const params = useParams();
@@ -109,6 +112,7 @@ function KeyPromptBanner() {
 export default function App() {
   return (
     <>
+    <Toaster position="top-center" toastOptions={{ duration: 3000 }} />
     <KeyPromptBanner />
     <PetWidget />
     <Routes>
@@ -146,6 +150,7 @@ export default function App() {
       <Route path="/weg/levels" element={<LevelsPage />} />
       <Route path="/weg/balance" element={<BalancePage />} />
       <Route path="/weg/rewards" element={<RewardsPage />} />
+      <Route path="/weg/shop" element={<ShopPage />} />
 
       {/* Jinghua */}
       <Route path="/jinghua" element={<QinghuaUniversityPage />} />
@@ -173,6 +178,7 @@ export default function App() {
       <Route path="/community/math-speed" element={<MathSpeedTestPage />} />
       <Route path="/community/quiz/:type" element={<QuizChallengePage />} />
       <Route path="/community/brain-train" element={<BrainTrainPage />} />
+      <Route path="/community/math-visual" element={<MathVisualPage />} />
       <Route path="/community/psych-test" element={<PsychologyTestPage />} />
 
       {/* System */}
@@ -220,6 +226,9 @@ export default function App() {
       <Route path="/adopt" element={<AdoptPage />} />
       <Route path="/pet-chat/:petId" element={<PetChatPage />} />
       <Route path="/avatar-chat" element={<AvatarChatPage />} />
+
+      {/* Grading */}
+      <Route path="/grading" element={<GradingPage />} />
 
       {/* Tools */}
       <Route path="/tools/translator" element={<TranslatorPage />} />
