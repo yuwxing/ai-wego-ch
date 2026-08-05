@@ -25,15 +25,15 @@
   .t-block.blue { background:var(--lego-blue); animation-delay:.3s; box-shadow:inset 0 -8px 0 rgba(0,0,0,.18), inset 0 8px 0 rgba(255,255,255,.2), 0 12px 0 #004f83,0 18px 20px rgba(0,0,0,.25); }
   .t-block::after { content:''; width:50%; height:50%; border:3px solid rgba(255,255,255,.35); border-radius:50%; box-shadow:inset 0 2px 0 rgba(255,255,255,.3); }
   @keyframes bounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-14px)} }
-  .hint { font-size:clamp(16px,3.20vw,43px); color:rgba(255,255,255,.7); margin-top:20px; animation:pulse 1.6s infinite; }
+  .hint { font-size:clamp(16px,2vw,24px); color:rgba(255,255,255,.7); margin-top:20px; animation:pulse 1.6s infinite; }
   @keyframes pulse { 0%,100%{opacity:.6} 50%{opacity:1} }
 
   /* UI */
   #ui { width:100%; height:100%; display:none; flex-direction:column; padding:clamp(10px,1.5vh,20px) clamp(10px,2vw,30px); }
   .top { display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:10px; margin-bottom:10px; }
-  .chip { background:#fff; border:3px solid #000; border-radius:14px; padding:clamp(6px,1vh,12px) clamp(14px,2vw,24px); font-size:clamp(14px,2.88vw,40px); font-weight:800; box-shadow:0 6px 0 #000; display:flex; align-items:center; gap:8px; }
+  .chip { background:#fff; border:3px solid #000; border-radius:14px; padding:clamp(6px,1vh,12px) clamp(14px,2vw,24px); font-size:clamp(14px,1.8vw,22px); font-weight:800; box-shadow:0 6px 0 #000; display:flex; align-items:center; gap:8px; }
   .chip .lab { color:#8e8e93; font-weight:600; }
-  .chip .val { color:var(--lego-red); font-size:clamp(18px,4.00vw,54px); }
+  .chip .val { color:var(--lego-red); font-size:clamp(18px,2.5vw,30px); }
 
   /* Game area */
   .game { flex:1; display:grid; grid-template-columns:1fr .9fr; gap:clamp(12px,2vw,28px); min-height:0; }
@@ -41,20 +41,20 @@
 
   /* Timeline */
   .timeline { background:#fff; border:4px solid #000; border-radius:18px; padding:clamp(14px,2vw,28px); box-shadow:0 12px 0 #000; display:flex; flex-direction:column; min-height:0; overflow:auto; }
-  .timeline-title { font-size:clamp(16px,3.52vw,47px); font-weight:900; margin-bottom:12px; text-align:center; }
+  .timeline-title { font-size:clamp(16px,2.2vw,26px); font-weight:900; margin-bottom:12px; text-align:center; }
   .cards { display:flex; flex-direction:column; gap:10px; }
-  .card { background:#f8f9fa; border:3px solid #000; border-radius:14px; padding:12px 16px; font-size:clamp(14px,2.88vw,36px); font-weight:800; display:flex; justify-content:space-between; align-items:center; gap:8px; box-shadow:0 8px 0 #000; cursor:pointer; }
+  .card { background:#f8f9fa; border:3px solid #000; border-radius:14px; padding:12px 16px; font-size:clamp(14px,1.8vw,20px); font-weight:800; display:flex; justify-content:space-between; align-items:center; gap:8px; box-shadow:0 8px 0 #000; cursor:pointer; }
   .card.correct { background:var(--lego-green); color:#fff; }
   .card .time { color:#8e8e93; }
 
   /* Question */
   .q-area { background:#fff; border:4px solid #000; border-radius:18px; padding:clamp(14px,2vw,28px); box-shadow:0 12px 0 #000; display:flex; flex-direction:column; gap:10px; min-height:0; }
-  .q-title { font-size:clamp(16px,3.52vw,47px); font-weight:900; text-align:center; }
-  .q-card { background:#f8f9fa; border:3px solid #000; border-radius:14px; padding:12px 16px; font-size:clamp(14px,2.88vw,36px); font-weight:800; }
-  .q-hint { font-size:clamp(12px,2.56vw,32px); color:#8e8e93; text-align:center; }
+  .q-title { font-size:clamp(16px,2.2vw,26px); font-weight:900; text-align:center; }
+  .q-card { background:#f8f9fa; border:3px solid #000; border-radius:14px; padding:12px 16px; font-size:clamp(14px,1.8vw,20px); font-weight:800; }
+  .q-hint { font-size:clamp(12px,1.6vw,18px); color:#8e8e93; text-align:center; }
 
   /* Lego */
-  .lego { position:relative; display:flex; align-items:center; justify-content:center; padding:clamp(10px,1.4vh,16px) clamp(14px,1.8vw,26px); font-size:clamp(14px,2.88vw,40px); font-weight:900; color:#fff; border:none; cursor:pointer; border-radius:12px; box-shadow:inset 0 -10px 0 rgba(0,0,0,.18), inset 0 10px 0 rgba(255,255,255,.18), 0 10px 0 #000; transition:transform .08s, box-shadow .08s, opacity .2s; }
+  .lego { position:relative; display:flex; align-items:center; justify-content:center; padding:clamp(10px,1.4vh,16px) clamp(14px,1.8vw,26px); font-size:clamp(14px,1.8vw,22px); font-weight:900; color:#fff; border:none; cursor:pointer; border-radius:12px; box-shadow:inset 0 -10px 0 rgba(0,0,0,.18), inset 0 10px 0 rgba(255,255,255,.18), 0 10px 0 #000; transition:transform .08s, box-shadow .08s, opacity .2s; }
   .lego:hover { transform:translateY(-3px); }
   .lego:active { transform:translateY(6px); box-shadow:inset 0 -10px 0 rgba(0,0,0,.18), inset 0 10px 0 rgba(255,255,255,.18), 0 4px 0 #000; }
   .lego.red { background:var(--lego-red); }
@@ -76,7 +76,7 @@
   @keyframes scaleIn { from{transform:scale(.8);opacity:0} to{transform:scale(1);opacity:1} }
   .m-emoji { font-size:clamp(50px,8vw,80px); margin-bottom:10px; }
   .m-title { font-size:clamp(24px,3.5vw,40px); font-weight:900; color:#000; margin-bottom:8px; }
-  .m-sub { font-size:clamp(16px,3.20vw,43px); color:#555; margin-bottom:16px; font-weight:700; }
+  .m-sub { font-size:clamp(16px,2vw,24px); color:#555; margin-bottom:16px; font-weight:700; }
   .m-btns { display:flex; gap:12px; justify-content:center; flex-wrap:wrap; }
 
   /* Effects */
