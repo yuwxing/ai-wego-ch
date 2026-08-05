@@ -79,14 +79,16 @@ export default function FlipCards() {
     }
   }
 
+  const cols = pairs <= 4 ? 2 : pairs <= 8 ? 3 : 4
+
   return (
-    <div className="max-w-4xl mx-auto p-4 sm:p-6">
-      <div className="flex flex-wrap items-center justify-between gap-3 mb-5">
+    <div className="h-[calc(100dvh-110px)] max-w-5xl mx-auto p-3 sm:p-4 flex flex-col gap-3">
+      <div className="flex flex-wrap items-center justify-between gap-2 shrink-0">
         <div>
-          <h2 className="text-xl font-bold text-slate-800 flex items-center gap-2">
+          <h2 className="text-lg sm:text-xl font-bold text-slate-800 flex items-center gap-2">
             <CheckCircle2 className="w-5 h-5 text-emerald-500" /> 单词翻卡配对
           </h2>
-          <p className="text-xs text-slate-400 mt-1">翻开英文卡片，找到对应的中文释义，全部配对即获胜</p>
+          <p className="text-[11px] sm:text-xs text-slate-400 mt-0.5">翻开英文卡片，找到对应的中文释义，全部配对即获胜</p>
         </div>
         <div className="flex items-center gap-2">
           <select
@@ -103,37 +105,40 @@ export default function FlipCards() {
         </div>
       </div>
 
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4">
+      <div
+        className="flex-1 min-h-0 grid gap-2 sm:gap-3"
+        style={{ gridTemplateColumns: `repeat(${cols}, minmax(0, 1fr))`, gridAutoRows: '1fr' }}
+      >
         {cards.map((card, idx) => (
           <button
             key={card.id}
             onClick={() => handleFlip(idx)}
-            className={`aspect-[4/5] rounded-2xl p-3 sm:p-4 flex flex-col items-center justify-center text-center transition-all duration-300 shadow-sm border-2
+            className={`rounded-2xl p-2 flex items-center justify-center text-center transition-all duration-300 shadow-sm border-2 overflow-hidden
               ${card.matched ? 'bg-emerald-50 border-emerald-300 opacity-80' :
-                card.flipped ? 'bg-white border-emerald-400 shadow-md scale-[1.02]' : 'bg-gradient-to-br from-emerald-400 to-teal-500 border-transparent hover:shadow-lg hover:scale-[1.03]'}`}
+                card.flipped ? 'bg-white border-emerald-400 shadow-md scale-[1.01]' : 'bg-gradient-to-br from-emerald-400 to-teal-500 border-transparent hover:shadow-lg hover:scale-[1.01]'}`}
           >
             {card.flipped || card.matched ? (
               <>
-                <span className={`${card.type === 'word' ? 'text-2xl sm:text-3xl font-extrabold text-emerald-700 break-all' : 'text-sm sm:text-base text-slate-700 leading-snug font-medium'} ${card.matched ? 'line-through opacity-60' : ''}`}>
+                <span className={`${card.type === 'word' ? 'text-2xl sm:text-3xl lg:text-4xl font-extrabold text-emerald-700 break-all px-1' : 'text-base sm:text-xl lg:text-2xl text-slate-700 leading-snug font-semibold px-1'} ${card.matched ? 'line-through opacity-60' : ''}`}>
                   {card.text}
                 </span>
-                {card.matched && <CheckCircle2 className="w-5 h-5 text-emerald-400 mt-1" />}
+                {card.matched && <CheckCircle2 className="w-6 h-6 text-emerald-400 shrink-0" />}
               </>
             ) : (
-              <span className="text-2xl text-white/80 font-bold">?</span>
+              <span className="text-3xl sm:text-4xl text-white/80 font-bold">?</span>
             )}
           </button>
         ))}
       </div>
 
-      <div className="mt-5 flex flex-wrap items-center justify-between gap-3 bg-white rounded-2xl border border-slate-200 p-4 shadow-sm">
+      <div className="shrink-0 flex flex-wrap items-center justify-between gap-2 bg-white rounded-2xl border border-slate-200 p-3 shadow-sm">
         <div className="flex items-center gap-5">
           <div className="text-center">
-            <p className="text-2xl font-bold text-slate-800">{matches}</p>
+            <p className="text-xl sm:text-2xl font-bold text-slate-800">{matches}</p>
             <p className="text-[10px] text-slate-400">已配对</p>
           </div>
           <div className="text-center">
-            <p className="text-2xl font-bold text-slate-800">{moves}</p>
+            <p className="text-xl sm:text-2xl font-bold text-slate-800">{moves}</p>
             <p className="text-[10px] text-slate-400">步数</p>
           </div>
         </div>
