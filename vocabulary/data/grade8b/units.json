@@ -1,0 +1,2156 @@
+[
+  {
+    "id": "g8b_u1",
+    "title": "Unit 1 Time to Relax",
+    "words": [
+      {
+        "word": "calligraphy",
+        "phonetic": "",
+        "meaning": "书法",
+        "example": ""
+      },
+      {
+        "word": "ski",
+        "phonetic": "",
+        "meaning": "滑雪",
+        "example": ""
+      },
+      {
+        "word": "express",
+        "phonetic": "",
+        "meaning": "表达；表示",
+        "example": ""
+      },
+      {
+        "word": "scared",
+        "phonetic": "",
+        "meaning": "害怕的；对……感到惊慌的",
+        "example": ""
+      },
+      {
+        "word": "poem",
+        "phonetic": "",
+        "meaning": "诗",
+        "example": ""
+      },
+      {
+        "word": "single",
+        "phonetic": "",
+        "meaning": "单个的；单身的",
+        "example": ""
+      },
+      {
+        "word": "ink",
+        "phonetic": "",
+        "meaning": "墨水",
+        "example": ""
+      },
+      {
+        "word": "deal",
+        "phonetic": "",
+        "meaning": "交易；协议 v. (dealt, dealt) 对付",
+        "example": ""
+      },
+      {
+        "word": "manage",
+        "phonetic": "",
+        "meaning": "完成（困难的事）；管理",
+        "example": ""
+      },
+      {
+        "word": "kungfu",
+        "phonetic": "",
+        "meaning": "功夫",
+        "example": ""
+      },
+      {
+        "word": "chat",
+        "phonetic": "",
+        "meaning": "&n. 闲聊",
+        "example": ""
+      },
+      {
+        "word": "outing",
+        "phonetic": "",
+        "meaning": "出外游玩；远足",
+        "example": ""
+      },
+      {
+        "word": "program",
+        "phonetic": "",
+        "meaning": "编写程序 n. 程序；(=programme)节目；项目",
+        "example": ""
+      },
+      {
+        "word": "upto",
+        "phonetic": "",
+        "meaning": "正在做；由某人决定",
+        "example": ""
+      },
+      {
+        "word": "stress",
+        "phonetic": "",
+        "meaning": "精神压力；紧张",
+        "example": ""
+      },
+      {
+        "word": "yoga",
+        "phonetic": "",
+        "meaning": "瑜伽",
+        "example": ""
+      },
+      {
+        "word": "object",
+        "phonetic": "",
+        "meaning": "物品；宾语",
+        "example": ""
+      },
+      {
+        "word": "Italian",
+        "phonetic": "",
+        "meaning": "意大利的；意大利人的；意大利语的",
+        "example": ""
+      },
+      {
+        "word": "programmer",
+        "phonetic": "",
+        "meaning": "程序设计员",
+        "example": ""
+      },
+      {
+        "word": "achievement",
+        "phonetic": "",
+        "meaning": "成就",
+        "example": ""
+      },
+      {
+        "word": "coin",
+        "phonetic": "",
+        "meaning": "硬币",
+        "example": ""
+      },
+      {
+        "word": "stamp",
+        "phonetic": "",
+        "meaning": "邮票",
+        "example": ""
+      },
+      {
+        "word": "teenage",
+        "phonetic": "",
+        "meaning": "青少年的",
+        "example": ""
+      },
+      {
+        "word": "postcard",
+        "phonetic": "",
+        "meaning": "明信片",
+        "example": ""
+      },
+      {
+        "word": "rather",
+        "phonetic": "",
+        "meaning": "相当；更准确地说",
+        "example": ""
+      },
+      {
+        "word": "old-fashioned",
+        "phonetic": "",
+        "meaning": "过时的；守旧的",
+        "example": ""
+      },
+      {
+        "word": "foreign",
+        "phonetic": "",
+        "meaning": "外国的；国外的",
+        "example": ""
+      },
+      {
+        "word": "suggestion",
+        "phonetic": "",
+        "meaning": "建议；提议",
+        "example": ""
+      },
+      {
+        "word": "failure",
+        "phonetic": "",
+        "meaning": "失败",
+        "example": ""
+      },
+      {
+        "word": "strict",
+        "phonetic": "",
+        "meaning": "严厉的；严格的",
+        "example": ""
+      },
+      {
+        "word": "surprisingly",
+        "phonetic": "",
+        "meaning": "出人意料地；惊人地",
+        "example": ""
+      },
+      {
+        "word": "stage",
+        "phonetic": "",
+        "meaning": "舞台；阶段",
+        "example": ""
+      },
+      {
+        "word": "importantly",
+        "phonetic": "",
+        "meaning": "重要地",
+        "example": ""
+      },
+      {
+        "word": "sofar",
+        "phonetic": "",
+        "meaning": "到目前为止",
+        "example": ""
+      },
+      {
+        "word": "ourselves",
+        "phonetic": "",
+        "meaning": "我们自己",
+        "example": ""
+      },
+      {
+        "word": "sore",
+        "phonetic": "",
+        "meaning": "疼痛的；酸痛的",
+        "example": ""
+      },
+      {
+        "word": "throat",
+        "phonetic": "",
+        "meaning": "喉咙",
+        "example": ""
+      },
+      {
+        "word": "stomachache",
+        "phonetic": "",
+        "meaning": "胃痛；肚子疼",
+        "example": ""
+      },
+      {
+        "word": "headache",
+        "phonetic": "",
+        "meaning": "头痛",
+        "example": ""
+      },
+      {
+        "word": "toothache",
+        "phonetic": "",
+        "meaning": "牙痛",
+        "example": ""
+      },
+      {
+        "word": "backache",
+        "phonetic": "",
+        "meaning": "背痛；腰痛",
+        "example": ""
+      },
+      {
+        "word": "press",
+        "phonetic": "",
+        "meaning": "压；按；挤；推",
+        "example": ""
+      },
+      {
+        "word": "nosebleed",
+        "phonetic": "",
+        "meaning": "鼻出血",
+        "example": ""
+      }
+    ]
+  },
+  {
+    "id": "g8b_u2",
+    "title": "Unit 2 Healthy Living",
+    "words": [
+      {
+        "word": "dentist",
+        "phonetic": "",
+        "meaning": "牙科医生",
+        "example": ""
+      },
+      {
+        "word": "stomach",
+        "phonetic": "",
+        "meaning": "胃；腹部",
+        "example": ""
+      },
+      {
+        "word": "avoid",
+        "phonetic": "",
+        "meaning": "避免；防止",
+        "example": ""
+      },
+      {
+        "word": "gas",
+        "phonetic": "",
+        "meaning": "气体；燃气",
+        "example": ""
+      },
+      {
+        "word": "ache",
+        "phonetic": "",
+        "meaning": "& v. 疼痛",
+        "example": ""
+      },
+      {
+        "word": "careless",
+        "phonetic": "",
+        "meaning": "不小心的；粗心的",
+        "example": ""
+      },
+      {
+        "word": "runny",
+        "phonetic": "",
+        "meaning": "流鼻涕的；流眼泪的",
+        "example": ""
+      },
+      {
+        "word": "bruised",
+        "phonetic": "",
+        "meaning": "受了瘀伤的",
+        "example": ""
+      },
+      {
+        "word": "suffer",
+        "phonetic": "",
+        "meaning": "受苦；遭受",
+        "example": ""
+      },
+      {
+        "word": "flu",
+        "phonetic": "",
+        "meaning": "流行性感冒",
+        "example": ""
+      },
+      {
+        "word": "medicine",
+        "phonetic": "",
+        "meaning": "药；医学",
+        "example": ""
+      },
+      {
+        "word": "mask",
+        "phonetic": "",
+        "meaning": "口罩",
+        "example": ""
+      },
+      {
+        "word": "virus",
+        "phonetic": "",
+        "meaning": "病毒",
+        "example": ""
+      },
+      {
+        "word": "description",
+        "phonetic": "",
+        "meaning": "描写；形容",
+        "example": ""
+      },
+      {
+        "word": "patient",
+        "phonetic": "",
+        "meaning": "病人 adj. 有耐心的",
+        "example": ""
+      },
+      {
+        "word": "injury",
+        "phonetic": "",
+        "meaning": "伤害；损伤",
+        "example": ""
+      },
+      {
+        "word": "illness",
+        "phonetic": "",
+        "meaning": "疾病",
+        "example": ""
+      },
+      {
+        "word": "clear",
+        "phonetic": "",
+        "meaning": "清晰的；清楚的 v. 清理",
+        "example": ""
+      },
+      {
+        "word": "pain",
+        "phonetic": "",
+        "meaning": "疼痛；痛苦",
+        "example": ""
+      },
+      {
+        "word": "brightness",
+        "phonetic": "",
+        "meaning": "亮度",
+        "example": ""
+      },
+      {
+        "word": "environment",
+        "phonetic": "",
+        "meaning": "环境",
+        "example": ""
+      },
+      {
+        "word": "cross",
+        "phonetic": "",
+        "meaning": "穿越；横过；交叉",
+        "example": ""
+      },
+      {
+        "word": "themselves",
+        "phonetic": "",
+        "meaning": "他（或她、它）们自己",
+        "example": ""
+      },
+      {
+        "word": "fry",
+        "phonetic": "",
+        "meaning": "油炸；油煎；油炒",
+        "example": ""
+      },
+      {
+        "word": "happily",
+        "phonetic": "",
+        "meaning": "快乐地；高兴地",
+        "example": ""
+      },
+      {
+        "word": "burn",
+        "phonetic": "",
+        "meaning": "(burnt, burnt) 燃烧；着火",
+        "example": ""
+      },
+      {
+        "word": "flame",
+        "phonetic": "",
+        "meaning": "火焰",
+        "example": ""
+      },
+      {
+        "word": "onto",
+        "phonetic": "",
+        "meaning": "向；朝",
+        "example": ""
+      },
+      {
+        "word": "quick",
+        "phonetic": "",
+        "meaning": "快的；迅速的 adv. 迅速地；快速地",
+        "example": ""
+      },
+      {
+        "word": "safety",
+        "phonetic": "",
+        "meaning": "安全；安全处所",
+        "example": ""
+      },
+      {
+        "word": "tonight",
+        "phonetic": "",
+        "meaning": "在今晚 n. 今夜；今晚",
+        "example": ""
+      },
+      {
+        "word": "sadly",
+        "phonetic": "",
+        "meaning": "伤心地；令人遗憾",
+        "example": ""
+      },
+      {
+        "word": "unfortunately",
+        "phonetic": "",
+        "meaning": "不幸地；可惜地",
+        "example": ""
+      },
+      {
+        "word": "luckily",
+        "phonetic": "",
+        "meaning": "幸运地",
+        "example": ""
+      },
+      {
+        "word": "badly",
+        "phonetic": "",
+        "meaning": "(worse, worst) 严重地",
+        "example": ""
+      },
+      {
+        "word": "painful",
+        "phonetic": "",
+        "meaning": "（身体部位）疼痛的；令人痛苦的",
+        "example": ""
+      },
+      {
+        "word": "harmful",
+        "phonetic": "",
+        "meaning": "有害的",
+        "example": ""
+      },
+      {
+        "word": "hit",
+        "phonetic": "",
+        "meaning": "(hit, hit) 碰撞；击；打 n. 打；击；击中",
+        "example": ""
+      },
+      {
+        "word": "shock",
+        "phonetic": "",
+        "meaning": "震惊；令人震惊的事 v. 使震惊；使惊愕",
+        "example": ""
+      },
+      {
+        "word": "bleed",
+        "phonetic": "",
+        "meaning": "(bled, bled) 流血；出血",
+        "example": ""
+      },
+      {
+        "word": "check",
+        "phonetic": "",
+        "meaning": "检查；查明 n. 检查；调查",
+        "example": ""
+      },
+      {
+        "word": "allergic",
+        "phonetic": "",
+        "meaning": "过敏的",
+        "example": ""
+      },
+      {
+        "word": "tight",
+        "phonetic": "",
+        "meaning": "疼痛的；憋气的；紧的；牢固的",
+        "example": ""
+      }
+    ]
+  },
+  {
+    "id": "g8b_u3",
+    "title": "Unit 3 What's Your Number?",
+    "words": [
+      {
+        "word": "peanut",
+        "phonetic": "",
+        "meaning": "花生",
+        "example": ""
+      },
+      {
+        "word": "nervously",
+        "phonetic": "",
+        "meaning": "紧张不安地",
+        "example": ""
+      },
+      {
+        "word": "onfire",
+        "phonetic": "",
+        "meaning": "着火；起火",
+        "example": ""
+      },
+      {
+        "word": "liedown",
+        "phonetic": "",
+        "meaning": "平躺；平卧",
+        "example": ""
+      },
+      {
+        "word": "emotion",
+        "phonetic": "",
+        "meaning": "情感；情绪",
+        "example": ""
+      },
+      {
+        "word": "upset",
+        "phonetic": "",
+        "meaning": "难过的；沮丧的",
+        "example": ""
+      },
+      {
+        "word": "lonely",
+        "phonetic": "",
+        "meaning": "孤独的；寂寞的",
+        "example": ""
+      },
+      {
+        "word": "shocked",
+        "phonetic": "",
+        "meaning": "震惊的",
+        "example": ""
+      },
+      {
+        "word": "control",
+        "phonetic": "",
+        "meaning": "& n. 控制",
+        "example": ""
+      },
+      {
+        "word": "anger",
+        "phonetic": "",
+        "meaning": "怒火",
+        "example": ""
+      },
+      {
+        "word": "advise",
+        "phonetic": "",
+        "meaning": "建议；劝告",
+        "example": ""
+      },
+      {
+        "word": "hurtful",
+        "phonetic": "",
+        "meaning": "伤感情的",
+        "example": ""
+      },
+      {
+        "word": "forgive",
+        "phonetic": "",
+        "meaning": "(forgave, forgiven) 原谅；宽恕",
+        "example": ""
+      },
+      {
+        "word": "fault",
+        "phonetic": "",
+        "meaning": "过错；责任",
+        "example": ""
+      },
+      {
+        "word": "present",
+        "phonetic": "",
+        "meaning": "礼物",
+        "example": ""
+      },
+      {
+        "word": "standard",
+        "phonetic": "",
+        "meaning": "标准；水平 adj. 标准的",
+        "example": ""
+      },
+      {
+        "word": "award",
+        "phonetic": "",
+        "meaning": "奖；奖品",
+        "example": ""
+      },
+      {
+        "word": "clearly",
+        "phonetic": "",
+        "meaning": "清楚地",
+        "example": ""
+      },
+      {
+        "word": "pressure",
+        "phonetic": "",
+        "meaning": "压力",
+        "example": ""
+      },
+      {
+        "word": "shut",
+        "phonetic": "",
+        "meaning": "(shut, shut) 关闭；合上；住嘴",
+        "example": ""
+      },
+      {
+        "word": "lastly",
+        "phonetic": "",
+        "meaning": "最后",
+        "example": ""
+      },
+      {
+        "word": "plenty",
+        "phonetic": "",
+        "meaning": "充足；丰富；大量",
+        "example": ""
+      },
+      {
+        "word": "ring",
+        "phonetic": "",
+        "meaning": "(rang, rung) 发出铃声",
+        "example": ""
+      },
+      {
+        "word": "enter",
+        "phonetic": "",
+        "meaning": "进入",
+        "example": ""
+      },
+      {
+        "word": "dare",
+        "phonetic": "",
+        "meaning": "&modal v. 敢于",
+        "example": ""
+      },
+      {
+        "word": "everybody",
+        "phonetic": "",
+        "meaning": "每人；所有人",
+        "example": ""
+      },
+      {
+        "word": "player",
+        "phonetic": "",
+        "meaning": "运动员；选手",
+        "example": ""
+      },
+      {
+        "word": "decision",
+        "phonetic": "",
+        "meaning": "决定",
+        "example": ""
+      },
+      {
+        "word": "score",
+        "phonetic": "",
+        "meaning": "得分；比分",
+        "example": ""
+      },
+      {
+        "word": "proud",
+        "phonetic": "",
+        "meaning": "骄傲的；自豪的",
+        "example": ""
+      },
+      {
+        "word": "coach",
+        "phonetic": "",
+        "meaning": "教练",
+        "example": ""
+      },
+      {
+        "word": "bit",
+        "phonetic": "",
+        "meaning": "有点儿；稍微",
+        "example": ""
+      },
+      {
+        "word": "repeat",
+        "phonetic": "",
+        "meaning": "重复",
+        "example": ""
+      },
+      {
+        "word": "though",
+        "phonetic": "",
+        "meaning": "虽然；尽管",
+        "example": ""
+      },
+      {
+        "word": "joyful",
+        "phonetic": "",
+        "meaning": "高兴的；令人愉快的",
+        "example": ""
+      },
+      {
+        "word": "thankful",
+        "phonetic": "",
+        "meaning": "感谢的；感激的",
+        "example": ""
+      },
+      {
+        "word": "negative",
+        "phonetic": "",
+        "meaning": "否定的；消极的",
+        "example": ""
+      },
+      {
+        "word": "bully",
+        "phonetic": "",
+        "meaning": "霸凌；恐吓 n. 恶霸",
+        "example": ""
+      },
+      {
+        "word": "behave",
+        "phonetic": "",
+        "meaning": "表现；举止得体",
+        "example": ""
+      },
+      {
+        "word": "differently",
+        "phonetic": "",
+        "meaning": "不同地",
+        "example": ""
+      },
+      {
+        "word": "physics",
+        "phonetic": "",
+        "meaning": "物理；物理学",
+        "example": ""
+      },
+      {
+        "word": "awake",
+        "phonetic": "",
+        "meaning": "醒着的",
+        "example": ""
+      },
+      {
+        "word": "normal",
+        "phonetic": "",
+        "meaning": "正常的；普通的",
+        "example": ""
+      }
+    ]
+  },
+  {
+    "id": "g8b_u4",
+    "title": "Unit 4 The Art of Having Fun",
+    "words": [
+      {
+        "word": "mad",
+        "phonetic": "",
+        "meaning": "发狂的；疯的",
+        "example": ""
+      },
+      {
+        "word": "mean",
+        "phonetic": "",
+        "meaning": "刻薄的；吝啬的",
+        "example": ""
+      },
+      {
+        "word": "deep",
+        "phonetic": "",
+        "meaning": "深的；有……深的",
+        "example": ""
+      },
+      {
+        "word": "anybody",
+        "phonetic": "",
+        "meaning": "任何人",
+        "example": ""
+      },
+      {
+        "word": "remain",
+        "phonetic": "",
+        "meaning": "继续存在；保持不变",
+        "example": ""
+      },
+      {
+        "word": "takeback",
+        "phonetic": "",
+        "meaning": "撤回；收回",
+        "example": ""
+      },
+      {
+        "word": "abit",
+        "phonetic": "",
+        "meaning": "有点儿；稍微",
+        "example": ""
+      },
+      {
+        "word": "not",
+        "phonetic": "",
+        "meaning": "..but also... 不但……而且……",
+        "example": ""
+      },
+      {
+        "word": "wonder",
+        "phonetic": "",
+        "meaning": "奇观；惊叹 v. 琢磨；想知道；感到诧异",
+        "example": ""
+      },
+      {
+        "word": "measurement",
+        "phonetic": "",
+        "meaning": "数量；测量",
+        "example": ""
+      },
+      {
+        "word": "level",
+        "phonetic": "",
+        "meaning": "高度；水平；程度",
+        "example": ""
+      },
+      {
+        "word": "surface",
+        "phonetic": "",
+        "meaning": "表面；表层",
+        "example": ""
+      },
+      {
+        "word": "depth",
+        "phonetic": "",
+        "meaning": "深（度）；纵深",
+        "example": ""
+      },
+      {
+        "word": "research",
+        "phonetic": "",
+        "meaning": "& n. 研究；调查",
+        "example": ""
+      },
+      {
+        "word": "vessel",
+        "phonetic": "",
+        "meaning": "大船；轮船",
+        "example": ""
+      },
+      {
+        "word": "unusual",
+        "phonetic": "",
+        "meaning": "特别的；不寻常的",
+        "example": ""
+      },
+      {
+        "word": "bottom",
+        "phonetic": "",
+        "meaning": "底部；最下部",
+        "example": ""
+      },
+      {
+        "word": "waterfall",
+        "phonetic": "",
+        "meaning": "瀑布",
+        "example": ""
+      },
+      {
+        "word": "development",
+        "phonetic": "",
+        "meaning": "发展；壮大",
+        "example": ""
+      },
+      {
+        "word": "desert",
+        "phonetic": "",
+        "meaning": "沙漠；荒原",
+        "example": ""
+      },
+      {
+        "word": "cubic",
+        "phonetic": "",
+        "meaning": "立方的",
+        "example": ""
+      },
+      {
+        "word": "pool",
+        "phonetic": "",
+        "meaning": "池塘；水坑",
+        "example": ""
+      },
+      {
+        "word": "climber",
+        "phonetic": "",
+        "meaning": "攀登者；登山者",
+        "example": ""
+      },
+      {
+        "word": "northern",
+        "phonetic": "",
+        "meaning": "北部的；向北的",
+        "example": ""
+      },
+      {
+        "word": "distance",
+        "phonetic": "",
+        "meaning": "距离；遥远",
+        "example": ""
+      },
+      {
+        "word": "condition",
+        "phonetic": "",
+        "meaning": "状态；境况",
+        "example": ""
+      },
+      {
+        "word": "degree",
+        "phonetic": "",
+        "meaning": "度；度数；程度",
+        "example": ""
+      },
+      {
+        "word": "changeable",
+        "phonetic": "",
+        "meaning": "可能变化的；易变的；常变的",
+        "example": ""
+      },
+      {
+        "word": "death",
+        "phonetic": "",
+        "meaning": "死亡；毁灭；破灭",
+        "example": ""
+      },
+      {
+        "word": "determined",
+        "phonetic": "",
+        "meaning": "有决心的；坚决的",
+        "example": ""
+      },
+      {
+        "word": "above",
+        "phonetic": "",
+        "meaning": "在（或向）……上面；超过；",
+        "example": ""
+      },
+      {
+        "word": "ladder",
+        "phonetic": "",
+        "meaning": "梯子；阶梯；途径",
+        "example": ""
+      },
+      {
+        "word": "measure",
+        "phonetic": "",
+        "meaning": "测量；量度为 n. 措施；度量单位",
+        "example": ""
+      },
+      {
+        "word": "successfully",
+        "phonetic": "",
+        "meaning": "成功地；顺利地",
+        "example": ""
+      },
+      {
+        "word": "risk",
+        "phonetic": "",
+        "meaning": "使…冒风险（或面临危险）n. 危险；风险",
+        "example": ""
+      },
+      {
+        "word": "curiosity",
+        "phonetic": "",
+        "meaning": "好奇心；求知欲",
+        "example": ""
+      },
+      {
+        "word": "ambition",
+        "phonetic": "",
+        "meaning": "追求的目标；野心；雄心",
+        "example": ""
+      },
+      {
+        "word": "risky",
+        "phonetic": "",
+        "meaning": "有危险（或风险）的",
+        "example": ""
+      },
+      {
+        "word": "southern",
+        "phonetic": "",
+        "meaning": "南部的；向南的",
+        "example": ""
+      },
+      {
+        "word": "located",
+        "phonetic": "",
+        "meaning": "位于；坐落在",
+        "example": ""
+      },
+      {
+        "word": "freshwater",
+        "phonetic": "",
+        "meaning": "淡水的；淡水中生长的",
+        "example": ""
+      },
+      {
+        "word": "type",
+        "phonetic": "",
+        "meaning": "类型；种类",
+        "example": ""
+      },
+      {
+        "word": "attract",
+        "phonetic": "",
+        "meaning": "吸引；招引；引起（反应）",
+        "example": ""
+      }
+    ]
+  },
+  {
+    "id": "g8b_u5",
+    "title": "Unit 5 I Can't Wait for Tomorrow!",
+    "words": [
+      {
+        "word": "curious",
+        "phonetic": "",
+        "meaning": "好奇的；求知欲强的",
+        "example": ""
+      },
+      {
+        "word": "natural",
+        "phonetic": "",
+        "meaning": "自然的；天然的；天生的",
+        "example": ""
+      },
+      {
+        "word": "underwater",
+        "phonetic": "",
+        "meaning": "水下的；用于水下的adv. 在水下",
+        "example": ""
+      },
+      {
+        "word": "northeastern",
+        "phonetic": "",
+        "meaning": "东北的；东北方向的",
+        "example": ""
+      },
+      {
+        "word": "coast",
+        "phonetic": "",
+        "meaning": "海岸；海滨",
+        "example": ""
+      },
+      {
+        "word": "coral",
+        "phonetic": "",
+        "meaning": "珊瑚；珊瑚虫",
+        "example": ""
+      },
+      {
+        "word": "sand",
+        "phonetic": "",
+        "meaning": "沙子",
+        "example": ""
+      },
+      {
+        "word": "structure",
+        "phonetic": "",
+        "meaning": "结构（体）；构造；体系",
+        "example": ""
+      },
+      {
+        "word": "snorkel",
+        "phonetic": "",
+        "meaning": "使用呼吸管潜泳 n.（浮潜用的）呼吸管",
+        "example": ""
+      },
+      {
+        "word": "school",
+        "phonetic": "",
+        "meaning": "（鱼、鲸、海豚等的）群",
+        "example": ""
+      },
+      {
+        "word": "temper",
+        "phonetic": "",
+        "meaning": "脾气；怒气",
+        "example": ""
+      },
+      {
+        "word": "earthquake",
+        "phonetic": "",
+        "meaning": "地震",
+        "example": ""
+      },
+      {
+        "word": "typhoon",
+        "phonetic": "",
+        "meaning": "台风",
+        "example": ""
+      },
+      {
+        "word": "wildfire",
+        "phonetic": "",
+        "meaning": "野火",
+        "example": ""
+      },
+      {
+        "word": "snowstorm",
+        "phonetic": "",
+        "meaning": "雪暴；暴风雪",
+        "example": ""
+      },
+      {
+        "word": "flood",
+        "phonetic": "",
+        "meaning": "水灾；洪水 v. 泛滥；淹没",
+        "example": ""
+      },
+      {
+        "word": "drought",
+        "phonetic": "",
+        "meaning": "久旱；旱灾",
+        "example": ""
+      },
+      {
+        "word": "warn",
+        "phonetic": "",
+        "meaning": "警告；提醒注意",
+        "example": ""
+      },
+      {
+        "word": "wave",
+        "phonetic": "",
+        "meaning": "波浪；波；挥手 v. 挥手；挥舞",
+        "example": ""
+      },
+      {
+        "word": "tsunami",
+        "phonetic": "",
+        "meaning": "海啸",
+        "example": ""
+      },
+      {
+        "word": "interview",
+        "phonetic": "",
+        "meaning": "采访；面试 v. 采访；对（某人）进行面试",
+        "example": ""
+      },
+      {
+        "word": "report",
+        "phonetic": "",
+        "meaning": "& v. 汇报；报道",
+        "example": ""
+      },
+      {
+        "word": "neighbourhood",
+        "phonetic": "",
+        "meaning": "街区；临近的地方",
+        "example": ""
+      },
+      {
+        "word": "roof",
+        "phonetic": "",
+        "meaning": "屋顶；顶部",
+        "example": ""
+      },
+      {
+        "word": "nearly",
+        "phonetic": "",
+        "meaning": "几乎；差不多；将近",
+        "example": ""
+      },
+      {
+        "word": "relative",
+        "phonetic": "",
+        "meaning": "亲戚；亲属",
+        "example": ""
+      },
+      {
+        "word": "truck",
+        "phonetic": "",
+        "meaning": "卡车",
+        "example": ""
+      },
+      {
+        "word": "supply",
+        "phonetic": "",
+        "meaning": "供应（量）；（pl.supplies）补给（品）；v. 供应；供给",
+        "example": ""
+      },
+      {
+        "word": "preparation",
+        "phonetic": "",
+        "meaning": "准备（工作）；预备",
+        "example": ""
+      },
+      {
+        "word": "power",
+        "phonetic": "",
+        "meaning": "电力供应；能量；力量",
+        "example": ""
+      },
+      {
+        "word": "soundly",
+        "phonetic": "",
+        "meaning": "（睡觉）酣畅地；可靠地；完全彻底地",
+        "example": ""
+      },
+      {
+        "word": "thick",
+        "phonetic": "",
+        "meaning": "厚的；浓密的",
+        "example": ""
+      },
+      {
+        "word": "beat",
+        "phonetic": "",
+        "meaning": "(beat, beaten) 敲；打",
+        "example": ""
+      },
+      {
+        "word": "tornado",
+        "phonetic": "",
+        "meaning": "龙卷风；旋风",
+        "example": ""
+      },
+      {
+        "word": "weatherreport",
+        "phonetic": "",
+        "meaning": "天气预报",
+        "example": ""
+      },
+      {
+        "word": "oneanother",
+        "phonetic": "",
+        "meaning": "互相",
+        "example": ""
+      },
+      {
+        "word": "worst",
+        "phonetic": "",
+        "meaning": "& adv. 最坏（的）；最糟（的）",
+        "example": ""
+      },
+      {
+        "word": "froth",
+        "phonetic": "",
+        "meaning": "泡；泡沫",
+        "example": ""
+      },
+      {
+        "word": "refuse",
+        "phonetic": "",
+        "meaning": "拒绝；退却",
+        "example": ""
+      },
+      {
+        "word": "security",
+        "phonetic": "",
+        "meaning": "安全；保安；保障",
+        "example": ""
+      },
+      {
+        "word": "guard",
+        "phonetic": "",
+        "meaning": "卫兵；保卫 v. 保卫",
+        "example": ""
+      },
+      {
+        "word": "nearby",
+        "phonetic": "",
+        "meaning": "附近的 adv. 在附近",
+        "example": ""
+      },
+      {
+        "word": "scream",
+        "phonetic": "",
+        "meaning": "尖叫",
+        "example": ""
+      }
+    ]
+  },
+  {
+    "id": "g8b_u6",
+    "title": "Unit 6 It's a Wonderful World!",
+    "words": [
+      {
+        "word": "thankfully",
+        "phonetic": "",
+        "meaning": "幸亏；感激地",
+        "example": ""
+      },
+      {
+        "word": "knowledge",
+        "phonetic": "",
+        "meaning": "知识；学问",
+        "example": ""
+      },
+      {
+        "word": "hero",
+        "phonetic": "",
+        "meaning": "（pl.heroes）英雄；男主角；偶像",
+        "example": ""
+      },
+      {
+        "word": "safeguard",
+        "phonetic": "",
+        "meaning": "保护；捍卫 n. 安全设施",
+        "example": ""
+      },
+      {
+        "word": "floodwater",
+        "phonetic": "",
+        "meaning": "洪水",
+        "example": ""
+      },
+      {
+        "word": "manpower",
+        "phonetic": "",
+        "meaning": "劳动力；人力",
+        "example": ""
+      },
+      {
+        "word": "heartbeat",
+        "phonetic": "",
+        "meaning": "心跳（声）",
+        "example": ""
+      },
+      {
+        "word": "rescue",
+        "phonetic": "",
+        "meaning": "救援 v. 援救；营救",
+        "example": ""
+      },
+      {
+        "word": "heatwave",
+        "phonetic": "",
+        "meaning": "热浪",
+        "example": ""
+      },
+      {
+        "word": "southwestern",
+        "phonetic": "",
+        "meaning": "西南的；西南方向的",
+        "example": ""
+      },
+      {
+        "word": "volunteer",
+        "phonetic": "",
+        "meaning": "志愿者；自告奋勇者 v. 自愿做；义务做",
+        "example": ""
+      },
+      {
+        "word": "terribly",
+        "phonetic": "",
+        "meaning": "非常糟地；非常",
+        "example": ""
+      },
+      {
+        "word": "alarm",
+        "phonetic": "",
+        "meaning": "警报（器）；惊恐",
+        "example": ""
+      },
+      {
+        "word": "review",
+        "phonetic": "",
+        "meaning": "复习；回顾；复查 n. 回顾；审查",
+        "example": ""
+      },
+      {
+        "word": "sudden",
+        "phonetic": "",
+        "meaning": "突然的；骤然的",
+        "example": ""
+      },
+      {
+        "word": "thunder",
+        "phonetic": "",
+        "meaning": "雷；雷声 v. 打雷；发出雷鸣般响声",
+        "example": ""
+      },
+      {
+        "word": "usual",
+        "phonetic": "",
+        "meaning": "通常的；寻常的",
+        "example": ""
+      },
+      {
+        "word": "rainstorm",
+        "phonetic": "",
+        "meaning": "暴风雨",
+        "example": ""
+      },
+      {
+        "word": "rainy",
+        "phonetic": "",
+        "meaning": "阴雨的；多雨的",
+        "example": ""
+      },
+      {
+        "word": "bythetime",
+        "phonetic": "",
+        "meaning": "到……的时候",
+        "example": ""
+      },
+      {
+        "word": "shake",
+        "phonetic": "",
+        "meaning": "(shook, shaken) 与（某人）握手；摇动",
+        "example": ""
+      },
+      {
+        "word": "fist",
+        "phonetic": "",
+        "meaning": "拳头",
+        "example": ""
+      },
+      {
+        "word": "bump",
+        "phonetic": "",
+        "meaning": "碰；撞 n. 碰撞；（撞击造成的）肿块",
+        "example": ""
+      },
+      {
+        "word": "rub",
+        "phonetic": "",
+        "meaning": "摩擦；揉",
+        "example": ""
+      },
+      {
+        "word": "kiss",
+        "phonetic": "",
+        "meaning": "亲吻 n. 吻",
+        "example": ""
+      },
+      {
+        "word": "cheek",
+        "phonetic": "",
+        "meaning": "脸颊",
+        "example": ""
+      },
+      {
+        "word": "embarrassed",
+        "phonetic": "",
+        "meaning": "尴尬的",
+        "example": ""
+      },
+      {
+        "word": "confused",
+        "phonetic": "",
+        "meaning": "困惑的",
+        "example": ""
+      },
+      {
+        "word": "formal",
+        "phonetic": "",
+        "meaning": "正式的",
+        "example": ""
+      },
+      {
+        "word": "curry",
+        "phonetic": "",
+        "meaning": "咖喱菜",
+        "example": ""
+      },
+      {
+        "word": "rude",
+        "phonetic": "",
+        "meaning": "粗鲁的",
+        "example": ""
+      },
+      {
+        "word": "uncommon",
+        "phonetic": "",
+        "meaning": "罕见的；不寻常的",
+        "example": ""
+      },
+      {
+        "word": "palm",
+        "phonetic": "",
+        "meaning": "手掌",
+        "example": ""
+      },
+      {
+        "word": "fork",
+        "phonetic": "",
+        "meaning": "叉子",
+        "example": ""
+      },
+      {
+        "word": "Indian",
+        "phonetic": "",
+        "meaning": "印度的；印度人的 n. 印度人",
+        "example": ""
+      },
+      {
+        "word": "manner",
+        "phonetic": "",
+        "meaning": "方式；（pl. manners）礼仪",
+        "example": ""
+      },
+      {
+        "word": "confusing",
+        "phonetic": "",
+        "meaning": "令人困惑的；难以理解的",
+        "example": ""
+      },
+      {
+        "word": "unless",
+        "phonetic": "",
+        "meaning": "除非；如果不",
+        "example": ""
+      },
+      {
+        "word": "proper",
+        "phonetic": "",
+        "meaning": "恰当的；正确的",
+        "example": ""
+      },
+      {
+        "word": "serving",
+        "phonetic": "",
+        "meaning": "分菜用的 n. 一份食物",
+        "example": ""
+      },
+      {
+        "word": "embarrassing",
+        "phonetic": "",
+        "meaning": "使人难堪的",
+        "example": ""
+      },
+      {
+        "word": "cultural",
+        "phonetic": "",
+        "meaning": "与文化有关的；文化的",
+        "example": ""
+      },
+      {
+        "word": "situp",
+        "phonetic": "",
+        "meaning": "坐直",
+        "example": ""
+      }
+    ]
+  },
+  {
+    "id": "g8b_u7",
+    "title": "Unit 7 A Tale of Two Cities",
+    "words": [
+      {
+        "word": "tablemanners",
+        "phonetic": "",
+        "meaning": "餐桌礼仪",
+        "example": ""
+      },
+      {
+        "word": "custom",
+        "phonetic": "",
+        "meaning": "习俗",
+        "example": ""
+      },
+      {
+        "word": "occasion",
+        "phonetic": "",
+        "meaning": "场合；重大活动",
+        "example": ""
+      },
+      {
+        "word": "nicely",
+        "phonetic": "",
+        "meaning": "漂亮地；令人愉快地",
+        "example": ""
+      },
+      {
+        "word": "private",
+        "phonetic": "",
+        "meaning": "不喜欢谈论私事的；私人的",
+        "example": ""
+      },
+      {
+        "word": "whether",
+        "phonetic": "",
+        "meaning": "是否",
+        "example": ""
+      },
+      {
+        "word": "married",
+        "phonetic": "",
+        "meaning": "已婚的；婚姻的",
+        "example": ""
+      },
+      {
+        "word": "unsafe",
+        "phonetic": "",
+        "meaning": "不安全的；危险的",
+        "example": ""
+      },
+      {
+        "word": "informal",
+        "phonetic": "",
+        "meaning": "非正式的",
+        "example": ""
+      },
+      {
+        "word": "jeans",
+        "phonetic": "",
+        "meaning": "牛仔裤",
+        "example": ""
+      },
+      {
+        "word": "marry",
+        "phonetic": "",
+        "meaning": "结婚；娶；嫁",
+        "example": ""
+      },
+      {
+        "word": "Asian",
+        "phonetic": "",
+        "meaning": "亚洲的 n. 亚洲人",
+        "example": ""
+      },
+      {
+        "word": "correctly",
+        "phonetic": "",
+        "meaning": "正确地；得体地",
+        "example": ""
+      },
+      {
+        "word": "receive",
+        "phonetic": "",
+        "meaning": "收到",
+        "example": ""
+      },
+      {
+        "word": "main",
+        "phonetic": "",
+        "meaning": "主要的",
+        "example": ""
+      },
+      {
+        "word": "false",
+        "phonetic": "",
+        "meaning": "错误的；不真实的",
+        "example": ""
+      },
+      {
+        "word": "impression",
+        "phonetic": "",
+        "meaning": "印象",
+        "example": ""
+      },
+      {
+        "word": "cheers",
+        "phonetic": "",
+        "meaning": "再见；干杯",
+        "example": ""
+      },
+      {
+        "word": "adventure",
+        "phonetic": "",
+        "meaning": "冒险；冒险经历",
+        "example": ""
+      },
+      {
+        "word": "fantasy",
+        "phonetic": "",
+        "meaning": "幻想；幻想作品",
+        "example": ""
+      },
+      {
+        "word": "mystery",
+        "phonetic": "",
+        "meaning": "悬疑小说（或电影、戏剧）；神秘的事物；奥秘",
+        "example": ""
+      },
+      {
+        "word": "fiction",
+        "phonetic": "",
+        "meaning": "小说",
+        "example": ""
+      },
+      {
+        "word": "detective",
+        "phonetic": "",
+        "meaning": "侦探",
+        "example": ""
+      },
+      {
+        "word": "alien",
+        "phonetic": "",
+        "meaning": "外星人",
+        "example": ""
+      },
+      {
+        "word": "attack",
+        "phonetic": "",
+        "meaning": "& n. 攻击；进攻",
+        "example": ""
+      },
+      {
+        "word": "historical",
+        "phonetic": "",
+        "meaning": "历史的；有关历史的",
+        "example": ""
+      },
+      {
+        "word": "force",
+        "phonetic": "",
+        "meaning": "强迫；迫使；用力推动 n. 力；武力",
+        "example": ""
+      },
+      {
+        "word": "steal",
+        "phonetic": "",
+        "meaning": "(stole, stolen) 偷；窃取",
+        "example": ""
+      },
+      {
+        "word": "punish",
+        "phonetic": "",
+        "meaning": "惩罚；处罚",
+        "example": ""
+      },
+      {
+        "word": "recently",
+        "phonetic": "",
+        "meaning": "最近；不久前",
+        "example": ""
+      },
+      {
+        "word": "recommend",
+        "phonetic": "",
+        "meaning": "推荐；建议",
+        "example": ""
+      },
+      {
+        "word": "society",
+        "phonetic": "",
+        "meaning": "社会；社团",
+        "example": ""
+      },
+      {
+        "word": "literary",
+        "phonetic": "",
+        "meaning": "文学的；文学上的",
+        "example": ""
+      },
+      {
+        "word": "base",
+        "phonetic": "",
+        "meaning": "把（总部等）设在 n. 根基；基础；根据地",
+        "example": ""
+      },
+      {
+        "word": "summary",
+        "phonetic": "",
+        "meaning": "总结；概要",
+        "example": ""
+      },
+      {
+        "word": "spoiled",
+        "phonetic": "",
+        "meaning": "(=spoilt) 宠坏的；娇惯坏的",
+        "example": ""
+      },
+      {
+        "word": "selfish",
+        "phonetic": "",
+        "meaning": "自私的",
+        "example": ""
+      },
+      {
+        "word": "lock",
+        "phonetic": "",
+        "meaning": "用锁锁上 n. 锁",
+        "example": ""
+      },
+      {
+        "word": "unlock",
+        "phonetic": "",
+        "meaning": "开……的锁；发现；揭开",
+        "example": ""
+      },
+      {
+        "word": "hidden",
+        "phonetic": "",
+        "meaning": "隐藏的；秘密的",
+        "example": ""
+      },
+      {
+        "word": "nobody",
+        "phonetic": "",
+        "meaning": "没有人；谁也不",
+        "example": ""
+      },
+      {
+        "word": "therefore",
+        "phonetic": "",
+        "meaning": "因此；所以",
+        "example": ""
+      },
+      {
+        "word": "weak",
+        "phonetic": "",
+        "meaning": "虚弱的；（能力）弱的",
+        "example": ""
+      }
+    ]
+  },
+  {
+    "id": "g8b_u8",
+    "title": "Unit 8 The Seasons",
+    "words": [
+      {
+        "word": "secretly",
+        "phonetic": "",
+        "meaning": "秘密地",
+        "example": ""
+      },
+      {
+        "word": "prove",
+        "phonetic": "",
+        "meaning": "(proved, proved 或proved, proven)证明；证实；显示是",
+        "example": ""
+      },
+      {
+        "word": "climax",
+        "phonetic": "",
+        "meaning": "高潮；极点",
+        "example": ""
+      },
+      {
+        "word": "effect",
+        "phonetic": "",
+        "meaning": "影响；结果",
+        "example": ""
+      },
+      {
+        "word": "reader",
+        "phonetic": "",
+        "meaning": "读者；简易读物",
+        "example": ""
+      },
+      {
+        "word": "librarian",
+        "phonetic": "",
+        "meaning": "图书管理员；图书馆馆长",
+        "example": ""
+      },
+      {
+        "word": "consider",
+        "phonetic": "",
+        "meaning": "认为；仔细考虑",
+        "example": ""
+      },
+      {
+        "word": "enemy",
+        "phonetic": "",
+        "meaning": "敌人",
+        "example": ""
+      },
+      {
+        "word": "naughty",
+        "phonetic": "",
+        "meaning": "淘气的",
+        "example": ""
+      },
+      {
+        "word": "defeat",
+        "phonetic": "",
+        "meaning": "击败；战胜 n. 失败；击败",
+        "example": ""
+      },
+      {
+        "word": "recommendation",
+        "phonetic": "",
+        "meaning": "推荐；提议",
+        "example": ""
+      },
+      {
+        "word": "basic",
+        "phonetic": "",
+        "meaning": "基本的；初步的",
+        "example": ""
+      },
+      {
+        "word": "American",
+        "phonetic": "",
+        "meaning": "美国的；美洲的 n. 美国人；美洲人",
+        "example": ""
+      },
+      {
+        "word": "doubt",
+        "phonetic": "",
+        "meaning": "怀疑 n. 疑惑；不确定",
+        "example": ""
+      },
+      {
+        "word": "destroy",
+        "phonetic": "",
+        "meaning": "破坏；摧毁",
+        "example": ""
+      },
+      {
+        "word": "introduction",
+        "phonetic": "",
+        "meaning": "介绍；序言；采用",
+        "example": ""
+      },
+      {
+        "word": "daybyday",
+        "phonetic": "",
+        "meaning": "一天天；逐日",
+        "example": ""
+      },
+      {
+        "word": "elderly",
+        "phonetic": "",
+        "meaning": "年纪较大的；上了年纪的",
+        "example": ""
+      },
+      {
+        "word": "provide",
+        "phonetic": "",
+        "meaning": "提供；给予",
+        "example": ""
+      },
+      {
+        "word": "owner",
+        "phonetic": "",
+        "meaning": "主人；物主",
+        "example": ""
+      },
+      {
+        "word": "cage",
+        "phonetic": "",
+        "meaning": "笼子",
+        "example": ""
+      },
+      {
+        "word": "donation",
+        "phonetic": "",
+        "meaning": "捐赠物；捐赠",
+        "example": ""
+      },
+      {
+        "word": "shelter",
+        "phonetic": "",
+        "meaning": "庇护所；居所",
+        "example": ""
+      },
+      {
+        "word": "youth",
+        "phonetic": "",
+        "meaning": "青年；青年时期",
+        "example": ""
+      },
+      {
+        "word": "active",
+        "phonetic": "",
+        "meaning": "活跃的；积极的",
+        "example": ""
+      },
+      {
+        "word": "army",
+        "phonetic": "",
+        "meaning": "军队",
+        "example": ""
+      },
+      {
+        "word": "primary",
+        "phonetic": "",
+        "meaning": "小学教育的；首要的",
+        "example": ""
+      },
+      {
+        "word": "charity",
+        "phonetic": "",
+        "meaning": "慈善机构（或组织）；慈善事业",
+        "example": ""
+      },
+      {
+        "word": "warmly",
+        "phonetic": "",
+        "meaning": "热情地；温暖地",
+        "example": ""
+      },
+      {
+        "word": "theelderly",
+        "phonetic": "",
+        "meaning": "老人；上了年纪的人",
+        "example": ""
+      },
+      {
+        "word": "comealong",
+        "phonetic": "",
+        "meaning": "赶快；跟着来",
+        "example": ""
+      },
+      {
+        "word": "lady",
+        "phonetic": "",
+        "meaning": "女士；淑女",
+        "example": ""
+      },
+      {
+        "word": "adult",
+        "phonetic": "",
+        "meaning": "成年人 adj. 成年的；成熟的",
+        "example": ""
+      },
+      {
+        "word": "practical",
+        "phonetic": "",
+        "meaning": "实用的；实际的",
+        "example": ""
+      },
+      {
+        "word": "life-saving",
+        "phonetic": "",
+        "meaning": "救命的；救生的",
+        "example": ""
+      },
+      {
+        "word": "teamwork",
+        "phonetic": "",
+        "meaning": "团队合作",
+        "example": ""
+      },
+      {
+        "word": "successful",
+        "phonetic": "",
+        "meaning": "成功的；有成就的",
+        "example": ""
+      },
+      {
+        "word": "value",
+        "phonetic": "",
+        "meaning": "重要作用；价值",
+        "example": ""
+      },
+      {
+        "word": "voluntary",
+        "phonetic": "",
+        "meaning": "自愿的；无偿的",
+        "example": ""
+      },
+      {
+        "word": "ordinary",
+        "phonetic": "",
+        "meaning": "平凡的；普通的",
+        "example": ""
+      },
+      {
+        "word": "worth",
+        "phonetic": "",
+        "meaning": "值得；有价值",
+        "example": ""
+      },
+      {
+        "word": "audience",
+        "phonetic": "",
+        "meaning": "听众；观众",
+        "example": ""
+      },
+      {
+        "word": "success",
+        "phonetic": "",
+        "meaning": "成功",
+        "example": ""
+      },
+      {
+        "word": "elder",
+        "phonetic": "",
+        "meaning": "（尤指家庭中两个成员）年龄较长的",
+        "example": ""
+      },
+      {
+        "word": "pocket",
+        "phonetic": "",
+        "meaning": "口袋",
+        "example": ""
+      },
+      {
+        "word": "effort",
+        "phonetic": "",
+        "meaning": "努力；艰难的尝试",
+        "example": ""
+      },
+      {
+        "word": "talent",
+        "phonetic": "",
+        "meaning": "才能；天赋；天才",
+        "example": ""
+      },
+      {
+        "word": "advertisement",
+        "phonetic": "",
+        "meaning": "(=ad)n. 广告；启事",
+        "example": ""
+      },
+      {
+        "word": "onthego",
+        "phonetic": "",
+        "meaning": "忙碌的",
+        "example": ""
+      },
+      {
+        "word": "familiarwith",
+        "phonetic": "",
+        "meaning": "通晓；熟悉",
+        "example": ""
+      }
+    ]
+  }
+]

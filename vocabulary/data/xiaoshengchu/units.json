@@ -1,0 +1,662 @@
+[
+  {
+    "id": "xsc_u1",
+    "title": "Starter Units（小学已学）",
+    "words": [
+      {
+        "word": "down",
+        "phonetic": "",
+        "meaning": "向下；往下",
+        "example": ""
+      },
+      {
+        "word": "meet",
+        "phonetic": "",
+        "meaning": "遇见；会见",
+        "example": ""
+      },
+      {
+        "word": "may",
+        "phonetic": "",
+        "meaning": "可以；可能",
+        "example": ""
+      },
+      {
+        "word": "call",
+        "phonetic": "",
+        "meaning": "打电话；称呼",
+        "example": ""
+      },
+      {
+        "word": "fine",
+        "phonetic": "",
+        "meaning": "健康的；美好的",
+        "example": ""
+      },
+      {
+        "word": "let",
+        "phonetic": "",
+        "meaning": "让；允许",
+        "example": ""
+      },
+      {
+        "word": "tidy",
+        "phonetic": "",
+        "meaning": "整洁的；整理",
+        "example": ""
+      },
+      {
+        "word": "trousers",
+        "phonetic": "",
+        "meaning": "裤子",
+        "example": ""
+      },
+      {
+        "word": "bicycle",
+        "phonetic": "",
+        "meaning": "自行车",
+        "example": ""
+      },
+      {
+        "word": "put",
+        "phonetic": "",
+        "meaning": "放；摆",
+        "example": ""
+      },
+      {
+        "word": "sock",
+        "phonetic": "",
+        "meaning": "短袜",
+        "example": ""
+      },
+      {
+        "word": "pair",
+        "phonetic": "",
+        "meaning": "一双；一对",
+        "example": ""
+      },
+      {
+        "word": "find",
+        "phonetic": "",
+        "meaning": "找到；发现",
+        "example": ""
+      },
+      {
+        "word": "glasses",
+        "phonetic": "",
+        "meaning": "眼镜",
+        "example": ""
+      },
+      {
+        "word": "minute",
+        "phonetic": "",
+        "meaning": "分钟",
+        "example": ""
+      },
+      {
+        "word": "welcome",
+        "phonetic": "",
+        "meaning": "欢迎；受欢迎的",
+        "example": ""
+      },
+      {
+        "word": "chicken",
+        "phonetic": "",
+        "meaning": "鸡；鸡肉",
+        "example": ""
+      },
+      {
+        "word": "rabbit",
+        "phonetic": "",
+        "meaning": "兔子",
+        "example": ""
+      },
+      {
+        "word": "animal",
+        "phonetic": "",
+        "meaning": "动物",
+        "example": ""
+      },
+      {
+        "word": "beautiful",
+        "phonetic": "",
+        "meaning": "美丽的；漂亮的",
+        "example": ""
+      }
+    ]
+  },
+  {
+    "id": "xsc_u2",
+    "title": "Units 1-7（小学已学）",
+    "words": [
+      {
+        "word": "friend",
+        "phonetic": "",
+        "meaning": "朋友",
+        "example": ""
+      },
+      {
+        "word": "get",
+        "phonetic": "",
+        "meaning": "得到；到达",
+        "example": ""
+      },
+      {
+        "word": "which",
+        "phonetic": "",
+        "meaning": "哪一个；哪些",
+        "example": ""
+      },
+      {
+        "word": "age",
+        "phonetic": "",
+        "meaning": "年龄",
+        "example": ""
+      },
+      {
+        "word": "pet",
+        "phonetic": "",
+        "meaning": "宠物",
+        "example": ""
+      },
+      {
+        "word": "parent",
+        "phonetic": "",
+        "meaning": "父母",
+        "example": ""
+      },
+      {
+        "word": "hour",
+        "phonetic": "",
+        "meaning": "小时",
+        "example": ""
+      },
+      {
+        "word": "ago",
+        "phonetic": "",
+        "meaning": "以前",
+        "example": ""
+      },
+      {
+        "word": "place",
+        "phonetic": "",
+        "meaning": "地方",
+        "example": ""
+      },
+      {
+        "word": "wear",
+        "phonetic": "",
+        "meaning": "穿；戴",
+        "example": ""
+      },
+      {
+        "word": "quiet",
+        "phonetic": "",
+        "meaning": "安静的",
+        "example": ""
+      },
+      {
+        "word": "middle",
+        "phonetic": "",
+        "meaning": "中间的；中间",
+        "example": ""
+      },
+      {
+        "word": "blackboard",
+        "phonetic": "",
+        "meaning": "黑板",
+        "example": ""
+      },
+      {
+        "word": "famous",
+        "phonetic": "",
+        "meaning": "著名的",
+        "example": ""
+      },
+      {
+        "word": "email",
+        "phonetic": "",
+        "meaning": "电子邮件；发邮件",
+        "example": ""
+      },
+      {
+        "word": "answer",
+        "phonetic": "",
+        "meaning": "回答；答案",
+        "example": ""
+      },
+      {
+        "word": "question",
+        "phonetic": "",
+        "meaning": "问题",
+        "example": ""
+      },
+      {
+        "word": "subject",
+        "phonetic": "",
+        "meaning": "学科",
+        "example": ""
+      },
+      {
+        "word": "education",
+        "phonetic": "",
+        "meaning": "教育",
+        "example": ""
+      },
+      {
+        "word": "difficult",
+        "phonetic": "",
+        "meaning": "困难的",
+        "example": ""
+      },
+      {
+        "word": "idea",
+        "phonetic": "",
+        "meaning": "想法；主意",
+        "example": ""
+      },
+      {
+        "word": "travel",
+        "phonetic": "",
+        "meaning": "旅行",
+        "example": ""
+      },
+      {
+        "word": "share",
+        "phonetic": "",
+        "meaning": "分享",
+        "example": ""
+      },
+      {
+        "word": "half",
+        "phonetic": "",
+        "meaning": "一半；一半的",
+        "example": ""
+      },
+      {
+        "word": "begin",
+        "phonetic": "",
+        "meaning": "开始",
+        "example": ""
+      },
+      {
+        "word": "lesson",
+        "phonetic": "",
+        "meaning": "课；课程",
+        "example": ""
+      },
+      {
+        "word": "candle",
+        "phonetic": "",
+        "meaning": "蜡烛",
+        "example": ""
+      },
+      {
+        "word": "doll",
+        "phonetic": "",
+        "meaning": "玩偶；洋娃娃",
+        "example": ""
+      },
+      {
+        "word": "wish",
+        "phonetic": "",
+        "meaning": "希望；愿望",
+        "example": ""
+      },
+      {
+        "word": "hear",
+        "phonetic": "",
+        "meaning": "听见",
+        "example": ""
+      }
+    ]
+  },
+  {
+    "id": "xsc_u3",
+    "title": "课标补充词汇",
+    "words": [
+      {
+        "word": "astronaut",
+        "phonetic": "",
+        "meaning": "宇航员，太空人",
+        "example": "What do you want to be?\n你想成为什么？\n I want to be an astronaut.\n我想成为一名宇航员。"
+      },
+      {
+        "word": "back",
+        "phonetic": "",
+        "meaning": "回原处，恢复原状",
+        "example": "When do you go back to school?\n你什么时候回学校？\nI go back to school at 2 o'clock.\n我两点回学校。"
+      },
+      {
+        "word": "begin",
+        "phonetic": "",
+        "meaning": "开始",
+        "example": "The sports meet will begin tomorrow.\n运动会将在明天开始。"
+      },
+      {
+        "word": "chore",
+        "phonetic": "",
+        "meaning": "家庭杂务，杂活",
+        "example": "I am helpful. I often do chores at home.\n我很愿意帮忙。我经常在家做家务。"
+      },
+      {
+        "word": "cut",
+        "phonetic": "",
+        "meaning": "切，割，剪",
+        "example": "I can help my mum cut the vegetables.\n我会帮妈妈切蔬菜。"
+      },
+      {
+        "word": "from",
+        "phonetic": "",
+        "meaning": "来自；寄自；得自",
+        "example": "My dad got some hamburgers from the hotel kitchen.\n我的小狗从厨房得到一些汉堡包。"
+      },
+      {
+        "word": "glass",
+        "phonetic": "",
+        "meaning": "玻璃；玻璃杯；眼镜",
+        "example": "Why don't you wear the new glasses?\n你为什么不戴新的眼镜？"
+      },
+      {
+        "word": "of",
+        "phonetic": "",
+        "meaning": "关于；……的",
+        "example": "On the wall, there is a photo of Zhang Peng.\n在墙上，有一幅张鹏的照片。"
+      },
+      {
+        "word": "pair",
+        "phonetic": "",
+        "meaning": "一对，一双",
+        "example": "Can I help you? \n我能帮你吗？ \nYes. I want to buy a pair of shoes.\n是的。我想买一双鞋子。"
+      },
+      {
+        "word": "piano",
+        "phonetic": "",
+        "meaning": "钢琴",
+        "example": "I am good at playing the piano.\n我很擅长弹钢琴。"
+      },
+      {
+        "word": "trousers",
+        "phonetic": "",
+        "meaning": "裤子，长裤",
+        "example": "Put away your trousers.\n把你的裤子摆放好。"
+      },
+      {
+        "word": "wake",
+        "phonetic": "",
+        "meaning": "唤醒，醒来",
+        "example": "Did you wake up early this morning?\n你今天早上早早起床吗？\nYes, I did.\n是的。"
+      },
+      {
+        "word": "a/an",
+        "phonetic": "",
+        "meaning": "（指初次提及或非特指的人或物）一个/张/块等",
+        "example": "1. I have a ruler.  我有一把尺子。\n2. I have an eraser. 我有一块橡皮。"
+      },
+      {
+        "word": "air",
+        "phonetic": "",
+        "meaning": "空气，大气",
+        "example": "1. The airplane is flying in the air. \n飞机正在空中飞行。\n2. People can't live without(没有) air.\n人类生存离不开空气。"
+      },
+      {
+        "word": "bee",
+        "phonetic": "",
+        "meaning": "蜜蜂",
+        "example": "There’s a bee in our classroom.\n我们教室里有一只蜜蜂。"
+      },
+      {
+        "word": "catch",
+        "phonetic": "",
+        "meaning": "接住，抓住",
+        "example": "Zoom catches the can.\nZoom 抓住了易拉罐。"
+      },
+      {
+        "word": "city",
+        "phonetic": "",
+        "meaning": "城市",
+        "example": "There are many tall buildings in my city. \n我所在的城市有很多高楼大厦。"
+      },
+      {
+        "word": "colour(AmE color)",
+        "phonetic": "",
+        "meaning": "1. 颜色\n    2.上颜色",
+        "example": "1.What’s your favourite colour? \n你最喜欢什么颜色？\n2.Colour it brown, please. \n请把它刷成棕色。"
+      },
+      {
+        "word": "earth",
+        "phonetic": "",
+        "meaning": "地球",
+        "example": "Before humans lived on the earth, whales already lived in the sea.\n在人类居住在地球上之前，鲸鱼就已经生活在海洋里了。"
+      },
+      {
+        "word": "fire",
+        "phonetic": "",
+        "meaning": "火",
+        "example": "The firemen put out the fire yesterday.\n昨天消防员扑灭了火。"
+      },
+      {
+        "word": "hometown",
+        "phonetic": "",
+        "meaning": "家乡",
+        "example": "Shantou is my hometown.\n汕头是我的家乡。"
+      },
+      {
+        "word": "meat",
+        "phonetic": "",
+        "meaning": "肉",
+        "example": "Cavemen often ate raw meat.\n穴居人经常吃生肉。"
+      },
+      {
+        "word": "or",
+        "phonetic": "",
+        "meaning": "或者",
+        "example": "I usually go to school at 7:50 or 8 o’clock.\n我通常7点50分或8点去上学。"
+      },
+      {
+        "word": "safe",
+        "phonetic": "",
+        "meaning": "安全的",
+        "example": "A life jacket can keep you safe in the water.\n救生衣可以让你在水里保持安全。"
+      },
+      {
+        "word": "about",
+        "phonetic": "",
+        "meaning": "关于",
+        "example": "We’re going to see a film about space travel.\n我们准备去看一部关于太空旅行的电影。"
+      },
+      {
+        "word": "art",
+        "phonetic": "",
+        "meaning": "美术，艺术",
+        "example": "Amy cleaned the art room after drawing pictures.\n艾米画画后打扫了美术室。"
+      },
+      {
+        "word": "book",
+        "phonetic": "",
+        "meaning": "书",
+        "example": "Sarah usually reads books in the library on the weekend.\n周末萨拉通常去图书馆看书。"
+      },
+      {
+        "word": "can",
+        "phonetic": "",
+        "meaning": "罐头\n能，会；可以",
+        "example": "There is a can beside the river.\n河边有一个罐头。\nZhang Peng can do Chinese kung fu.\n张鹏会些中国功夫。"
+      },
+      {
+        "word": "Chinese",
+        "phonetic": "",
+        "meaning": "中文；中国人\n中国的；中国人的",
+        "example": "The children are learning poems in Chinese class now.\n孩子们正在语文课上学诗歌。"
+      },
+      {
+        "word": "difficult",
+        "phonetic": "",
+        "meaning": "困难的",
+        "example": "Mike often answers very difficult maths questions.\n麦克经常回答非常难的数学题。"
+      },
+      {
+        "word": "feel",
+        "phonetic": "",
+        "meaning": "感受，感觉",
+        "example": "How do you feel ?\n你感觉怎么样？\nI’m so happy.\n我很开心。"
+      },
+      {
+        "word": "paper",
+        "phonetic": "",
+        "meaning": "纸",
+        "example": "She drew a picture on the paper.\n她在纸上画了一幅画。"
+      },
+      {
+        "word": "subject",
+        "phonetic": "",
+        "meaning": "学科",
+        "example": "English is my favourite subject.\n英语是我最喜欢的学科。"
+      },
+      {
+        "word": "great",
+        "phonetic": "",
+        "meaning": "伟大的；美妙的",
+        "example": "Tom went to the Great Wall last winter vacation.\n汤姆去年寒假去了长城。\n--Let’s go to the playground after scho"
+      },
+      {
+        "word": "question",
+        "phonetic": "",
+        "meaning": "问题",
+        "example": "I often answer maths questions.\n我经常回答数学题。"
+      },
+      {
+        "word": "answer",
+        "phonetic": "",
+        "meaning": "回答；答案",
+        "example": "Who can answer my question?\n谁可以回答我的问题？"
+      },
+      {
+        "word": "call",
+        "phonetic": "",
+        "meaning": "打电话，召集；n.打电话",
+        "example": "I'll call you tonight.\n我今晚将打电话给你。"
+      },
+      {
+        "word": "careful",
+        "phonetic": "",
+        "meaning": "小心的",
+        "example": "Be careful! The water is so hot.\n小心！水很烫。"
+      },
+      {
+        "word": "fine",
+        "phonetic": "",
+        "meaning": "好的",
+        "example": "How are you?   I'm fine.\n你好吗？        我很好。"
+      },
+      {
+        "word": "give",
+        "phonetic": "",
+        "meaning": "给",
+        "example": "I'll give you a call. \n我将给你打电话。"
+      },
+      {
+        "word": "minute",
+        "phonetic": "",
+        "meaning": "分钟",
+        "example": "There are 60 minutes in an hour.\n一小时有六十分钟。"
+      },
+      {
+        "word": "put",
+        "phonetic": "",
+        "meaning": "放，放置",
+        "example": "Put your foot under your chair.\n把你的脚放在桌子下面。"
+      },
+      {
+        "word": "top",
+        "phonetic": "",
+        "meaning": "顶部的，\n最上面的；",
+        "example": "I want to be the top one.\n我想成为最顶尖的人。"
+      },
+      {
+        "word": "cry",
+        "phonetic": "",
+        "meaning": "哭泣",
+        "example": "But onions make me cry.\n但是洋葱把我弄哭了。"
+      },
+      {
+        "word": "good",
+        "phonetic": "",
+        "meaning": "优良的；擅长的",
+        "example": "1.You are a good student.\n你是一个优秀的学生。\n2. I'm good at English.\n我很擅长英语。"
+      },
+      {
+        "word": "free",
+        "phonetic": "",
+        "meaning": "免费的；空闲的；",
+        "example": "If you are free,we can go to the park.\n如果你有空，我们可以去公园。"
+      },
+      {
+        "word": "bring",
+        "phonetic": "",
+        "meaning": "带来",
+        "example": "The coach brings a small purple flower.\n教练带来了一朵紫色的小花。"
+      },
+      {
+        "word": "close",
+        "phonetic": "",
+        "meaning": "关闭，合上",
+        "example": "Close your book,please.\n请合上你的书。"
+      },
+      {
+        "word": "famous",
+        "phonetic": "",
+        "meaning": "著名的；出名的",
+        "example": "The Sydney Opera House is the most famous building in Australia.\n悉尼歌剧院是澳大利亚最著名的建筑。"
+      },
+      {
+        "word": "for",
+        "phonetic": "",
+        "meaning": "对于",
+        "example": "What would you like for dinner?\n你晚饭想吃什么？"
+      },
+      {
+        "word": "middle",
+        "phonetic": "",
+        "meaning": "中间的；中间",
+        "example": "We’re going to a new middle school, so we’re going to say goodbye to each other.\n我们要互相道别因为我们将要上新的中学。"
+      },
+      {
+        "word": "never",
+        "phonetic": "",
+        "meaning": "从不",
+        "example": "I never go swimming in winter.\n我从未在冬天游泳。"
+      },
+      {
+        "word": "out",
+        "phonetic": "",
+        "meaning": "向外",
+        "example": "Take out your English book,please .\n请拿出你们的英语书。"
+      },
+      {
+        "word": "place",
+        "phonetic": "",
+        "meaning": "地方",
+        "example": "Zhongshan Park is a beautiful place.\n中山公园是一个漂亮的地方。"
+      },
+      {
+        "word": "sweep",
+        "phonetic": "",
+        "meaning": "打扫；清除",
+        "example": "I often sweep the floor at home on weekends. \n周末我经常在家拖地。"
+      },
+      {
+        "word": "tidy",
+        "phonetic": "",
+        "meaning": "整洁的；有条理的",
+        "example": "Your room is so clean and tidy .\n你的房间既干净又整洁。"
+      },
+      {
+        "word": "toilet",
+        "phonetic": "",
+        "meaning": "厕所；洗手间",
+        "example": "Excuse me! Where’s the toilet?\n不好意思！请问卫生间在哪里？"
+      }
+    ]
+  }
+]

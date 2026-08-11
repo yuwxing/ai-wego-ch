@@ -1,0 +1,80 @@
+这是 `D:\ai-wego` 的完整项目结构：
+
+## 根目录
+
+```
+D:\ai-wego/
+├── .github/workflows/
+│   ├── daily-content.yml
+│   └── deploy.yml
+├── .wrangler/
+├── assets/                    # 打包后的静态资源 (CSS/JS)
+├── avatars/                   # 头像图片集合 (18种)
+├── dl_all/                    # 全部下载副本 (完整站点的静态备份)
+├── frontend/                  # 主前端项目 (React + Vite + Tailwind + Cloudflare)
+├── mentors/                   # 导师头像 (math, paper, philosophy, research, startup)
+├── pets/                      # 宠物图片 + sprites (动图/缩略图)
+├── public/                    # 公共静态资源
+├── scripts/                   # 脚本 (每日/每周内容生成, 词汇解析, DeepSeek测试)
+├── vocabulary/                # 词汇学习子项目 (React + Vite)
+├── word/                      # 词汇文本 (七上/七下/八上/八下)
+│
+├── index.html                 # 入口页面
+├── WordCardPage.tsx           # 单词卡片页面
+├── WordCardPage-parse-vocab.js
+├── WordCardPage-wordData.ts
+├── package.json
+├── vite.config.ts
+├── README.md
+├── grammar.txt                # 语法文件
+├── hero-banner.png
+├── weg-coin.png
+└── vite.svg
+```
+
+## 主要子项目
+
+### 📁 `frontend/` — 主前端 (React + TypeScript + Vite)
+
+```
+frontend/
+├── src/
+│   ├── components/    # 组件
+│   ├── contexts/      # React Contexts
+│   ├── data/          # 数据
+│   ├── pages/         # 页面
+│   ├── services/      # 服务层
+│   ├── types/         # 类型定义
+│   ├── utils/         # 工具函数
+│   ├── App.tsx
+│   ├── main.tsx
+│   └── index.css
+├── functions/api/     # Cloudflare Functions
+├── public/            # 静态资源 (audio, avatars, mentors, pets)
+├── dist/              # 构建输出
+├── .github/workflows/ # CI/CD
+├── package.json
+├── vite.config.ts
+└── tailwind.config.js
+```
+
+### 📁 `vocabulary/` — 词汇子项目 (React + Vite)
+
+```
+vocabulary/
+├── src/
+│   ├── components/    # 组件
+│   ├── pages/         # 页面
+│   ├── services/      # 服务
+│   └── store/         # 状态管理 (zustand)
+├── data/              # 词汇数据 (grade7a, grade7b, grade8a, grade8b, xiaoshengchu)
+├── dist/              # 构建输出
+├── package.json
+└── vite.config.js
+```
+
+### 🐾 `pets/` — 宠物系统 (33只宠物)
+
+包含 `bolan`, `changjing`, `chuangyi`, `dianjin`, `dongzuo`, `fankui`, `fengge`, `guangying`, `huaxianzi`, `huixi`, `huixi2`, `huizhi`, `huizhi2`, `jingtou`, `jingyu`, `lianhua`, `lieying`, `linggan`, `lingya`, `mengya`, `mocai`, `mochai`, `nuanyu`, `renwu`, `rongtong`, `shenglin`, `tishi`, `wenxin`, `xiaolongnv`, `xinya`, `xuanqi`, `yunlu`, `zhenxuan`, `zhiyuan` 等图片，以及 `sprites/` 下的动图资源。
+
+看起来是一个**AI 英语学习助手**网站项目，包含单词卡、宠物养成、AI导师对话等功能，部署在 Cloudflare Pages 上。需要我深入看哪个部分的源码吗？

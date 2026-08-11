@@ -1,0 +1,886 @@
+{
+  "课标有，小学没学": [
+    [
+      "组别",
+      "课标有，单词表没有",
+      "词性",
+      "释义",
+      "单词出处(第几册)",
+      "具体位置",
+      "例句"
+    ],
+    [
+      "Group 2",
+      "astronaut",
+      "名词",
+      "宇航员，太空人",
+      "暂未查出",
+      "",
+      " What do you want to be?\n你想成为什么？\n I want to be an astronaut.\n我想成为一名宇航员。"
+    ],
+    [
+      "",
+      "back",
+      "副词",
+      "回原处，恢复原状",
+      "人教版PEP Book 6",
+      "Unit 1 P4 Let’s talk中Zhang Peng与Pedro对话出现“When do you go back to school after lunch?”",
+      "When do you go back to school?\n你什么时候回学校？\nI go back to school at 2 o'clock.\n我两点回学校。"
+    ],
+    [
+      "",
+      "begin",
+      "动词",
+      "开始",
+      "人教版PEP Book 8",
+      "Unit 3 P24 Let’s try 中题目出现The second class is beginning.",
+      "The sports meet will begin tomorrow.\n运动会将在明天开始。"
+    ],
+    [
+      "",
+      "chore",
+      "名词",
+      "家庭杂务，杂活",
+      "暂未查出",
+      "",
+      "I am helpful. I often do chores at home.\n我很愿意帮忙。我经常在家做家务。"
+    ],
+    [
+      "",
+      "cut",
+      "动词",
+      "切，割，剪",
+      "人教版PEP Book 1",
+      "Unit 5 P52 Let’s do中出现“Cut the cake.”",
+      "I can help my mum cut the vegetables.\n我会帮妈妈切蔬菜。"
+    ],
+    [
+      "",
+      "from",
+      "介词",
+      "来自；寄自；得自",
+      "人教版PEP Book 2",
+      "Unit 1 P4 Let’s talk中Amy“Hi, I’m Amy. I’m from the UK.”",
+      "My dad got some hamburgers from the hotel kitchen.\n我的小狗从厨房得到一些汉堡包。"
+    ],
+    [
+      "",
+      "glass",
+      "名词",
+      "玻璃；玻璃杯；眼镜",
+      "人教版PEP Book 3",
+      "Unit 3 P28 Let’s learn中有blue glasses",
+      "Why don't you wear the new glasses?\n你为什么不戴新的眼镜？"
+    ],
+    [
+      "",
+      "of",
+      "介词",
+      "关于；……的",
+      "人教版PEP Book 7",
+      "Unit 2 P16 Let’s talk 中出现“So many pictures of bikes!”",
+      "On the wall, there is a photo of Zhang Peng.\n在墙上，有一幅张鹏的照片。"
+    ],
+    [
+      "",
+      "pair",
+      "名词",
+      "一对，一双",
+      "暂未查出",
+      "",
+      "Can I help you? \n我能帮你吗？ \nYes. I want to buy a pair of shoes.\n是的。我想买一双鞋子。"
+    ],
+    [
+      "",
+      "piano  ",
+      "名词",
+      "钢琴",
+      "人教版PEP Book 8",
+      "Recycle P46 Day5中出现“I play the piano or sing songs in music class.”",
+      "I am good at playing the piano.\n我很擅长弹钢琴。"
+    ],
+    [
+      "",
+      "trousers",
+      "名词",
+      "裤子，长裤",
+      "暂未查出",
+      "",
+      "Put away your trousers.\n把你的裤子摆放好。"
+    ],
+    [
+      "",
+      "wake ",
+      "动词",
+      "唤醒，醒来",
+      "人教版PEP Book 4",
+      "Unit 2 P21 Story time中Zip说“Wake up, Zoom. It’s time to get up.”",
+      "Did you wake up early this morning?\n你今天早上早早起床吗？\nYes, I did.\n是的。"
+    ],
+    [
+      "Group 3",
+      "a/an ",
+      "不定冠词",
+      "（指初次提及或非特指的人或物）一个/张/块等",
+      "人教版PEP Book 1",
+      "Unit 1 P5 Zoom和Zip谈话“I have a ruler.”“I have an eraser.”",
+      "1. I have a ruler.  我有一把尺子。\n2. I have an eraser. 我有一块橡皮。"
+    ],
+    [
+      "",
+      "air",
+      "名词",
+      "空气，大气",
+      "人教版PEP Book 7",
+      "P70 Songs in each unit中, 在Unit 2以airplane 出现",
+      "1. The airplane is flying in the air. \n飞机正在空中飞行。\n2. People can't live without(没有) air.\n人类生存离不开空气。"
+    ],
+    [
+      "",
+      "bee",
+      "名词",
+      "蜜蜂",
+      "人教版PEP Book 3",
+      "Unit 1 P11 Story time 中出现“There’s a bee in our classroom.”",
+      "There’s a bee in our classroom.\n我们教室里有一只蜜蜂。"
+    ],
+    [
+      "",
+      "catch",
+      "动词",
+      "接住，抓住",
+      "人教版PEP Book 5",
+      "Unit 5 P55 Story time中出现“Zoom catches the can.”",
+      "Zoom catches the can.\nZoom 抓住了易拉罐。"
+    ],
+    [
+      "",
+      "city",
+      "名词",
+      "城市",
+      "人教版PEP Book 7",
+      "Unit 1 P4 Let’s talk中下面的问题出现Talk about the places in your city/town/village.",
+      "There are many tall buildings in my city. \n我所在的城市有很多高楼大厦。"
+    ],
+    [
+      "",
+      "colour(AmE color)",
+      "1.名词\n2.动词",
+      "1. 颜色\n    2.上颜色",
+      "人教版PEP Book 1",
+      "Unit 2 P13单元标题 Colours；在P18 Let’s learn中出现“Colour it brown!”",
+      "1.What’s your favourite colour? \n你最喜欢什么颜色？\n2.Colour it brown, please. \n请把它刷成棕色。"
+    ],
+    [
+      "",
+      "earth",
+      "名词",
+      "地球",
+      "人教版PEP Book 8",
+      "Unit 4 P41 Story time中出现“Before humans lived on the earth, whales already lived in the sea.”",
+      "Before humans lived on the earth, whales already lived in the sea.\n在人类居住在地球上之前，鲸鱼就已经生活在海洋里了。"
+    ],
+    [
+      "",
+      "fire",
+      "名词",
+      "火",
+      "暂未查出",
+      "",
+      "The firemen put out the fire yesterday.\n昨天消防员扑灭了火。"
+    ],
+    [
+      "",
+      "hometown ",
+      "名词",
+      "家乡",
+      "暂未查出",
+      "",
+      "Shantou is my hometown.\n汕头是我的家乡。"
+    ],
+    [
+      "",
+      "meat",
+      "名词",
+      "肉",
+      "人教版PEP Book 8",
+      "Unit 4 P41 Story time中出现“Cavemen often ate raw meat.”",
+      "Cavemen often ate raw meat.\n穴居人经常吃生肉。"
+    ],
+    [
+      "",
+      "or",
+      "（表示选择）连词",
+      "或者",
+      "人教版PEP Book 6",
+      "Unit 1 P4 Let’s talk中Zhang Peng与Pedro对话出现“Usually at 9:30 or 10 o’clock.”",
+      "I usually go to school at 7:50 or 8 o’clock.\n我通常7点50分或8点去上学。"
+    ],
+    [
+      "",
+      "safe  ",
+      "形容词",
+      "安全的",
+      "暂未查出",
+      "",
+      "A life jacket can keep you safe in the water.\n救生衣可以让你在水里保持安全。"
+    ],
+    [
+      "Group 4",
+      "about",
+      "prep. 介词",
+      "关于",
+      "人教版PEP Book 7",
+      "Unit 3 P26 Let’s talk中John和Amy对话中出现“We’re going to see a film about space travel!”",
+      "We’re going to see a film about space travel.\n我们准备去看一部关于太空旅行的电影。"
+    ],
+    [
+      "",
+      "art ",
+      "n. 名词",
+      "美术，艺术",
+      "人教版PEP Book 4",
+      "Unit 1 P8 Let’s learn中出现art room",
+      "Amy cleaned the art room after drawing pictures.\n艾米画画后打扫了美术室。"
+    ],
+    [
+      "",
+      "book",
+      "n. 名词",
+      "书",
+      "人教版PEP Book 3",
+      "Unit 2 P15 Let’s learn中以Chinese book出现",
+      "Sarah usually reads books in the library on the weekend.\n周末萨拉通常去图书馆看书。"
+    ],
+    [
+      "",
+      "can",
+      "n. 名词\nv. 情态动词",
+      "罐头\n能，会；可以",
+      "人教版PEP Book 5",
+      "Unit 4 P37 标题What can you do? 作为情态动词；\nUnit 5 P55 Story time中出现“There is a can beside the river.”作为名词罐头",
+      "There is a can beside the river.\n河边有一个罐头。\nZhang Peng can do Chinese kung fu.\n张鹏会些中国功夫。"
+    ],
+    [
+      "",
+      "Chinese",
+      "n. 名词\nadj. 形容词",
+      "中文；中国人\n中国的；中国人的",
+      "人教版PEP Book 3",
+      "Unit 2 P15 Let’s learn中以Chinese book出现",
+      "The children are learning poems in Chinese class now.\n孩子们正在语文课上学诗歌。"
+    ],
+    [
+      "",
+      "difficult",
+      "adj. 形容词",
+      "困难的",
+      "人教版PEP Book 8",
+      "Recycle P46 Day5中下面的练习出现“Mike often answers very difficult maths questions.”",
+      "Mike often answers very difficult maths questions.\n麦克经常回答非常难的数学题。"
+    ],
+    [
+      "",
+      "feel",
+      "v. 动词",
+      "感受，感觉",
+      "人教版PEP Book 7",
+      "Unit 6 P57标题How do you feel?",
+      "How do you feel ?\n你感觉怎么样？\nI’m so happy.\n我很开心。"
+    ],
+    [
+      "",
+      "paper",
+      "n. 名词",
+      "纸",
+      "暂未查出",
+      "",
+      "She drew a picture on the paper.\n她在纸上画了一幅画。"
+    ],
+    [
+      "",
+      "subject  ",
+      "n. 名词",
+      "学科",
+      "暂未查出",
+      "",
+      "English is my favourite subject.\n英语是我最喜欢的学科。"
+    ],
+    [
+      "",
+      "great",
+      "adj. 形容词",
+      "伟大的；美妙的",
+      "人教版PEP Book 1",
+      "Unit1 P11 Story time Zoom与Zip对话中出现 “Great!”",
+      "Tom went to the Great Wall last winter vacation.\n汤姆去年寒假去了长城。\n--Let’s go to the playground after school. --Great!\n--让我们放学后一起去操场玩吧。--太棒啦！"
+    ],
+    [
+      "",
+      "question",
+      "n. 名词",
+      "问题",
+      "人教版PEP Book 8",
+      "Recycle P46 Day5中出现“I often answer maths questions.”",
+      "I often answer maths questions.\n我经常回答数学题。"
+    ],
+    [
+      "Group 5",
+      "answer",
+      "动词，名词",
+      "回答；答案",
+      "人教版PEP Book 8",
+      "Recycle P46 Day5中出现“I often answer maths questions.”",
+      "Who can answer my question?\n谁可以回答我的问题？"
+    ],
+    [
+      "",
+      "call",
+      "动词，名词",
+      "打电话，召集；n.打电话",
+      "人教版PEP Book 5",
+      "Unit 2 P17 B Let’s try 中出现Zhang Peng calls Oliver.",
+      "I'll call you tonight.\n我今晚将打电话给你。"
+    ],
+    [
+      "",
+      "careful",
+      "形容词",
+      "小心的",
+      "人教版PEP Book 4",
+      "Unit 3 P24 Let’s talk中Mike与妈妈的对话出现“Be careful! It’s very hot.”",
+      "Be careful! The water is so hot.\n小心！水很烫。"
+    ],
+    [
+      "",
+      "fine",
+      "形容词，副词",
+      "好的",
+      "人教版PEP Book 1",
+      "Unit 2 P21 Story time Zoom和Zip对话出现“How are you?” “Fine, thank you.”",
+      "How are you?   I'm fine.\n你好吗？        我很好。"
+    ],
+    [
+      "",
+      "give",
+      "动词",
+      "给",
+      "人教版PEP Book 8",
+      "Unit 4 P38 Read and write中出现“Then Robin said, Drink this! and gave Wu Yifan some water.”",
+      "I'll give you a call. \n我将给你打电话。"
+    ],
+    [
+      "",
+      "minute",
+      "名词",
+      "分钟",
+      "人教版PEP Book 4",
+      "Unit 2 P19 Read and write中出现Just a minute",
+      "There are 60 minutes in an hour.\n一小时有六十分钟。"
+    ],
+    [
+      "",
+      "put",
+      "动词",
+      "放，放置",
+      "人教版PEP Book 2",
+      "Unit 4 P39 Let’s do中出现Put your foot under your chair.",
+      "Put your foot under your chair.\n把你的脚放在桌子下面。"
+    ],
+    [
+      "",
+      "top  ",
+      "形容词",
+      "顶部的，\n最上面的；",
+      "暂未查出",
+      "",
+      "I want to be the top one.\n我想成为最顶尖的人。"
+    ],
+    [
+      "",
+      "cry",
+      "动词",
+      "哭泣",
+      "人教版PEP Book 4",
+      "Unit 4 P39 Let’s chant中出现“But onions make me cry.”",
+      "But onions make me cry.\n但是洋葱把我弄哭了。"
+    ],
+    [
+      "",
+      "good",
+      "形容词，名词",
+      "优良的；擅长的",
+      "人教版PEP Book 6",
+      "Unit 1 P7 Let’s talk中售货员夸Sarah“Good girl!”\nUnit 2 P17 Let’s talk中Miss White 称赞Amy“Good job!”",
+      "1.You are a good student.\n你是一个优秀的学生。\n2. I'm good at English.\n我很擅长英语。"
+    ],
+    [
+      "",
+      "free",
+      "形容词",
+      "免费的；空闲的；",
+      "暂未查出",
+      "",
+      "If you are free,we can go to the park.\n如果你有空，我们可以去公园。"
+    ],
+    [
+      "Group 6",
+      "bring",
+      "动词",
+      "带来",
+      "人教版PEP Book 7",
+      "Recycle 2 P68的故事中出现The coach brings a small purple flower.",
+      "The coach brings a small purple flower.\n教练带来了一朵紫色的小花。"
+    ],
+    [
+      "",
+      "close",
+      "动词",
+      "关闭，合上",
+      "人教版PEP Book 1",
+      "Unit 1 P8 Let’s do 中出现Close your book.",
+      "Close your book,please.\n请合上你的书。"
+    ],
+    [
+      "",
+      "famous",
+      "形容词",
+      "著名的；出名的",
+      "人教版PEP Book 6",
+      "Recycle 1 P34 Stella邮件中出现“It is the most famous building in Australia.”",
+      "The Sydney Opera House is the most famous building in Australia.\n悉尼歌剧院是澳大利亚最著名的建筑。"
+    ],
+    [
+      "",
+      "for",
+      "介词",
+      "对于",
+      "人教版PEP Book 3\n人教版PEP Book 6",
+      "Unit 5 P48 Let’s talk中Mike和妈妈的对话中出现“What’s for dinner?” “What would you like for dinner?”\nUnit 1 P8 Let’s learn中出现go for a walk短语",
+      "What would you like for dinner?\n你晚饭想吃什么？"
+    ],
+    [
+      "",
+      "middle",
+      "形容词；名词",
+      "中间的；中间",
+      "人教版PEP Book 8",
+      "Recycle P48中邀请函出现“We are all going to middle school soon, so we will say goodbye too each other.”\nP51 Story time中Zoom和Zip对话出现“I’m going to a new middle school.”",
+      "We’re going to a new middle school, so we’re going to say goodbye to each other.\n我们要互相道别因为我们将要上新的中学。"
+    ],
+    [
+      "",
+      "never",
+      "副词",
+      "从不",
+      "人教版PEP Book 7",
+      "Recycle 2 P68的故事中出现The seeds are bad and will never sprout!",
+      "I never go swimming in winter.\n我从未在冬天游泳。"
+    ],
+    [
+      "",
+      "out",
+      "副词",
+      "向外",
+      "人教版PEP Book 3",
+      "Unit 2 P21 Story time中出现“Take out your books, please.”",
+      "Take out your English book,please .\n请拿出你们的英语书。"
+    ],
+    [
+      "",
+      "place",
+      "名词",
+      "地方",
+      "人教版PEP Book 8",
+      "Unit 4 P41 Story time中出现“Make it a better place!”",
+      " Zhongshan Park is a beautiful place.\n中山公园是一个漂亮的地方。"
+    ],
+    [
+      "",
+      "sweep",
+      "动词",
+      "打扫；清除",
+      "暂未查出",
+      "",
+      "I often sweep the floor at home on weekends. \n周末我经常在家拖地。"
+    ],
+    [
+      "",
+      "tidy    ",
+      "形容词",
+      "整洁的；有条理的",
+      "暂未查出",
+      "",
+      "Your room is so clean and tidy .\n你的房间既干净又整洁。"
+    ],
+    [
+      "",
+      "toilet   ",
+      "名词",
+      "厕所；洗手间",
+      "暂未查出",
+      "",
+      "Excuse me! Where’s the toilet?\n不好意思！请问卫生间在哪里？"
+    ]
+  ],
+  "小学已学但不够熟悉": [
+    [
+      "单元",
+      "小学已学但不够熟悉",
+      "页码",
+      "词性",
+      "释义"
+    ],
+    [
+      "Starter  Unit1 ",
+      "down",
+      "p2",
+      "adv.",
+      "向下；往下"
+    ],
+    [
+      "",
+      "meet",
+      "p3",
+      "v.",
+      "遇见；会见"
+    ],
+    [
+      "",
+      "may",
+      "p3",
+      "modal v.",
+      "可以；可能"
+    ],
+    [
+      "",
+      "call",
+      "p4",
+      "v.",
+      "打电话；称呼"
+    ],
+    [
+      "",
+      "fine",
+      "p4",
+      "adj.",
+      "健康的；美好的"
+    ],
+    [
+      "",
+      "let",
+      "p5",
+      "v.",
+      "让；允许"
+    ],
+    [
+      "Starter  Unit 2",
+      "tidy",
+      "p7",
+      "adj./v.",
+      "整洁的；整理"
+    ],
+    [
+      "",
+      "trousers",
+      "p7",
+      "n.",
+      "裤子"
+    ],
+    [
+      "",
+      "bicycle",
+      "p8",
+      "n.",
+      "自行车"
+    ],
+    [
+      "",
+      "put",
+      "p8",
+      "v.",
+      "放；摆"
+    ],
+    [
+      "",
+      "sock",
+      "p9",
+      "n.",
+      "短袜"
+    ],
+    [
+      "",
+      "pair",
+      "p9",
+      "n.",
+      "一双；一对"
+    ],
+    [
+      "",
+      "find",
+      "p10",
+      "v.",
+      "找到；发现"
+    ],
+    [
+      "",
+      "glasses",
+      "p10",
+      "n.",
+      "眼镜"
+    ],
+    [
+      "",
+      "minute",
+      "p11",
+      "n.",
+      "分钟"
+    ],
+    [
+      "",
+      "welcome",
+      "p11",
+      "int./adj.",
+      "欢迎；受欢迎的"
+    ],
+    [
+      "Starter  Unit 3",
+      "chicken",
+      "p13",
+      "n.",
+      "鸡；鸡肉"
+    ],
+    [
+      "",
+      "rabbit",
+      "p13",
+      "n.",
+      "兔子"
+    ],
+    [
+      "",
+      "animal",
+      "p13",
+      "n.",
+      "动物"
+    ],
+    [
+      "",
+      "beautiful",
+      "p14",
+      "adj.",
+      "美丽的；漂亮的"
+    ],
+    [
+      "Unit 1",
+      "friend",
+      "p19",
+      "n.",
+      "朋友"
+    ],
+    [
+      "",
+      "get",
+      "p20",
+      "v.",
+      "得到；到达"
+    ],
+    [
+      "",
+      "which",
+      "p20",
+      "pron./adj.",
+      "哪一个；哪些"
+    ],
+    [
+      "",
+      "age",
+      "p20",
+      "n.",
+      "年龄"
+    ],
+    [
+      "",
+      "pet",
+      "p20",
+      "n.",
+      "宠物"
+    ],
+    [
+      "",
+      "parent",
+      "p20",
+      "n.",
+      "父母"
+    ],
+    [
+      "",
+      "hour",
+      "p20",
+      "n.",
+      "小时"
+    ],
+    [
+      "",
+      "ago",
+      "p20",
+      "adv.",
+      "以前"
+    ],
+    [
+      "",
+      "place",
+      "p20",
+      "n.",
+      "地方"
+    ],
+    [
+      "Unit 2",
+      "wear",
+      "p22",
+      "v.",
+      "穿；戴"
+    ],
+    [
+      "",
+      "quiet",
+      "p22",
+      "adj.",
+      "安静的"
+    ],
+    [
+      "",
+      "middle",
+      "p22",
+      "adj./n.",
+      "中间的；中间"
+    ],
+    [
+      "Unit 3",
+      "blackboard",
+      "p23",
+      "n.",
+      "黑板"
+    ],
+    [
+      "",
+      "famous",
+      "p23",
+      "adj.",
+      "著名的"
+    ],
+    [
+      "",
+      "email",
+      "p23",
+      "n./v.",
+      "电子邮件；发邮件"
+    ],
+    [
+      "",
+      "answer",
+      "p23",
+      "v./n.",
+      "回答；答案"
+    ],
+    [
+      "",
+      "question",
+      "p23",
+      "n.",
+      "问题"
+    ],
+    [
+      "Unit 4",
+      "subject",
+      "p44",
+      "n.",
+      "学科"
+    ],
+    [
+      "",
+      "education",
+      "p44",
+      "n.",
+      "教育"
+    ],
+    [
+      "",
+      "difficult",
+      "p44",
+      "adj.",
+      "困难的"
+    ],
+    [
+      "",
+      "idea",
+      "p44",
+      "n.",
+      "想法；主意"
+    ],
+    [
+      "",
+      "travel",
+      "p44",
+      "v./n.",
+      "旅行"
+    ],
+    [
+      "Unit 5",
+      "share",
+      "p51",
+      "v.",
+      "分享"
+    ],
+    [
+      "Unit 6",
+      "half",
+      "p60",
+      "n./adj.",
+      "一半；一半的"
+    ],
+    [
+      "",
+      "begin",
+      "p60",
+      "v.",
+      "开始"
+    ],
+    [
+      "",
+      "lesson",
+      "p60",
+      "n.",
+      "课；课程"
+    ],
+    [
+      "Unit 7",
+      "candle",
+      "p70",
+      "n.",
+      "蜡烛"
+    ],
+    [
+      "",
+      "doll",
+      "p70",
+      "n.",
+      "玩偶；洋娃娃"
+    ],
+    [
+      "",
+      "wish",
+      "p72",
+      "v./n.",
+      "希望；愿望"
+    ],
+    [
+      "",
+      "hear",
+      "p72",
+      "v.",
+      "听见"
+    ]
+  ],
+  "Sheet3": []
+}

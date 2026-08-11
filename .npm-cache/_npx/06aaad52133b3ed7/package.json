@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "@lobehub/market-cli": "^0.0.40"
+  },
+  "_npx": {
+    "packages": [
+      "@lobehub/market-cli"
+    ]
+  }
+}

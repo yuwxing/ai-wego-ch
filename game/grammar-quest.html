@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>语法大闯关 ✨ 支持自定义词库</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{
+  font-family:'Segoe UI','PingFang SC','Microsoft YaHei',sans-serif;
+  background:linear-gradient(135deg,#0f0c29 0%,#302b63 50%,#24243e 100%);
+  min-height:100vh;display:flex;justify-content:center;align-items:center;overflow:hidden;padding:10px;
+}
+#bgCanvas{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
+
+.wrap{
+  position:relative;z-index:1;
+  width:560px;max-width:100%;
+  background:rgba(255,255,255,.06);backdrop-filter:blur(16px);
+  border-radius:32px;padding:20px 22px 24px;
+  border:1px solid rgba(255,255,255,.12);
+  box-shadow:0 20px 60px rgba(0,0,0,.6);
+}
+
+.top{display:flex;justify-content:space-between;align-items:center;padding:0 2px 12px;color:white;gap:6px}
+.top .bx{background:rgba(255,255,255,.08);backdrop-filter:blur(4px);border-radius:14px;padding:5px 14px;font-size:13px;font-weight:600;white-space:nowrap}
+.top .bx span{font-size:19px;margin-left:3px}
+.lv-bx{color:#a78bfa}.sc-bx{color:#fbbf24}
+.acc-bx{color:#34d399;min-width:60px;text-align:center}
+.acc-bx.low{color:#f87171}
+
+.timer-sec{padding:0 2px 4px}
+.progress-row{display:flex;align-items:center;gap:10px;margin-bottom:6px}
+.progress-bar{flex:1;height:7px;border-radius:6px;background:rgba(255,255,255,.12);overflow:hidden}
+.progress-fill{height:100%;border-radius:6px;width:0%;background:linear-gradient(90deg,#8b5cf6,#6366f1);transition:width .4s}
+.progress-text{color:rgba(255,255,255,.5);font-size:12px;min-width:45px;text-align:right}
+.timer-row{display:flex;align-items:center;gap:10px}
+.timer-bar{flex:1;height:6px;border-radius:5px;background:rgba(255,255,255,.1);overflow:hidden}
+.timer-fill{height:100%;border-radius:5px;width:100%;background:linear-gradient(90deg,#22d3ee,#06b6d4);transition:width .4s linear}
+.timer-fill.danger{background:linear-gradient(90deg,#f87171,#ef4444)}.timer-fill.caution{background:linear-gradient(90deg,#fbbf24,#f59e0b)}
+.timer-text{color:rgba(255,255,255,.5);font-size:11px;min-width:38px;text-align:right}
+
+.q-card{background:rgba(255,255,255,.04);border-radius:20px;padding:24px 20px 20px;margin:10px 0 14px;border:1px solid rgba(255,255,255,.06);min-height:240px;position:relative}
+.q-tag{display:inline-block;background:rgba(167,139,250,.2);color:#c4b5fd;border-radius:20px;padding:3px 12px;font-size:12px;font-weight:600;margin-bottom:12px}
+.q-grammar{font-size:13px;color:#a78bfa;font-weight:600;margin-bottom:10px;letter-spacing:.5px}
+.q-sentence{font-size:22px;color:white;font-weight:600;line-height:1.5;margin-bottom:10px;min-height:40px}
+.q-sentence .blank{display:inline-block;min-width:60px;border-bottom:3px dashed rgba(255,255,255,.3);margin:0 4px;padding:0 6px}
+.q-hint{font-size:13px;color:rgba(255,255,255,.4);margin-bottom:16px;min-height:18px}
+
+.options{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.opt{padding:14px 16px;border:2px solid rgba(255,255,255,.1);border-radius:16px;background:rgba(255,255,255,.04);color:white;font-size:16px;font-weight:600;cursor:pointer;transition:all .15s;text-align:center;user-select:none}
+.opt:hover{border-color:rgba(255,255,255,.3);background:rgba(255,255,255,.08);transform:translateY(-2px)}
+.opt:active{transform:scale(.96)}
+.opt.selected{border-color:#6366f1;background:rgba(99,102,241,.2)}
+.opt.correct{border-color:#22c55e;background:rgba(34,197,94,.2);animation:pulse-green .4s}
+@keyframes pulse-green{50%{box-shadow:0 0 20px rgba(34,197,94,.4)}}
+.opt.wrong{border-color:#ef4444;background:rgba(239,68,68,.2);animation:shake .3s}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}75%{transform:translateX(8px)}}
+
+.feedback{text-align:center;padding:10px 0 0;font-size:15px;font-weight:600;min-height:34px;display:flex;align-items:center;justify-content:center;gap:8px}
+.feedback.correct{color:#22c55e}.feedback.wrong{color:#ef4444}
+
+.btns{display:flex;justify-content:center;gap:8px;padding-top:8px;flex-wrap:wrap}
+.btn{padding:9px 20px;border:none;border-radius:14px;font-size:14px;font-weight:700;cursor:pointer;transition:all .12s;color:white;white-space:nowrap}
+.btn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(0,0,0,.3)}.btn:active{transform:scale(.95)}
+.btn-pri{background:linear-gradient(135deg,#8b5cf6,#6366f1)}
+.btn-sec{background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15)}
+.btn-edit{background:rgba(251,191,36,.2);border:1px solid rgba(251,191,36,.3);color:#fbbf24}
+.btn-edit:hover{background:rgba(251,191,36,.35)}
+
+.mask{position:absolute;top:0;left:0;right:0;bottom:0;z-index:50;border-radius:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,0,0,.65);backdrop-filter:blur(12px);color:white;text-align:center;padding:30px}
+.mask h2{font-size:28px;margin-bottom:6px}.mask p{font-size:14px;opacity:.75;margin-bottom:20px;line-height:1.7}
+.hidden{display:none!important}
+.start-icon{font-size:56px;margin-bottom:8px}.start-sub{font-size:13px;opacity:.5;margin-top:4px}
+.final-s{font-size:54px;font-weight:800;color:#fbbf24;margin:8px 0}.final-sub{font-size:13px;opacity:.6}.final-msg{font-size:16px;margin-top:8px}.final-stars{font-size:38px;margin:6px 0}
+.lv-t{position:absolute;top:0;left:0;right:0;bottom:0;z-index:55;border-radius:20px;display:flex;flex-direction:column;align-items:center;justify-content:center;background:rgba(0,0,0,.7);backdrop-filter:blur(8px);color:white;animation:fadeIn .35s;text-align:center;padding:30px}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.lv-t .big{font-size:68px;font-weight:800;color:#a78bfa;line-height:1;margin:6px 0}
+.lv-t .lv-label{font-size:14px;opacity:.7}.lv-t .lv-desc{margin-top:10px;font-size:13px;opacity:.6}
+
+.source-badge{display:inline-block;font-size:10px;padding:2px 8px;border-radius:10px;background:rgba(255,255,255,.1);color:rgba(255,255,255,.5);margin-left:4px;vertical-align:middle}
+.source-badge.custom{background:rgba(251,191,36,.2);color:#fbbf24}
+
+/* 编辑器 */
+.editor-panel{position:absolute;top:0;left:0;right:0;bottom:0;z-index:60;border-radius:20px;display:flex;flex-direction:column;padding:20px;background:rgba(15,23,42,.95);backdrop-filter:blur(16px);color:white}
+.editor-panel h3{font-size:18px;margin-bottom:4px;text-align:center}
+.editor-panel .sub{font-size:12px;opacity:.6;text-align:center;margin-bottom:12px}
+.editor-panel textarea{flex:1;width:100%;min-height:150px;border-radius:12px;border:1px solid rgba(255,255,255,.15);background:rgba(255,255,255,.05);color:white;padding:12px;font-size:13px;font-family:monospace;resize:vertical;line-height:1.7}
+.editor-panel textarea::placeholder{color:rgba(255,255,255,.25)}
+.editor-panel .info{font-size:11px;opacity:.45;margin-top:6px;text-align:center}
+.editor-panel .editor-btns{display:flex;gap:8px;justify-content:center;margin-top:10px;flex-wrap:wrap}
+.editor-panel .mode-select{display:flex;gap:12px;justify-content:center;margin-bottom:10px}
+.editor-panel .mode-select label{font-size:13px;opacity:.6;cursor:pointer;padding:4px 12px;border-radius:10px;background:rgba(255,255,255,.05);transition:all .15s}
+.editor-panel .mode-select label.active{opacity:1;background:rgba(139,92,246,.3);border:1px solid rgba(139,92,246,.4)}
+
+@media(max-width:500px){
+  .wrap{padding:14px 12px 18px;border-radius:24px;max-height:98vh;overflow-y:auto}
+  .options{grid-template-columns:1fr;gap:8px}
+  .q-sentence{font-size:19px}.opt{font-size:15px;padding:12px}
+  .q-card{padding:18px 14px 16px;min-height:200px}
+  .editor-panel{padding:14px}.editor-panel textarea{min-height:120px}
+}
+</style>
+</head>
+<body>
+
+<canvas id="bgCanvas"></canvas>
+
+<div class="wrap" style="position:relative">
+  <div class="top">
+    <div class="bx lv-bx">📚 第 <span id="lvDisp">1</span> 关 <span class="source-badge" id="srcBadge">语法</span></div>
+    <div class="bx sc-bx">🏆 <span id="scDisp">0</span></div>
+    <div class="bx acc-bx" id="accDisp">🎯 <span id="accPct">0</span>%</div>
+  </div>
+
+  <div class="timer-sec">
+    <div class="progress-row">
+      <div class="progress-bar"><div class="progress-fill" id="progFill"></div></div>
+      <span class="progress-text" id="progText">0/10</span>
+    </div>
+    <div class="timer-row">
+      <div class="timer-bar"><div class="timer-fill" id="timerFill"></div></div>
+      <span class="timer-text" id="timerDisp">60s</span>
+    </div>
+  </div>
+
+  <div class="q-card" id="qCard">
+    <div class="q-tag" id="qTag">🔤 词汇语法</div>
+    <div class="q-grammar" id="qGrammar">Grammar Point</div>
+    <div class="q-sentence" id="qSentence">Loading...</div>
+    <div class="q-hint" id="qHint">💡 点击选项作答</div>
+    <div class="options" id="options"></div>
+    <div class="feedback" id="feedback"></div>
+  </div>
+
+  <div class="btns">
+    <button class="btn btn-pri" id="startBtn">🎮 开始</button>
+    <button class="btn btn-edit" id="editBtn">📝 编辑词库</button>
+  </div>
+
+  <!-- 遮罩 -->
+  <div class="mask" id="startOver">
+    <div class="start-icon">🏰</div>
+    <h2>语法大闯关</h2>
+    <p>专为初中语法设计 · 5大关卡 + 自定义模式<br>
+    也可粘贴课本词汇表，自动生成词汇选择题</p>
+    <button class="btn btn-pri" id="startBtn2" style="font-size:17px;padding:12px 40px">开始闯关 🚀</button>
+    <div class="start-sub">💡 点击"编辑词库"可使用课本词汇</div>
+  </div>
+  <div class="mask hidden" id="endOver"><h2 id="endTitle">游戏结束</h2><div class="final-sub">最终得分</div><div class="final-s" id="finalScore">0</div><div class="final-stars" id="finalStars"></div><div class="final-msg" id="endMsg"></div><button class="btn btn-pri" id="endRestartBtn" style="margin-top:12px">再来一次</button></div>
+  <div class="lv-t hidden" id="lvTrans"><p>🎉 闯关成功！</p><div class="big" id="nextLv">2</div><p class="lv-label">第 <span id="nextLvLabel">2</span> 关</p><div class="lv-desc" id="lvDesc">更多语法挑战</div><button class="btn btn-pri" id="lvContinueBtn" style="margin-top:16px">继续 ➜</button></div>
+
+  <!-- 编辑器 -->
+  <div class="editor-panel hidden" id="editorPanel">
+    <h3>📝 自定义词库</h3>
+    <p class="sub">每行一组 中文=英文，游戏将自动生成词汇选择题</p>
+    <textarea id="wordInput" placeholder="苹果=apple&#10;香蕉=banana&#10;猫=cat&#10;狗=dog&#10;书=book&#10;(至少6组词)"></textarea>
+    <p class="info">至少6组词 · 保存后游戏自动切换为词汇模式</p>
+    <div class="editor-btns">
+      <button class="btn btn-pri" id="saveWordsBtn">💾 保存并应用</button>
+      <button class="btn btn-sec" id="resetWordsBtn">↩️ 恢复语法题库</button>
+      <button class="btn btn-sec" id="closeEditorBtn">✕ 关闭</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ========== 粒子 ==========
+const canvas=document.getElementById('bgCanvas'),ctx=canvas.getContext('2d');
+let pw=0,ph=0;function resize(){pw=canvas.width=window.innerWidth;ph=canvas.height=window.innerHeight}
+window.addEventListener('resize',resize);resize();
+const pts=Array.from({length:60},()=>({x:Math.random()*pw,y:Math.random()*ph,r:1+Math.random()*2,vx:(Math.random()-.5)*.3,vy:(Math.random()-.5)*.3,o:.2+Math.random()*.5,doa:(Math.random()-.5)*.005}));
+(function a(){ctx.clearRect(0,0,pw,ph);pts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.o+=p.doa;if(p.o>.8||p.o<.1)p.doa*=-1;if(p.x<0)p.x=pw;if(p.x>pw)p.x=0;if(p.y<0)p.y=ph;if(p.y>ph)p.y=0;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=`rgba(167,139,250,${p.o})`;ctx.fill()});requestAnimationFrame(a)})();
+
+// ========== 题库 ==========
+const GTOPIC={therebe:{label:'📍 There be 句型',icon:'📍'},tense:{label:'⏳ 动词时态',icon:'⏳'},preposition:{label:'📍 介词',icon:'📍'},irregular:{label:'🔄 不规则动词',icon:'🔄'},mixed:{label:'🔀 综合语法',icon:'🔀'},vocab:{label:'📖 词汇练习',icon:'📖'}};
+
+const QUESTIONS=[
+  // ... same grammar questions as before
+  {level:1,topic:'therebe',sentence:'___ a book on the desk.',options:['There is','There are','It is','This is'],correct:0,grammar:'There be 就近',hint:'book 是单数'},
+  {level:1,topic:'therebe',sentence:'___ two cats under the table.',options:['There is','There are','They are','It has'],correct:1,grammar:'There be 就近',hint:'two cats 是复数'},
+  {level:1,topic:'therebe',sentence:'___ some water in the glass.',options:['There is','There are','There have','It has'],correct:0,grammar:'water 不可数',hint:'water 不可数'},
+  {level:1,topic:'therebe',sentence:'There ___ a pen and two rulers.',options:['is','are','have','has'],correct:0,grammar:'就近 a pen',hint:'a pen 单数'},
+  {level:1,topic:'therebe',sentence:'There ___ many students.',options:['is','are','have','has'],correct:1,grammar:'students 复数',hint:'many students 复数'},
+  {level:1,topic:'therebe',sentence:'___ a post office near here?',options:['Is there','Are there','There is','There are'],correct:0,grammar:'疑问句',hint:'a post office 单数'},
+  {level:1,topic:'therebe',sentence:'There ___ some milk.',options:['is','are','have','has'],correct:0,grammar:'milk 不可数',hint:'milk 不可数'},
+  {level:1,topic:'therebe',sentence:'There aren\'t ___ apples.',options:['some','any','a','an'],correct:1,grammar:'否定用 any',hint:'否定句用 any'},
+  {level:1,topic:'therebe',sentence:'___ a lot of people.',options:['There is','There are','It has','They have'],correct:1,grammar:'people 复数',hint:'people 复数'},
+  {level:1,topic:'therebe',sentence:'There ___ a book and pencils.',options:['is','are','have','has'],correct:0,grammar:'就近 a book',hint:'a book 单数'},
+  // L2
+  {level:2,topic:'tense',sentence:'She ___ to school every day.',options:['go','goes','going','went'],correct:1,grammar:'三单现',hint:'She 三单'},
+  {level:2,topic:'tense',sentence:'They ___ football now.',options:['play','plays','are playing','played'],correct:2,grammar:'现在进行',hint:'now'},
+  {level:2,topic:'tense',sentence:'I ___ a movie yesterday.',options:['see','saw','seeing','will see'],correct:1,grammar:'过去时',hint:'yesterday'},
+  {level:2,topic:'tense',sentence:'He ___ to Beijing next week.',options:['go','went','will go','goes'],correct:2,grammar:'将来时',hint:'next week'},
+  {level:2,topic:'tense',sentence:'My mother ___ dinner every evening.',options:['cook','cooks','is cooking','cooked'],correct:1,grammar:'三单现',hint:'every evening'},
+  {level:2,topic:'tense',sentence:'Listen! Someone ___ outside.',options:['sing','sings','is singing','sang'],correct:2,grammar:'现在进行',hint:'Listen!'},
+  {level:2,topic:'tense',sentence:'We ___ to the zoo last Sunday.',options:['go','goes','went','will go'],correct:2,grammar:'过去时',hint:'last Sunday'},
+  {level:2,topic:'tense',sentence:'Tom ___ his homework tomorrow.',options:['do','does','did','will do'],correct:3,grammar:'将来时',hint:'tomorrow'},
+  {level:2,topic:'tense',sentence:'The boy ___ a book when I came in.',options:['reads','was reading','read','will read'],correct:1,grammar:'过去进行',hint:'when I came in'},
+  {level:2,topic:'tense',sentence:'She ___ (already finish) her homework.',options:['already finish','already finishes','has already finished','finished already'],correct:2,grammar:'完成时',hint:'already'},
+  // L3
+  {level:3,topic:'preposition',sentence:'The cat is ___ the table.',options:['in','on','under','at'],correct:2,grammar:'under',hint:'在……下'},
+  {level:3,topic:'preposition',sentence:'School begins ___ September.',options:['in','on','at','by'],correct:0,grammar:'月份 in',hint:'月份用 in'},
+  {level:3,topic:'preposition',sentence:'I get up ___ 7:00 ___ the morning.',options:['at / in','in / at','on / in','at / on'],correct:0,grammar:'at/in',hint:'时刻at 上午in'},
+  {level:3,topic:'preposition',sentence:'My birthday is ___ March 15th.',options:['in','on','at','for'],correct:1,grammar:'日期 on',hint:'具体日期 on'},
+  {level:3,topic:'preposition',sentence:'The man ___ the left is my uncle.',options:['in','on','at','by'],correct:1,grammar:'on the left',hint:'方位'},
+  {level:3,topic:'preposition',sentence:'We meet ___ the school gate.',options:['in','on','at','to'],correct:2,grammar:'at 地点',hint:'具体地点 at'},
+  {level:3,topic:'preposition',sentence:'There is a bridge ___ the river.',options:['on','over','above','in'],correct:1,grammar:'over 上方',hint:'横跨河面'},
+  {level:3,topic:'preposition',sentence:'She is good ___ English.',options:['in','at','on','for'],correct:1,grammar:'be good at',hint:'固定搭配'},
+  {level:3,topic:'preposition',sentence:'What\'s the difference ___ the two?',options:['among','between','in','of'],correct:1,grammar:'between 两者',hint:'两者之间'},
+  {level:3,topic:'preposition',sentence:'Help me ___ housework.',options:['do','with','for','in'],correct:1,grammar:'help with',hint:'固定搭配'},
+  // L4
+  {level:4,topic:'irregular',sentence:'I have ___ (read) this book.',options:['read','readed','reading','reads'],correct:0,grammar:'read 无变化',hint:'read-read-read'},
+  {level:4,topic:'irregular',sentence:'She ___ (go) to Shanghai last month.',options:['go','goes','went','gone'],correct:2,grammar:'go-went',hint:'过去式 went'},
+  {level:4,topic:'irregular',sentence:'I have ___ (eat) lunch.',options:['eat','ate','eaten','eating'],correct:2,grammar:'eat-eaten',hint:'过去分词 eaten'},
+  {level:4,topic:'irregular',sentence:'He ___ (buy) a new bike.',options:['buy','buys','bought','buying'],correct:2,grammar:'buy-bought',hint:'过去式 bought'},
+  {level:4,topic:'irregular',sentence:'The glass was ___ (break).',options:['break','broke','broken','breaking'],correct:2,grammar:'break-broken',hint:'被动 broken'},
+  {level:4,topic:'irregular',sentence:'She has ___ (write) a letter.',options:['write','wrote','written','writing'],correct:2,grammar:'write-written',hint:'过去分词 written'},
+  {level:4,topic:'irregular',sentence:'I ___ (see) it just now.',options:['see','saw','seen','seeing'],correct:1,grammar:'see-saw',hint:'过去式 saw'},
+  {level:4,topic:'irregular',sentence:'He has never ___ (be) to Beijing.',options:['be','been','was','being'],correct:1,grammar:'be-been',hint:'has been to'},
+  {level:4,topic:'irregular',sentence:'She ___ (take) photos.',options:['take','takes','took','taken'],correct:2,grammar:'take-took',hint:'过去式 took'},
+  {level:4,topic:'irregular',sentence:'The secret was ___ (keep).',options:['keep','kept','keeping','keeps'],correct:1,grammar:'keep-kept',hint:'过去分词 kept'},
+  // L5
+  {level:5,topic:'mixed',sentence:'___ hot today!',options:["It's",'Its','It','Is'],correct:0,grammar:'It\'s 天气',hint:'天气用 It is'},
+  {level:5,topic:'mixed',sentence:'She is ___ girl in our class.',options:['tall','taller','tallest','the tallest'],correct:3,grammar:'最高级',hint:'in our class'},
+  {level:5,topic:'mixed',sentence:'You ___ be quiet in the library.',options:['can','must','may','need'],correct:1,grammar:'must',hint:'必须'},
+  {level:5,topic:'mixed',sentence:'This book is ___.',options:['interest','interested','interesting','interests'],correct:2,grammar:'interesting',hint:'物 用-ing'},
+  {level:5,topic:'mixed',sentence:'The classroom ___ every day.',options:['cleans','is cleaned','cleaned','is cleaning'],correct:1,grammar:'被动',hint:'被打扫'},
+  {level:5,topic:'mixed',sentence:'Would you like ___ tea?',options:['some','any','a','an'],correct:0,grammar:'some',hint:'建议问句'},
+  {level:5,topic:'mixed',sentence:'He runs ___ than me.',options:['fast','faster','fastest','more fast'],correct:1,grammar:'比较级',hint:'than'},
+  {level:5,topic:'mixed',sentence:'I don\'t know ___ to do.',options:['what','how','which','where'],correct:0,grammar:'what to do',hint:'做什么'},
+  {level:5,topic:'mixed',sentence:'Neither Tom nor his friends ___.',options:['is','are','was','has'],correct:1,grammar:'就近',hint:'friends 复数'},
+  {level:5,topic:'mixed',sentence:'She learned English ___ she was 6.',options:['since','for','from','in'],correct:0,grammar:'since',hint:'时间点'},
+];
+
+const LEVELS=[
+  {level:1,topic:'therebe',label:'There be 句型',desc:'学习 there be 句型的用法',passRate:.6,time:60},
+  {level:2,topic:'tense',label:'动词时态',desc:'一般现在时、进行时、过去时',passRate:.6,time:60},
+  {level:3,topic:'preposition',label:'介词',desc:'时间介词、地点介词',passRate:.6,time:60},
+  {level:4,topic:'irregular',label:'不规则动词',desc:'掌握不规则动词变化',passRate:.6,time:60},
+  {level:5,topic:'mixed',label:'综合语法',desc:'综合运用各类语法知识',passRate:.65,time:60},
+];
+
+// ========== 自定义词库 ==========
+let customWords = null;
+
+function loadCustomWords(){
+  try{const s=localStorage.getItem('grammarWords');if(s){customWords=JSON.parse(s);return true}}catch(e){}
+  return false;
+}
+function saveCustomWords(w){try{localStorage.setItem('grammarWords',JSON.stringify(w));customWords=w}catch(e){}}
+
+function parseWords(text){
+  const lines=text.split('\n').map(l=>l.trim()).filter(l=>l);
+  const words=[];
+  for(const line of lines){
+    const sep=line.includes('=')?'=':line.includes('，')?'，':line.includes(',')?',' :null;
+    if(!sep)continue;
+    const parts=line.split(sep);
+    if(parts.length>=2){const zh=parts[0].trim(),en=parts[1].trim();if(zh&&en)words.push({zh,en})}
+  }
+  return words;
+}
+
+function isCustomMode(){return customWords && customWords.length>=6}
+
+// ========== 生成词汇题 ==========
+function generateVocabQuestions(wordPool, count=10){
+  if(wordPool.length<4) return [];
+  const qs=[];
+  const shuffled = shuffle([...wordPool]);
+  const pool = shuffled.slice(0, Math.min(count*2, wordPool.length));
+  
+  for(let i=0; i<count && i*4+3 < pool.length; i+=4){
+    const batch = pool.slice(i, i+4);
+    if(batch.length<4) break;
+    for(const word of batch){
+      if(qs.length>=count) break;
+      const others = shuffle(pool.filter(w=>w.en!==word.en));
+      const options = shuffle([word.en, ...others.slice(0,3).map(w=>w.en)]);
+      const correctIdx = options.indexOf(word.en);
+      // Generate a simple sentence with a blank
+      const article = ['a','an','the',''][Math.floor(Math.random()*4)];
+      const sentence = `___ means "${word.zh}".`;
+      qs.push({
+        level: Math.min(5, Math.ceil(word.en.length/2)),
+        topic:'vocab',
+        sentence,
+        options,
+        correct: correctIdx,
+        grammar: `"${word.en}" = ${word.zh}`,
+        hint: `选择 "${word.zh}" 对应的英文`
+      });
+    }
+  }
+  // Fill remaining
+  const remaining = pool.slice(qs.length);
+  for(const word of remaining){
+    if(qs.length>=count) break;
+    const others = shuffle(pool.filter(w=>w.en!==word.en));
+    const options = shuffle([word.en, ...others.slice(0,3).map(w=>w.en)]);
+    const correctIdx = options.indexOf(word.en);
+    qs.push({
+      level: Math.min(5, Math.ceil(word.en.length/2)),
+      topic:'vocab',
+      sentence: `___ means "${word.zh}".`,
+      options,
+      correct: correctIdx,
+      grammar: `"${word.en}" = ${word.zh}`,
+      hint: `选择 "${word.zh}" 对应的英文`
+    });
+  }
+  return qs;
+}
+
+function getActiveQuestions(){
+  if(isCustomMode()){
+    const genQs = generateVocabQuestions(customWords, 60);
+    if(genQs.length>=10) return genQs;
+  }
+  return QUESTIONS;
+}
+
+// ========== 状态 ==========
+let score=0,level=1,qIdx=0,correctCount=0;
+let timeLeft=60,timerInt=null;
+let isPlaying=false,isLoadingNext=false,answered=false;
+let activeQuestions=[];
+
+const $=id=>document.getElementById(id);
+const lvDisp=$('lvDisp'),scDisp=$('scDisp'),accDisp=$('accDisp'),accPct=$('accPct');
+const timerFill=$('timerFill'),timerDisp=$('timerDisp');
+const progFill=$('progFill'),progText=$('progText');
+const qTag=$('qTag'),qGrammar=$('qGrammar'),qSentence=$('qSentence'),qHint=$('qHint');
+const optEl=$('options'),fbEl=$('feedback'),srcBadge=$('srcBadge');
+const startOver=$('startOver'),endOver=$('endOver'),lvTrans=$('lvTrans');
+const editorPanel=$('editorPanel'),wordInput=$('wordInput');
+
+function getLevelQs(){
+  return activeQuestions.filter(q=>q.level===level);
+}
+
+function startTimer(){
+  clearInterval(timerInt);
+  const cfg=isCustomMode()?{time:60}:LEVELS.find(l=>l.level===level)||LEVELS[0];
+  timeLeft=cfg.time;updateTimerUI();
+  timerInt=setInterval(()=>{timeLeft--;updateTimerUI();if(timeLeft<=0){clearInterval(timerInt);handleTimeUp()}},1000);
+}
+function updateTimerUI(){timerDisp.textContent=timeLeft+'s';const cfg=isCustomMode()?{time:60}:LEVELS.find(l=>l.level===level)||LEVELS[0];const p=Math.max(0,timeLeft/cfg.time*100);timerFill.style.width=p+'%';timerFill.className='timer-fill'+(timeLeft<=10?' danger':timeLeft<=20?' caution':'')}
+function stopTimer(){clearInterval(timerInt)}
+function handleTimeUp(){if(!isPlaying||isLoadingNext)return;answered=true;fbEl.className='feedback wrong';fbEl.innerHTML='⏰ 时间到！';setTimeout(()=>checkLevelEnd(),800)}
+
+function loadQuestion(){
+  if(!isPlaying)return;answered=false;isLoadingNext=false;
+  const qs=getLevelQs();
+  if(qIdx>=qs.length){checkLevelEnd();return}
+  const q=qs[qIdx];
+  const topic = isCustomMode()?GTOPIC.vocab:(GTOPIC[q.topic]||{icon:'📘',label:'语法题'});
+  qTag.textContent=topic.icon+' '+topic.label;
+  qGrammar.textContent=q.grammar||'';
+  const parts=q.sentence.split('___');let html='';parts.forEach((p,i)=>{html+=p;if(i<parts.length-1)html+='<span class="blank"></span>'});
+  qSentence.innerHTML=html;
+  qHint.textContent='💡 '+q.hint;fbEl.textContent='';fbEl.className='feedback';
+  optEl.innerHTML='';const labels=['A','B','C','D'];
+  q.options.forEach((opt,i)=>{const btn=document.createElement('div');btn.className='opt';btn.textContent=labels[i]+'. '+opt;btn.dataset.idx=i;btn.addEventListener('click',()=>onAnswer(i));optEl.appendChild(btn)});
+  const total=getLevelQs().length;const pct=total>0?qIdx/total*100:0;
+  progFill.style.width=pct+'%';progText.textContent=`${qIdx}/${total}`;
+}
+
+function onAnswer(idx){
+  if(answered||!isPlaying||isLoadingNext)return;
+  answered=true;const qs=getLevelQs();const q=qs[qIdx];const opts=optEl.querySelectorAll('.opt');
+  opts.forEach(o=>o.classList.remove('selected'));opts[idx].classList.add('selected');
+  if(idx===q.correct){opts[idx].classList.add('correct');score+=10;correctCount++;fbEl.className='feedback correct';fbEl.innerHTML='✅ 回答正确！+10分';updateUI()}
+  else{opts[idx].classList.add('wrong');opts[q.correct].classList.add('correct');fbEl.className='feedback wrong';fbEl.innerHTML='❌ 正确答案是 '+(q.options[q.correct])}
+  opts.forEach(o=>{o.style.pointerEvents='none'});
+  setTimeout(()=>{qIdx++;if(qIdx>=getLevelQs().length){checkLevelEnd()}else{loadQuestion()}},1200);
+}
+
+function checkLevelEnd(){
+  if(!isPlaying)return;stopTimer();const qs=getLevelQs();const rate=qs.length>0?correctCount/qs.length:0;
+  const cfg=isCustomMode()?{passRate:.5}:LEVELS.find(l=>l.level===level)||LEVELS[0];
+  if(rate>=cfg.passRate){
+    if(level>=5){endGame(true)}else{showLevelTransition()}
+  }else{endGame(false)}
+}
+
+function showLevelTransition(){
+  const n=level+1;$('nextLv').textContent=n;$('nextLvLabel').textContent=n;
+  const cfg=LEVELS.find(l=>l.level===n);
+  $('lvDesc').textContent=isCustomMode()?'继续挑战更多词汇！':cfg?cfg.label+' — '+cfg.desc:'最终挑战！';
+  lvTrans.classList.remove('hidden');
+}
+
+function updateUI(){
+  lvDisp.textContent=level;scDisp.textContent=score;
+  const rate=getLevelQs().length>0?Math.round(correctCount/getLevelQs().length*100):0;
+  accPct.textContent=rate;accDisp.className='bx acc-bx'+(rate<50?' low':'');
+}
+
+function startGame(){
+  score=0;level=1;qIdx=0;correctCount=0;
+  isPlaying=true;isLoadingNext=false;answered=false;
+  startOver.classList.add('hidden');endOver.classList.add('hidden');lvTrans.classList.add('hidden');editorPanel.classList.add('hidden');
+  activeQuestions=getActiveQuestions();
+  stopTimer();
+  const custom=isCustomMode();
+  srcBadge.textContent=custom?'词汇':'语法';srcBadge.className='source-badge'+(custom?' custom':'');
+  updateUI();startTimer();loadQuestion();
+}
+
+function startNextLevel(){level++;qIdx=0;correctCount=0;lvTrans.classList.add('hidden');updateUI();startTimer();loadQuestion()}
+
+function endGame(won){
+  isPlaying=false;stopTimer();optEl.querySelectorAll('.opt').forEach(o=>{o.style.pointerEvents='none'});
+  const stars=won?'⭐⭐⭐':score>=50?'⭐⭐':score>=30?'⭐':'';let title,msg;
+  if(won){title='🎉 恭喜通关！';msg='所有关卡全部通过，语法达人就是你！🏆'}
+  else{title='⏰ 挑战结束';if(score>=80)msg='非常棒！差一点就通关了！';else if(score>=50)msg='还不错！巩固一下再来💪';else msg='加油！打好基础！📖'}
+  $('endTitle').textContent=title;$('finalScore').textContent=score;$('finalStars').textContent=stars;$('endMsg').textContent=msg;
+  endOver.classList.remove('hidden');
+}
+
+// ========== 编辑器 ==========
+function openEditor(){
+  if(isPlaying){if(!confirm('编辑词库将中断当前游戏，确定吗？'))return;isPlaying=false;stopTimer()}
+  const words=customWords||[];
+  wordInput.value=words.length>0?words.map(w=>w.zh+'='+w.en).join('\n'):'';
+  if(!wordInput.value){
+    wordInput.placeholder='例如：\n苹果=apple\n香蕉=banana\n猫=cat\n狗=dog\n书=book\n(至少6组词)';
+  }
+  editorPanel.classList.remove('hidden');
+}
+function closeEditor(){editorPanel.classList.add('hidden')}
+
+function applyCustomWords(){
+  const text=wordInput.value.trim();
+  if(!text){alert('请至少输入一组词！');return}
+  const parsed=parseWords(text);
+  if(parsed.length<6){alert(`至少需要6组词，当前仅 ${parsed.length} 组。`);return}
+  saveCustomWords(parsed);closeEditor();
+  startGame();
+}
+
+function resetToBuiltin(){
+  customWords=null;try{localStorage.removeItem('grammarWords')}catch(e){}
+  wordInput.value='';
+  alert('已恢复语法题库');closeEditor();
+}
+
+// ========== 绑定 ==========
+document.addEventListener('DOMContentLoaded',()=>{
+  loadCustomWords();
+  $('startBtn').addEventListener('click',startGame);
+  $('startBtn2').addEventListener('click',startGame);
+  $('endRestartBtn').addEventListener('click',startGame);
+  $('lvContinueBtn').addEventListener('click',startNextLevel);
+  $('editBtn').addEventListener('click',openEditor);
+  $('saveWordsBtn').addEventListener('click',applyCustomWords);
+  $('resetWordsBtn').addEventListener('click',resetToBuiltin);
+  $('closeEditorBtn').addEventListener('click',closeEditor);
+});
+</script>
+</body>
+</html>

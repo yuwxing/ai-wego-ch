@@ -1,0 +1,3792 @@
+[
+  {
+    "word": "unit",
+    "meaning": "单元",
+    "example": ""
+  },
+  {
+    "word": "WHO",
+    "meaning": "世界卫生组织",
+    "example": ""
+  },
+  {
+    "word": "unit",
+    "meaning": "过渡单元 starter",
+    "example": ""
+  },
+  {
+    "word": "PRC",
+    "meaning": "中华人民共和国",
+    "example": ""
+  },
+  {
+    "word": "section",
+    "meaning": "部分；地区",
+    "example": ""
+  },
+  {
+    "word": "UN",
+    "meaning": "联合国",
+    "example": ""
+  },
+  {
+    "word": "greet",
+    "meaning": "招呼；问候",
+    "example": ""
+  },
+  {
+    "word": "Miller",
+    "meaning": "米勒",
+    "example": ""
+  },
+  {
+    "word": "each",
+    "meaning": "每个；各自",
+    "example": ""
+  },
+  {
+    "word": "另外的人（或物）;另外",
+    "meaning": "瓶子 bottle",
+    "example": ""
+  },
+  {
+    "word": "other",
+    "meaning": "的；其他的",
+    "example": ""
+  },
+  {
+    "word": "eraser",
+    "meaning": "橡皮",
+    "example": ""
+  },
+  {
+    "word": "other",
+    "meaning": "互相；彼此 each",
+    "example": ""
+  },
+  {
+    "word": "key",
+    "meaning": "钥匙；关键",
+    "example": ""
+  },
+  {
+    "word": "oh",
+    "meaning": "哦；啊",
+    "example": ""
+  },
+  {
+    "word": "thing",
+    "meaning": "东西；事情",
+    "example": ""
+  },
+  {
+    "word": "everyone",
+    "meaning": "每人；所有人",
+    "example": ""
+  },
+  {
+    "word": "need",
+    "meaning": "需要",
+    "example": ""
+  },
+  {
+    "word": "start",
+    "meaning": "开始；着手",
+    "example": ""
+  },
+  {
+    "word": "乐趣；快乐；有趣的；",
+    "meaning": "别客气；不用谢。 You're welcome.",
+    "example": ""
+  },
+  {
+    "word": "conversation",
+    "meaning": "谈话；交谈",
+    "example": ""
+  },
+  {
+    "word": "fun",
+    "meaning": "使人快乐的",
+    "example": ""
+  },
+  {
+    "word": "spell",
+    "meaning": "用字母拼；拼写",
+    "example": ""
+  },
+  {
+    "word": "yard",
+    "meaning": "院子；园圃",
+    "example": ""
+  },
+  {
+    "word": "bell",
+    "meaning": "铃（声）；钟（声）",
+    "example": ""
+  },
+  {
+    "word": "carrot",
+    "meaning": "胡萝卜",
+    "example": ""
+  },
+  {
+    "word": "Helen",
+    "meaning": "海伦",
+    "example": ""
+  },
+  {
+    "word": "goose",
+    "meaning": "鹅",
+    "example": ""
+  },
+  {
+    "word": "Ella",
+    "meaning": "埃拉",
+    "example": ""
+  },
+  {
+    "word": "另一个；又一（人或事",
+    "meaning": "数数 count",
+    "example": ""
+  },
+  {
+    "word": "Emma",
+    "meaning": "埃玛",
+    "example": ""
+  },
+  {
+    "word": "another",
+    "meaning": "物）",
+    "example": ""
+  },
+  {
+    "word": "Peter",
+    "meaning": "彼得",
+    "example": ""
+  },
+  {
+    "word": "else",
+    "meaning": "其他的；别的",
+    "example": ""
+  },
+  {
+    "word": "Brown",
+    "meaning": "布朗",
+    "example": ""
+  },
+  {
+    "word": "circle",
+    "meaning": "圈出；圆形；圆圈",
+    "example": ""
+  },
+  {
+    "word": "PLA",
+    "meaning": "中国人民解放军",
+    "example": ""
+  },
+  {
+    "word": "at",
+    "meaning": "看；瞧 look",
+    "example": ""
+  },
+  {
+    "word": "VR",
+    "meaning": "虚拟现实",
+    "example": ""
+  },
+  {
+    "word": "friends",
+    "meaning": "交朋友 make",
+    "example": ""
+  },
+  {
+    "word": "know",
+    "meaning": "认识；了解 get to",
+    "example": ""
+  },
+  {
+    "word": "page",
+    "meaning": "页面;（书刊或纸张）页",
+    "example": ""
+  },
+  {
+    "word": "full",
+    "meaning": "完整的；满的",
+    "example": ""
+  },
+  {
+    "word": "even",
+    "meaning": "甚至；连；愈加",
+    "example": ""
+  },
+  {
+    "word": "name",
+    "meaning": "全名 full",
+    "example": ""
+  },
+  {
+    "word": "hey",
+    "meaning": "嘿；喂",
+    "example": ""
+  },
+  {
+    "word": "grade",
+    "meaning": "年级；等级",
+    "example": ""
+  },
+  {
+    "word": "向某人提供某物）；将",
+    "meaning": "弹吉他 play the guitar 想（用于礼貌地邀请或",
+    "example": ""
+  },
+  {
+    "word": "name",
+    "meaning": "姓氏 last",
+    "example": ""
+  },
+  {
+    "word": "会",
+    "meaning": "would",
+    "example": ""
+  },
+  {
+    "word": "classmate",
+    "meaning": "同班同学",
+    "example": ""
+  },
+  {
+    "word": "to",
+    "meaning": "表示愿意、喜欢 would like",
+    "example": ""
+  },
+  {
+    "word": "teacher",
+    "meaning": "班主任 class",
+    "example": ""
+  },
+  {
+    "word": "information",
+    "meaning": "信息；消息",
+    "example": ""
+  },
+  {
+    "word": "name",
+    "meaning": "名字 first",
+    "example": ""
+  },
+  {
+    "word": "（用于回复电子邮件）",
+    "meaning": "业余爱好 hobby",
+    "example": ""
+  },
+  {
+    "word": "mistake",
+    "meaning": "错误；失误",
+    "example": ""
+  },
+  {
+    "word": "re",
+    "meaning": "关于；事由",
+    "example": ""
+  },
+  {
+    "word": "country",
+    "meaning": "国家",
+    "example": ""
+  },
+  {
+    "word": "Green",
+    "meaning": "格林",
+    "example": ""
+  },
+  {
+    "word": "same",
+    "meaning": "相同的",
+    "example": ""
+  },
+  {
+    "word": "双胞胎之一；双胞胎之",
+    "meaning": "英国 UK",
+    "example": ""
+  },
+  {
+    "word": "twin",
+    "meaning": "一的",
+    "example": ""
+  },
+  {
+    "word": "US",
+    "meaning": "美国",
+    "example": ""
+  },
+  {
+    "word": "both",
+    "meaning": "两个；两个都",
+    "example": ""
+  },
+  {
+    "word": "Smith",
+    "meaning": "史密斯",
+    "example": ""
+  },
+  {
+    "word": "band",
+    "meaning": "乐队",
+    "example": ""
+  },
+  {
+    "word": "Lisa",
+    "meaning": "莉萨",
+    "example": ""
+  },
+  {
+    "word": "pot",
+    "meaning": "锅",
+    "example": ""
+  },
+  {
+    "word": "Tom",
+    "meaning": "汤姆",
+    "example": ""
+  },
+  {
+    "word": "lot",
+    "meaning": "很；非常 a",
+    "example": ""
+  },
+  {
+    "word": "pot",
+    "meaning": "火锅 hot",
+    "example": ""
+  },
+  {
+    "word": "tofu",
+    "meaning": "豆腐",
+    "example": ""
+  },
+  {
+    "word": "Sally",
+    "meaning": "萨莉",
+    "example": ""
+  },
+  {
+    "word": "parrot",
+    "meaning": "鹦鹉",
+    "example": ""
+  },
+  {
+    "word": "Wood",
+    "meaning": "伍德",
+    "example": ""
+  },
+  {
+    "word": "guitar",
+    "meaning": "吉他",
+    "example": ""
+  },
+  {
+    "word": "Sydney",
+    "meaning": "悉尼（澳大利亚城市）",
+    "example": ""
+  },
+  {
+    "word": "tennis",
+    "meaning": "网球运动",
+    "example": ""
+  },
+  {
+    "word": "Australia",
+    "meaning": "澳大利亚",
+    "example": ""
+  },
+  {
+    "word": "tofu",
+    "meaning": "麻婆豆腐 Mapo",
+    "example": ""
+  },
+  {
+    "word": "activity",
+    "meaning": "活动",
+    "example": ""
+  },
+  {
+    "word": "duck",
+    "meaning": "北京烤鸭 Beijing roast",
+    "example": ""
+  },
+  {
+    "word": "chess",
+    "meaning": "国际象棋",
+    "example": ""
+  },
+  {
+    "word": "Singapore",
+    "meaning": "新加坡",
+    "example": ""
+  },
+  {
+    "word": "祖父（母)；外祖父（母",
+    "meaning": "中国象棋 Chinese chess",
+    "example": ""
+  },
+  {
+    "word": "Wall",
+    "meaning": "长城 the Great",
+    "example": ""
+  },
+  {
+    "word": "grandparent",
+    "meaning": "）",
+    "example": ""
+  },
+  {
+    "word": "Pauline",
+    "meaning": "保利娜",
+    "example": ""
+  },
+  {
+    "word": "funny",
+    "meaning": "好笑的；奇怪的",
+    "example": ""
+  },
+  {
+    "word": "Lee",
+    "meaning": "李",
+    "example": ""
+  },
+  {
+    "word": "laugh",
+    "meaning": "笑；发笑；笑声",
+    "example": ""
+  },
+  {
+    "word": "Coco",
+    "meaning": "科科",
+    "example": ""
+  },
+  {
+    "word": "different",
+    "meaning": "不同的",
+    "example": ""
+  },
+  {
+    "word": "London",
+    "meaning": "伦敦（英国首都）",
+    "example": ""
+  },
+  {
+    "word": "violin",
+    "meaning": "小提琴",
+    "example": ""
+  },
+  {
+    "word": "mean",
+    "meaning": "意思是；打算",
+    "example": ""
+  },
+  {
+    "word": "fun",
+    "meaning": "玩得高兴 have",
+    "example": ""
+  },
+  {
+    "word": "husband",
+    "meaning": "丈夫",
+    "example": ""
+  },
+  {
+    "word": "hat",
+    "meaning": "帽子",
+    "example": ""
+  },
+  {
+    "word": "bat",
+    "meaning": "球棒；球拍",
+    "example": ""
+  },
+  {
+    "word": "handsome",
+    "meaning": "英俊的",
+    "example": ""
+  },
+  {
+    "word": "bat",
+    "meaning": "乒乓球拍 ping-pong",
+    "example": ""
+  },
+  {
+    "word": "knee",
+    "meaning": "膝；膝盖",
+    "example": ""
+  },
+  {
+    "word": "ping-pong",
+    "meaning": "打乒乓球 play",
+    "example": ""
+  },
+  {
+    "word": "night",
+    "meaning": "在夜晚 at",
+    "example": ""
+  },
+  {
+    "word": "together",
+    "meaning": "在一起；共同",
+    "example": ""
+  },
+  {
+    "word": "（外）孙子；（外）孙",
+    "meaning": "在中间 in the middle",
+    "example": ""
+  },
+  {
+    "word": "day",
+    "meaning": "每天 every",
+    "example": ""
+  },
+  {
+    "word": "grandchild",
+    "meaning": "女",
+    "example": ""
+  },
+  {
+    "word": "rod",
+    "meaning": "钓竿 fishing",
+    "example": ""
+  },
+  {
+    "word": "son",
+    "meaning": "儿子",
+    "example": ""
+  },
+  {
+    "word": "spend",
+    "meaning": "花（时间、钱等）",
+    "example": ""
+  },
+  {
+    "word": "hike",
+    "meaning": "远足；徒步旅行",
+    "example": ""
+  },
+  {
+    "word": "of",
+    "meaning": "大量；许多 a lot",
+    "example": ""
+  },
+  {
+    "word": "hiking",
+    "meaning": "远足；徒步旅行 go",
+    "example": ""
+  },
+  {
+    "word": "really",
+    "meaning": "非常；确实；真正地",
+    "example": ""
+  },
+  {
+    "word": "to",
+    "meaning": "紧邻；在......近旁 next",
+    "example": ""
+  },
+  {
+    "word": "member",
+    "meaning": "成员；会员",
+    "example": ""
+  },
+  {
+    "word": "David",
+    "meaning": "戴维",
+    "example": ""
+  },
+  {
+    "word": "Jim",
+    "meaning": "吉姆",
+    "example": ""
+  },
+  {
+    "word": "field",
+    "meaning": "运动场 sports",
+    "example": ""
+  },
+  {
+    "word": "Kate",
+    "meaning": "凯特",
+    "example": ""
+  },
+  {
+    "word": "office",
+    "meaning": "办公室",
+    "example": ""
+  },
+  {
+    "word": "Lily",
+    "meaning": "莉莉",
+    "example": ""
+  },
+  {
+    "word": "large",
+    "meaning": "大的；大号的",
+    "example": ""
+  },
+  {
+    "word": "Ireland",
+    "meaning": "爱尔兰",
+    "example": ""
+  },
+  {
+    "word": "special",
+    "meaning": "特别的；特殊的",
+    "example": ""
+  },
+  {
+    "word": "Fred",
+    "meaning": "弗雷德",
+    "example": ""
+  },
+  {
+    "word": "smart",
+    "meaning": "智能的；聪明的",
+    "example": ""
+  },
+  {
+    "word": "Sam",
+    "meaning": "萨姆",
+    "example": ""
+  },
+  {
+    "word": "whiteboard",
+    "meaning": "白板；白色书写板",
+    "example": ""
+  },
+  {
+    "word": "Jane",
+    "meaning": "简",
+    "example": ""
+  },
+  {
+    "word": "up",
+    "meaning": "张贴；搭建 put",
+    "example": ""
+  },
+  {
+    "word": "Jack",
+    "meaning": "杰克",
+    "example": ""
+  },
+  {
+    "word": "通知；注意；注意到；",
+    "meaning": "重要的 important",
+    "example": ""
+  },
+  {
+    "word": "Sarah",
+    "meaning": "萨拉",
+    "example": ""
+  },
+  {
+    "word": "notice",
+    "meaning": "意识到",
+    "example": ""
+  },
+  {
+    "word": "Oscar",
+    "meaning": "奥斯卡",
+    "example": ""
+  },
+  {
+    "word": "locker",
+    "meaning": "有锁存物柜；寄物柜",
+    "example": ""
+  },
+  {
+    "word": "Lucy",
+    "meaning": "露西",
+    "example": ""
+  },
+  {
+    "word": "drawer",
+    "meaning": "抽屉",
+    "example": ""
+  },
+  {
+    "word": "hall",
+    "meaning": "礼堂；大厅",
+    "example": ""
+  },
+  {
+    "word": "(of)",
+    "meaning": "在......后面 at the back",
+    "example": ""
+  },
+  {
+    "word": "hall",
+    "meaning": "餐厅 dining",
+    "example": ""
+  },
+  {
+    "word": "corner",
+    "meaning": "角；墙角；街角",
+    "example": ""
+  },
+  {
+    "word": "of",
+    "meaning": "在......前面 in front",
+    "example": ""
+  },
+  {
+    "word": "bookcase",
+    "meaning": "书架；书柜",
+    "example": ""
+  },
+  {
+    "word": "building",
+    "meaning": "建筑物；房子",
+    "example": ""
+  },
+  {
+    "word": "screen",
+    "meaning": "屏幕；银幕",
+    "example": ""
+  },
+  {
+    "word": "across",
+    "meaning": "在（......）对面；横过",
+    "example": ""
+  },
+  {
+    "word": "school",
+    "meaning": "在学校 at",
+    "example": ""
+  },
+  {
+    "word": "from",
+    "meaning": "在对面 across",
+    "example": ""
+  },
+  {
+    "word": "from",
+    "meaning": "与......不一样 different",
+    "example": ""
+  },
+  {
+    "word": "centre",
+    "meaning": "(=center) 中心；中央",
+    "example": ""
+  },
+  {
+    "word": "；健身房；(尤指学校的",
+    "meaning": "现代的；当代的 modern （=gymnasium）体育馆",
+    "example": ""
+  },
+  {
+    "word": "gym",
+    "meaning": "",
+    "example": ""
+  },
+  {
+    "word": "令人惊奇的；(惊喜或惊",
+    "meaning": "做体操 do exercises )体育活动",
+    "example": ""
+  },
+  {
+    "word": "field",
+    "meaning": "场地；田地",
+    "example": ""
+  },
+  {
+    "word": "amazing",
+    "meaning": "叹)的",
+    "example": ""
+  },
+  {
+    "word": "raise",
+    "meaning": "使升高；提高",
+    "example": ""
+  },
+  {
+    "word": "过去；过去的事情；过",
+    "meaning": "的 exciting",
+    "example": ""
+  },
+  {
+    "word": "flag",
+    "meaning": "旗；旗帜",
+    "example": ""
+  },
+  {
+    "word": "灵巧的；善于应付......",
+    "meaning": "去的；在......之后 past 大多数；最多；最大；",
+    "example": ""
+  },
+  {
+    "word": "most",
+    "meaning": "最",
+    "example": ""
+  },
+  {
+    "word": "with",
+    "meaning": "的 good",
+    "example": ""
+  },
+  {
+    "word": "change",
+    "meaning": "改变；变化",
+    "example": ""
+  },
+  {
+    "word": "number",
+    "meaning": "数字；号码",
+    "example": ""
+  },
+  {
+    "word": "seat",
+    "meaning": "座位",
+    "example": ""
+  },
+  {
+    "word": "with",
+    "meaning": "帮助某人做（某事） help sb.",
+    "example": ""
+  },
+  {
+    "word": "delicious",
+    "meaning": "美味的；可口的",
+    "example": ""
+  },
+  {
+    "word": "reason",
+    "meaning": "原因；理由",
+    "example": ""
+  },
+  {
+    "word": "about...?",
+    "meaning": "......怎么样？ How",
+    "example": ""
+  },
+  {
+    "word": "书信结尾的签名前）你",
+    "meaning": "听；倾听 listen to （通常写作 Yours,用于",
+    "example": ""
+  },
+  {
+    "word": "yours",
+    "meaning": "",
+    "example": ""
+  },
+  {
+    "word": "的；您的",
+    "meaning": "擅长 good at",
+    "example": ""
+  },
+  {
+    "word": "send",
+    "meaning": "发送；邮寄",
+    "example": ""
+  },
+  {
+    "word": "如同；作为；当......时",
+    "meaning": "记住；记起 remember",
+    "example": ""
+  },
+  {
+    "word": "similar",
+    "meaning": "类似的；相像的",
+    "example": ""
+  },
+  {
+    "word": "as",
+    "meaning": "；由于",
+    "example": ""
+  },
+  {
+    "word": "to",
+    "meaning": "类似的；相像的 similar",
+    "example": ""
+  },
+  {
+    "word": "听起来；好像；声音；",
+    "meaning": "上午 AM",
+    "example": ""
+  },
+  {
+    "word": "sound",
+    "meaning": "响声",
+    "example": ""
+  },
+  {
+    "word": "法语；法国的；法国人",
+    "meaning": "下午；午后 PM",
+    "example": ""
+  },
+  {
+    "word": "now",
+    "meaning": "再见 bye for",
+    "example": ""
+  },
+  {
+    "word": "French",
+    "meaning": "的；法语的",
+    "example": ""
+  },
+  {
+    "word": "Flora",
+    "meaning": "弗洛拉",
+    "example": ""
+  },
+  {
+    "word": "excellent",
+    "meaning": "优秀的；极好的",
+    "example": ""
+  },
+  {
+    "word": "biology",
+    "meaning": "生物学",
+    "example": ""
+  },
+  {
+    "word": "instrument",
+    "meaning": "乐器；器械；工具",
+    "example": ""
+  },
+  {
+    "word": "IT",
+    "meaning": "信息技术",
+    "example": ""
+  },
+  {
+    "word": "singer",
+    "meaning": "歌手",
+    "example": ""
+  },
+  {
+    "word": "geography",
+    "meaning": "地理（学）",
+    "example": ""
+  },
+  {
+    "word": "future",
+    "meaning": "将来；未来",
+    "example": ""
+  },
+  {
+    "word": "history",
+    "meaning": "历史；历史课",
+    "example": ""
+  },
+  {
+    "word": "future",
+    "meaning": "将来；未来 in the",
+    "example": ""
+  },
+  {
+    "word": "boring",
+    "meaning": "乏味的；令人生厌的",
+    "example": ""
+  },
+  {
+    "word": "term",
+    "meaning": "学期",
+    "example": ""
+  },
+  {
+    "word": "useful",
+    "meaning": "有用的；有益的",
+    "example": ""
+  },
+  {
+    "word": "workout",
+    "meaning": "计算出；解决",
+    "example": ""
+  },
+  {
+    "word": "problem",
+    "meaning": "难题；困难",
+    "example": ""
+  },
+  {
+    "word": "用颜料画；在......上刷",
+    "meaning": "能力；才能 ability",
+    "example": ""
+  },
+  {
+    "word": "class",
+    "meaning": "课堂上 in",
+    "example": ""
+  },
+  {
+    "word": "魔法；魔力；魔术；有",
+    "meaning": "油漆；油漆；涂料 paint",
+    "example": ""
+  },
+  {
+    "word": "magic",
+    "meaning": "魔力的；有神奇力量的",
+    "example": ""
+  },
+  {
+    "word": "climb",
+    "meaning": "攀登；爬",
+    "example": ""
+  },
+  {
+    "word": "life",
+    "meaning": "生活；生命",
+    "example": ""
+  },
+  {
+    "word": "扮演；行动；(戏剧等)",
+    "meaning": "更多（的） more",
+    "example": ""
+  },
+  {
+    "word": "scientist",
+    "meaning": "科学家",
+    "example": ""
+  },
+  {
+    "word": "act",
+    "meaning": "一幕；行动",
+    "example": ""
+  },
+  {
+    "word": "Baker",
+    "meaning": "贝克",
+    "example": ""
+  },
+  {
+    "word": "out",
+    "meaning": "表演 act",
+    "example": ""
+  },
+  {
+    "word": "Mike",
+    "meaning": "迈克",
+    "example": ""
+  },
+  {
+    "word": "home",
+    "meaning": "在家里 at",
+    "example": ""
+  },
+  {
+    "word": "Davis",
+    "meaning": "戴维斯",
+    "example": ""
+  },
+  {
+    "word": "interested",
+    "meaning": "感兴趣的",
+    "example": ""
+  },
+  {
+    "word": "Canada",
+    "meaning": "加拿大",
+    "example": ""
+  },
+  {
+    "word": "in",
+    "meaning": "对......感兴趣 interested",
+    "example": ""
+  },
+  {
+    "word": "club",
+    "meaning": "俱乐部；社团",
+    "example": ""
+  },
+  {
+    "word": "nature",
+    "meaning": "自然界；大自然",
+    "example": ""
+  },
+  {
+    "word": "join",
+    "meaning": "参加；加入",
+    "example": ""
+  },
+  {
+    "word": "beef",
+    "meaning": "牛肉",
+    "example": ""
+  },
+  {
+    "word": "choose",
+    "meaning": "选择；挑选",
+    "example": ""
+  },
+  {
+    "word": "（用以引出比较的第二",
+    "meaning": "不久；很快 soon",
+    "example": ""
+  },
+  {
+    "word": "drama",
+    "meaning": "戏剧；戏剧表演",
+    "example": ""
+  },
+  {
+    "word": "than",
+    "meaning": "部分）比",
+    "example": ""
+  },
+  {
+    "word": "chess",
+    "meaning": "下中国象棋 play Chinese",
+    "example": ""
+  },
+  {
+    "word": "than",
+    "meaning": "多于 more",
+    "example": ""
+  },
+  {
+    "word": "feeling",
+    "meaning": "感觉；情感",
+    "example": ""
+  },
+  {
+    "word": "进入；掉落；跌倒；(美",
+    "meaning": "头脑；心思 mind",
+    "example": ""
+  },
+  {
+    "word": "news",
+    "meaning": "消息；新闻",
+    "example": ""
+  },
+  {
+    "word": "fall",
+    "meaning": "式)秋天",
+    "example": ""
+  },
+  {
+    "word": "musical",
+    "meaning": "音乐的；有音乐天赋的",
+    "example": ""
+  },
+  {
+    "word": "with",
+    "meaning": "爱上...... fall in love",
+    "example": ""
+  },
+  {
+    "word": "instrument",
+    "meaning": "乐器 musical",
+    "example": ""
+  },
+  {
+    "word": "photos",
+    "meaning": "拍照 take",
+    "example": ""
+  },
+  {
+    "word": "exactly",
+    "meaning": "正是如此；准确地",
+    "example": ""
+  },
+  {
+    "word": "collect",
+    "meaning": "收集；采集",
+    "example": ""
+  },
+  {
+    "word": "drum",
+    "meaning": "鼓",
+    "example": ""
+  },
+  {
+    "word": "insect",
+    "meaning": "昆虫",
+    "example": ""
+  },
+  {
+    "word": "discover",
+    "meaning": "发现；发觉",
+    "example": ""
+  },
+  {
+    "word": "bed",
+    "meaning": "上床睡觉 go to",
+    "example": ""
+  },
+  {
+    "word": "wildlife",
+    "meaning": "野生动物；野生生物",
+    "example": ""
+  },
+  {
+    "word": "起床；升起；增长；增",
+    "meaning": "谚语；格言 saying",
+    "example": ""
+  },
+  {
+    "word": "Linda",
+    "meaning": "琳达",
+    "example": ""
+  },
+  {
+    "word": "rise",
+    "meaning": "加；增强",
+    "example": ""
+  },
+  {
+    "word": "Alice",
+    "meaning": "爱丽丝",
+    "example": ""
+  },
+  {
+    "word": "stay",
+    "meaning": "停留；待",
+    "example": ""
+  },
+  {
+    "word": "Bill",
+    "meaning": "比尔",
+    "example": ""
+  },
+  {
+    "word": "routine",
+    "meaning": "常规",
+    "example": ""
+  },
+  {
+    "word": "Jenny",
+    "meaning": "珍妮",
+    "example": ""
+  },
+  {
+    "word": "restaurant",
+    "meaning": "餐馆；餐厅",
+    "example": ""
+  },
+  {
+    "word": "of",
+    "meaning": "使用......；利用...... make use",
+    "example": ""
+  },
+  {
+    "word": "一段时间；一会儿；在",
+    "meaning": "家务劳动 housework",
+    "example": ""
+  },
+  {
+    "word": "quarter",
+    "meaning": "一刻钟；四等份之一",
+    "example": ""
+  },
+  {
+    "word": "淋浴；淋浴器；阵雨；",
+    "meaning": "…...期间；当......的时候 while",
+    "example": ""
+  },
+  {
+    "word": "shower",
+    "meaning": "洗淋浴",
+    "example": ""
+  },
+  {
+    "word": "weekend",
+    "meaning": "周末",
+    "example": ""
+  },
+  {
+    "word": "shower",
+    "meaning": "淋浴 take a",
+    "example": ""
+  },
+  {
+    "word": "daily",
+    "meaning": "每日的；日常的",
+    "example": ""
+  },
+  {
+    "word": "dressed",
+    "meaning": "穿衣服 get",
+    "example": ""
+  },
+  {
+    "word": "（用刷子）刷；刷子；",
+    "meaning": "日常生活 daily routine",
+    "example": ""
+  },
+  {
+    "word": "brush",
+    "meaning": "画笔",
+    "example": ""
+  },
+  {
+    "word": "休息；间断；（使）破",
+    "meaning": "只；仅 only",
+    "example": ""
+  },
+  {
+    "word": "tooth",
+    "meaning": "牙齿",
+    "example": ""
+  },
+  {
+    "word": "芬兰语；芬兰的；芬兰",
+    "meaning": "碎；损坏 break",
+    "example": ""
+  },
+  {
+    "word": "duty",
+    "meaning": "值班；职责",
+    "example": ""
+  },
+  {
+    "word": "Finnish",
+    "meaning": "人的；芬兰语的",
+    "example": ""
+  },
+  {
+    "word": "duty",
+    "meaning": "值班 on",
+    "example": ""
+  },
+  {
+    "word": "finish",
+    "meaning": "结束；完成",
+    "example": ""
+  },
+  {
+    "word": "usually",
+    "meaning": "通常地；一般地",
+    "example": ""
+  },
+  {
+    "word": "hockey",
+    "meaning": "曲棍球",
+    "example": ""
+  },
+  {
+    "word": "up",
+    "meaning": "起床；站起 get",
+    "example": ""
+  },
+  {
+    "word": "hockey",
+    "meaning": "冰球运动；冰上曲棍球 ice",
+    "example": ""
+  },
+  {
+    "word": "reporter",
+    "meaning": "记者",
+    "example": ""
+  },
+  {
+    "word": "already",
+    "meaning": "已经；早已",
+    "example": ""
+  },
+  {
+    "word": "around",
+    "meaning": "大约；环绕；到处",
+    "example": ""
+  },
+  {
+    "word": "dark",
+    "meaning": "昏暗的；深色的",
+    "example": ""
+  },
+  {
+    "word": "homework",
+    "meaning": "家庭作业",
+    "example": ""
+  },
+  {
+    "word": "outside",
+    "meaning": "在…...的外面；外面的",
+    "example": ""
+  },
+  {
+    "word": "part",
+    "meaning": "部分",
+    "example": ""
+  },
+  {
+    "word": "list",
+    "meaning": "清单；",
+    "example": ""
+  },
+  {
+    "word": "everyday",
+    "meaning": "每天的；日常的",
+    "example": ""
+  },
+  {
+    "word": "own",
+    "meaning": "自己的；本人的",
+    "example": ""
+  },
+  {
+    "word": "prepare",
+    "meaning": "把......预备好；准备",
+    "example": ""
+  },
+  {
+    "word": "example",
+    "meaning": "例子；范例",
+    "example": ""
+  },
+  {
+    "word": "for",
+    "meaning": "为…...把某物准备好 prepare sth.",
+    "example": ""
+  },
+  {
+    "word": "example",
+    "meaning": "例如 for",
+    "example": ""
+  },
+  {
+    "word": "Timo",
+    "meaning": "蒂莫",
+    "example": ""
+  },
+  {
+    "word": "language",
+    "meaning": "语言",
+    "example": ""
+  },
+  {
+    "word": "Halla",
+    "meaning": "哈拉",
+    "example": ""
+  },
+  {
+    "word": "做记号；纪念；打分；",
+    "meaning": "国际的 international",
+    "example": ""
+  },
+  {
+    "word": "Helsinki",
+    "meaning": "赫尔辛基（芬兰首都）",
+    "example": ""
+  },
+  {
+    "word": "mark",
+    "meaning": "记号",
+    "example": ""
+  },
+  {
+    "word": "Finland",
+    "meaning": "芬兰",
+    "example": ""
+  },
+  {
+    "word": "national",
+    "meaning": "国家的；民族的",
+    "example": ""
+  },
+  {
+    "word": "economics",
+    "meaning": "家政学；家庭经济学 home",
+    "example": ""
+  },
+  {
+    "word": "found",
+    "meaning": "创建；创立",
+    "example": ""
+  },
+  {
+    "word": "celebrate",
+    "meaning": "庆祝；庆贺",
+    "example": ""
+  },
+  {
+    "word": "惊奇；惊讶；使感到意",
+    "meaning": "重要的；重大的 meaningful",
+    "example": ""
+  },
+  {
+    "word": "surprise",
+    "meaning": "外",
+    "example": ""
+  },
+  {
+    "word": "wish",
+    "meaning": "许愿 make a",
+    "example": ""
+  },
+  {
+    "word": "something",
+    "meaning": "某事；某物",
+    "example": ""
+  },
+  {
+    "word": "帖子；邮政；邮寄；发",
+    "meaning": "庆典；庆祝（活动） celebration",
+    "example": ""
+  },
+  {
+    "word": "sale",
+    "meaning": "出售；销售",
+    "example": ""
+  },
+  {
+    "word": "联系；接触；联系；联",
+    "meaning": "布 post",
+    "example": ""
+  },
+  {
+    "word": "kilo",
+    "meaning": "千克；公斤",
+    "example": ""
+  },
+  {
+    "word": "contact",
+    "meaning": "络",
+    "example": ""
+  },
+  {
+    "word": "yogurt",
+    "meaning": "酸奶",
+    "example": ""
+  },
+  {
+    "word": "总数；合计；总的；全",
+    "meaning": "象征；符号 symbol",
+    "example": ""
+  },
+  {
+    "word": "total",
+    "meaning": "体的",
+    "example": ""
+  },
+  {
+    "word": "photo",
+    "meaning": "拍照 take a",
+    "example": ""
+  },
+  {
+    "word": "price",
+    "meaning": "价格",
+    "example": ""
+  },
+  {
+    "word": "village",
+    "meaning": "村庄；村镇",
+    "example": ""
+  },
+  {
+    "word": "balloon",
+    "meaning": "气球",
+    "example": ""
+  },
+  {
+    "word": "grow",
+    "meaning": "成长；长大；增长",
+    "example": ""
+  },
+  {
+    "word": "chocolate",
+    "meaning": "巧克力",
+    "example": ""
+  },
+  {
+    "word": "blow",
+    "meaning": "吹；刮",
+    "example": ""
+  },
+  {
+    "word": "pizza",
+    "meaning": "比萨饼",
+    "example": ""
+  },
+  {
+    "word": "out",
+    "meaning": "吹灭 blow",
+    "example": ""
+  },
+  {
+    "word": "enjoy",
+    "meaning": "享受......乐趣；喜欢",
+    "example": ""
+  },
+  {
+    "word": "名前，不指明婚否）女",
+    "meaning": "和；又 and （用于女子的姓氏或姓",
+    "example": ""
+  },
+  {
+    "word": "height",
+    "meaning": "身高；高度",
+    "example": ""
+  },
+  {
+    "word": "以后（的）；后来（的",
+    "meaning": "Ms 士",
+    "example": ""
+  },
+  {
+    "word": "time",
+    "meaning": "下次 next",
+    "example": ""
+  },
+  {
+    "word": "sit",
+    "meaning": "坐",
+    "example": ""
+  },
+  {
+    "word": "whom",
+    "meaning": "谁；什么人",
+    "example": ""
+  },
+  {
+    "word": "（用于客气地请求或吩",
+    "meaning": "下；向下 down",
+    "example": ""
+  },
+  {
+    "word": "Shakespeare",
+    "meaning": "威廉·莎士比亚 William",
+    "example": ""
+  },
+  {
+    "word": "please",
+    "meaning": "咐）请",
+    "example": ""
+  },
+  {
+    "word": "Nightingale",
+    "meaning": "弗洛伦斯·南丁格尔 Florence",
+    "example": ""
+  },
+  {
+    "word": "can",
+    "meaning": "能；会",
+    "example": ""
+  },
+  {
+    "word": "Day",
+    "meaning": "国庆节 National",
+    "example": ""
+  },
+  {
+    "word": "表示该动词为不定式；",
+    "meaning": "说 say 常用于原形动词之前，",
+    "example": ""
+  },
+  {
+    "word": "Day",
+    "meaning": "中国共产党建党纪念日 CPC Founding",
+    "example": ""
+  },
+  {
+    "word": "指已提到或易领会到的",
+    "meaning": "to 朝;至",
+    "example": ""
+  },
+  {
+    "word": "Day",
+    "meaning": "中国人民解放军建军节 PLA",
+    "example": ""
+  },
+  {
+    "word": "the",
+    "meaning": "人或事物",
+    "example": ""
+  },
+  {
+    "word": "Judy",
+    "meaning": "朱迪",
+    "example": ""
+  },
+  {
+    "word": "I",
+    "meaning": "我",
+    "example": ""
+  },
+  {
+    "word": "Clark",
+    "meaning": "克拉克",
+    "example": ""
+  },
+  {
+    "word": "am",
+    "meaning": "是",
+    "example": ""
+  },
+  {
+    "word": "hello",
+    "meaning": "你好；喂",
+    "example": ""
+  },
+  {
+    "word": "thank",
+    "meaning": "感谢；谢谢",
+    "example": ""
+  },
+  {
+    "word": "how",
+    "meaning": "怎样；如何",
+    "example": ""
+  },
+  {
+    "word": "用于构成否定句和疑问",
+    "meaning": "现在；目前 now",
+    "example": ""
+  },
+  {
+    "word": "do",
+    "meaning": "句；做；干",
+    "example": ""
+  },
+  {
+    "word": "my",
+    "meaning": "我的",
+    "example": ""
+  },
+  {
+    "word": "you",
+    "meaning": "你；您；你们",
+    "example": ""
+  },
+  {
+    "word": "name",
+    "meaning": "名字；名称",
+    "example": ""
+  },
+  {
+    "word": "people",
+    "meaning": "人；人们",
+    "example": ""
+  },
+  {
+    "word": "is",
+    "meaning": "是",
+    "example": ""
+  },
+  {
+    "word": "hi",
+    "meaning": "嗨；喂",
+    "example": ""
+  },
+  {
+    "word": "nice",
+    "meaning": "令人愉快的；宜人的",
+    "example": ""
+  },
+  {
+    "word": "good",
+    "meaning": "好的",
+    "example": ""
+  },
+  {
+    "word": "用来引出评论或问题；",
+    "meaning": "遇见；相逢 meet",
+    "example": ""
+  },
+  {
+    "word": "morning",
+    "meaning": "早晨；上午",
+    "example": ""
+  },
+  {
+    "word": "so",
+    "meaning": "所以；这么；那么",
+    "example": ""
+  },
+  {
+    "word": "what",
+    "meaning": "什么",
+    "example": ""
+  },
+  {
+    "word": "keep",
+    "meaning": "（使）保持；保留",
+    "example": ""
+  },
+  {
+    "word": "your",
+    "meaning": "你的；您的；你们的",
+    "example": ""
+  },
+  {
+    "word": "在…...里；表示某事完",
+    "meaning": "整洁的；井井有条的 tidy",
+    "example": ""
+  },
+  {
+    "word": "too",
+    "meaning": "也；又；太",
+    "example": ""
+  },
+  {
+    "word": "表示未曾提到的)",
+    "meaning": "成或发生的方式 in (用于单数可数名词前，",
+    "example": ""
+  },
+  {
+    "word": "a",
+    "meaning": "",
+    "example": ""
+  },
+  {
+    "word": "（无帽边或有帽舌的）",
+    "meaning": "书包 schoolbag 一（人、事、物）",
+    "example": ""
+  },
+  {
+    "word": "are",
+    "meaning": "是",
+    "example": ""
+  },
+  {
+    "word": "cap",
+    "meaning": "帽子；棒球帽",
+    "example": ""
+  },
+  {
+    "word": "goodbye",
+    "meaning": "再见；再会",
+    "example": ""
+  },
+  {
+    "word": "ruler",
+    "meaning": "尺；直尺",
+    "example": ""
+  },
+  {
+    "word": "may",
+    "meaning": "可以；可能",
+    "example": ""
+  },
+  {
+    "word": "pencil",
+    "meaning": "铅笔",
+    "example": ""
+  },
+  {
+    "word": "have",
+    "meaning": "有",
+    "example": ""
+  },
+  {
+    "word": "打电话；呼唤；打电话",
+    "meaning": "棕色(的)；褐色(的) brown 把......叫作；（给…...）",
+    "example": ""
+  },
+  {
+    "word": "call",
+    "meaning": "",
+    "example": ""
+  },
+  {
+    "word": "，大声呼叫",
+    "meaning": "黑色(的) black",
+    "example": ""
+  },
+  {
+    "word": "me",
+    "meaning": "（I 的宾格）我",
+    "example": ""
+  },
+  {
+    "word": "橙红色(的)；橘黄色(的)",
+    "meaning": "黄色(的) yellow",
+    "example": ""
+  },
+  {
+    "word": "fine",
+    "meaning": "健康的；美好的",
+    "example": ""
+  },
+  {
+    "word": "orange",
+    "meaning": "；橙子；柑橘",
+    "example": ""
+  },
+  {
+    "word": "great",
+    "meaning": "美妙的；伟大的",
+    "example": ""
+  },
+  {
+    "word": "green",
+    "meaning": "绿色(的)",
+    "example": ""
+  },
+  {
+    "word": "that",
+    "meaning": "那；那个",
+    "example": ""
+  },
+  {
+    "word": "blue",
+    "meaning": "蓝色(的)",
+    "example": ""
+  },
+  {
+    "word": "let",
+    "meaning": "允许；让",
+    "example": ""
+  },
+  {
+    "word": "white",
+    "meaning": "白色(的)",
+    "example": ""
+  },
+  {
+    "word": "us",
+    "meaning": "（we 的宾格）我们",
+    "example": ""
+  },
+  {
+    "word": "red",
+    "meaning": "红色(的)",
+    "example": ""
+  },
+  {
+    "word": "go",
+    "meaning": "去；走",
+    "example": ""
+  },
+  {
+    "word": "colour",
+    "meaning": "颜色",
+    "example": ""
+  },
+  {
+    "word": "bye",
+    "meaning": "再见",
+    "example": ""
+  },
+  {
+    "word": "trousers",
+    "meaning": "裤子",
+    "example": ""
+  },
+  {
+    "word": "it",
+    "meaning": "它",
+    "example": ""
+  },
+  {
+    "word": "they",
+    "meaning": "他（她、它）们",
+    "example": ""
+  },
+  {
+    "word": "time",
+    "meaning": "时间；次",
+    "example": ""
+  },
+  {
+    "word": "bicycle",
+    "meaning": "自行车；脚踏车",
+    "example": ""
+  },
+  {
+    "word": "for",
+    "meaning": "为了；给；对",
+    "example": ""
+  },
+  {
+    "word": "shoe",
+    "meaning": "鞋",
+    "example": ""
+  },
+  {
+    "word": "where",
+    "meaning": "在哪里；到哪里",
+    "example": ""
+  },
+  {
+    "word": "OK",
+    "meaning": "好；行；可以（的）",
+    "example": ""
+  },
+  {
+    "word": "put",
+    "meaning": "放",
+    "example": ""
+  },
+  {
+    "word": "sorry",
+    "meaning": "抱歉的；惋惜的",
+    "example": ""
+  },
+  {
+    "word": "bed",
+    "meaning": "床",
+    "example": ""
+  },
+  {
+    "word": "dad",
+    "meaning": "爸爸",
+    "example": ""
+  },
+  {
+    "word": "desk",
+    "meaning": "书桌",
+    "example": ""
+  },
+  {
+    "word": "glasses",
+    "meaning": "眼镜",
+    "example": ""
+  },
+  {
+    "word": "chair",
+    "meaning": "椅子",
+    "example": ""
+  },
+  {
+    "word": "（they的宾格）他（她",
+    "meaning": "看见 see",
+    "example": ""
+  },
+  {
+    "word": "book",
+    "meaning": "书",
+    "example": ""
+  },
+  {
+    "word": "them",
+    "meaning": "、它）们",
+    "example": ""
+  },
+  {
+    "word": "box",
+    "meaning": "箱；盒；方框",
+    "example": ""
+  },
+  {
+    "word": "wait",
+    "meaning": "等待；等候",
+    "example": ""
+  },
+  {
+    "word": "sock",
+    "meaning": "短袜",
+    "example": ""
+  },
+  {
+    "word": "一些；某些；有些；有",
+    "meaning": "分；分钟 minute",
+    "example": ""
+  },
+  {
+    "word": "some",
+    "meaning": "的",
+    "example": ""
+  },
+  {
+    "word": "head",
+    "meaning": "头",
+    "example": ""
+  },
+  {
+    "word": "pair",
+    "meaning": "一双；一对",
+    "example": ""
+  },
+  {
+    "word": "属于（某人）；关于（",
+    "meaning": "受欢迎的；欢迎 welcome",
+    "example": ""
+  },
+  {
+    "word": "of",
+    "meaning": "某人）",
+    "example": ""
+  },
+  {
+    "word": "her",
+    "meaning": "她的",
+    "example": ""
+  },
+  {
+    "word": "on",
+    "meaning": "在…...上",
+    "example": ""
+  },
+  {
+    "word": "nose",
+    "meaning": "鼻子",
+    "example": ""
+  },
+  {
+    "word": "under",
+    "meaning": "在…...下",
+    "example": ""
+  },
+  {
+    "word": "cat",
+    "meaning": "猫",
+    "example": ""
+  },
+  {
+    "word": "mum",
+    "meaning": "妈妈",
+    "example": ""
+  },
+  {
+    "word": "these",
+    "meaning": "这些",
+    "example": ""
+  },
+  {
+    "word": "not",
+    "meaning": "不；没有",
+    "example": ""
+  },
+  {
+    "word": "plant",
+    "meaning": "植物；种植",
+    "example": ""
+  },
+  {
+    "word": "find",
+    "meaning": "找到；发现",
+    "example": ""
+  },
+  {
+    "word": "baby",
+    "meaning": "动物幼崽；婴儿",
+    "example": ""
+  },
+  {
+    "word": "new",
+    "meaning": "新的；刚出现的",
+    "example": ""
+  },
+  {
+    "word": "chicken",
+    "meaning": "鸡；鸡肉",
+    "example": ""
+  },
+  {
+    "word": "no",
+    "meaning": "不；不要；没有；不是",
+    "example": ""
+  },
+  {
+    "word": "dog",
+    "meaning": "狗",
+    "example": ""
+  },
+  {
+    "word": "here",
+    "meaning": "在这里",
+    "example": ""
+  },
+  {
+    "word": "rabbit",
+    "meaning": "兔子",
+    "example": ""
+  },
+  {
+    "word": "room",
+    "meaning": "房间",
+    "example": ""
+  },
+  {
+    "word": "tomato",
+    "meaning": "西红柿",
+    "example": ""
+  },
+  {
+    "word": "flower",
+    "meaning": "花",
+    "example": ""
+  },
+  {
+    "word": "grass",
+    "meaning": "草",
+    "example": ""
+  },
+  {
+    "word": "apple",
+    "meaning": "苹果",
+    "example": ""
+  },
+  {
+    "word": "kind",
+    "meaning": "种类；体贴的，亲切的",
+    "example": ""
+  },
+  {
+    "word": "tree",
+    "meaning": "树",
+    "example": ""
+  },
+  {
+    "word": "he",
+    "meaning": "他",
+    "example": ""
+  },
+  {
+    "word": "this",
+    "meaning": "这；这个",
+    "example": ""
+  },
+  {
+    "word": "pig",
+    "meaning": "猪",
+    "example": ""
+  },
+  {
+    "word": "those",
+    "meaning": "那些",
+    "example": ""
+  },
+  {
+    "word": "there",
+    "meaning": "在那里",
+    "example": ""
+  },
+  {
+    "word": "animal",
+    "meaning": "动物",
+    "example": ""
+  },
+  {
+    "word": "behind",
+    "meaning": "在…...的后面",
+    "example": ""
+  },
+  {
+    "word": "duck",
+    "meaning": "鸭子",
+    "example": ""
+  },
+  {
+    "word": "home",
+    "meaning": "家",
+    "example": ""
+  },
+  {
+    "word": "potato",
+    "meaning": "土豆",
+    "example": ""
+  },
+  {
+    "word": "喜欢；例如；像…...一",
+    "meaning": "美丽的 beautiful",
+    "example": ""
+  },
+  {
+    "word": "many",
+    "meaning": "许多",
+    "example": ""
+  },
+  {
+    "word": "like",
+    "meaning": "样",
+    "example": ""
+  },
+  {
+    "word": "grandpa",
+    "meaning": "爷爷；外公",
+    "example": ""
+  },
+  {
+    "word": "向；朝；在（某处、某",
+    "meaning": "他的 his",
+    "example": ""
+  },
+  {
+    "word": "farm",
+    "meaning": "农场",
+    "example": ""
+  },
+  {
+    "word": "at",
+    "meaning": "时间或时刻）",
+    "example": ""
+  },
+  {
+    "word": "cow",
+    "meaning": "奶牛",
+    "example": ""
+  },
+  {
+    "word": "we",
+    "meaning": "我们",
+    "example": ""
+  },
+  {
+    "word": "small",
+    "meaning": "小的",
+    "example": ""
+  },
+  {
+    "word": "make",
+    "meaning": "使成为；制造",
+    "example": ""
+  },
+  {
+    "word": "lake",
+    "meaning": "湖",
+    "example": ""
+  },
+  {
+    "word": "friend",
+    "meaning": "朋友",
+    "example": ""
+  },
+  {
+    "word": "house",
+    "meaning": "房子",
+    "example": ""
+  },
+  {
+    "word": "get",
+    "meaning": "去取（或带来）；得到",
+    "example": ""
+  },
+  {
+    "word": "horse",
+    "meaning": "马",
+    "example": ""
+  },
+  {
+    "word": "know",
+    "meaning": "知道",
+    "example": ""
+  },
+  {
+    "word": "sheep",
+    "meaning": "羊；绵羊",
+    "example": ""
+  },
+  {
+    "word": "from",
+    "meaning": "从…...来；从…...开始",
+    "example": ""
+  },
+  {
+    "word": "big",
+    "meaning": "大的",
+    "example": ""
+  },
+  {
+    "word": "old",
+    "meaning": "老的；旧的",
+    "example": ""
+  },
+  {
+    "word": "look",
+    "meaning": "看",
+    "example": ""
+  },
+  {
+    "word": "舅父；叔父；伯父；姑",
+    "meaning": "最后的；末尾的 last",
+    "example": ""
+  },
+  {
+    "word": "uncle",
+    "meaning": "父；姨夫",
+    "example": ""
+  },
+  {
+    "word": "year",
+    "meaning": "年",
+    "example": ""
+  },
+  {
+    "word": "yes",
+    "meaning": "是的；可以",
+    "example": ""
+  },
+  {
+    "word": "also",
+    "meaning": "也；而且",
+    "example": ""
+  },
+  {
+    "word": "Mr",
+    "meaning": "前)先生",
+    "example": ""
+  },
+  {
+    "word": "和…...在一起；带有；",
+    "meaning": "居住；生活 live",
+    "example": ""
+  },
+  {
+    "word": "our",
+    "meaning": "我们的",
+    "example": ""
+  },
+  {
+    "word": "英语；英格兰人；英语",
+    "meaning": "使用 with",
+    "example": ""
+  },
+  {
+    "word": "English",
+    "meaning": "的；英格兰的",
+    "example": ""
+  },
+  {
+    "word": "parent",
+    "meaning": "父(母)亲",
+    "example": ""
+  },
+  {
+    "word": "teacher",
+    "meaning": "教师",
+    "example": ""
+  },
+  {
+    "word": "Chinese",
+    "meaning": "中国的；中国人；汉语",
+    "example": ""
+  },
+  {
+    "word": "which",
+    "meaning": "哪一个；哪一些",
+    "example": ""
+  },
+  {
+    "word": "food",
+    "meaning": "食物",
+    "example": ""
+  },
+  {
+    "word": "who",
+    "meaning": "谁；什么人",
+    "example": ""
+  },
+  {
+    "word": "lot",
+    "meaning": "大量；许多",
+    "example": ""
+  },
+  {
+    "word": "job",
+    "meaning": "工作",
+    "example": ""
+  },
+  {
+    "word": "about",
+    "meaning": "关于；大约",
+    "example": ""
+  },
+  {
+    "word": "student",
+    "meaning": "学生",
+    "example": ""
+  },
+  {
+    "word": "wall",
+    "meaning": "墙",
+    "example": ""
+  },
+  {
+    "word": "age",
+    "meaning": "年龄",
+    "example": ""
+  },
+  {
+    "word": "all",
+    "meaning": "所有(的)；全部(的)",
+    "example": ""
+  },
+  {
+    "word": "she",
+    "meaning": "她",
+    "example": ""
+  },
+  {
+    "word": "hour",
+    "meaning": "小时",
+    "example": ""
+  },
+  {
+    "word": "favourite",
+    "meaning": "最喜欢的；最爱的",
+    "example": ""
+  },
+  {
+    "word": "ago",
+    "meaning": "以前",
+    "example": ""
+  },
+  {
+    "word": "pet",
+    "meaning": "宠物",
+    "example": ""
+  },
+  {
+    "word": "family",
+    "meaning": "家庭",
+    "example": ""
+  },
+  {
+    "word": "very",
+    "meaning": "很；非常",
+    "example": ""
+  },
+  {
+    "word": "bird",
+    "meaning": "鸟",
+    "example": ""
+  },
+  {
+    "word": "cute",
+    "meaning": "可爱的",
+    "example": ""
+  },
+  {
+    "word": "非常；十分；许多；大",
+    "meaning": "说(某种语言)；说话 speak",
+    "example": ""
+  },
+  {
+    "word": "much",
+    "meaning": "量；多少",
+    "example": ""
+  },
+  {
+    "word": "sport",
+    "meaning": "运动",
+    "example": ""
+  },
+  {
+    "word": "school",
+    "meaning": "学校",
+    "example": ""
+  },
+  {
+    "word": "often",
+    "meaning": "时常；常常",
+    "example": ""
+  },
+  {
+    "word": "China",
+    "meaning": "中国",
+    "example": ""
+  },
+  {
+    "word": "play",
+    "meaning": "玩",
+    "example": ""
+  },
+  {
+    "word": "panda",
+    "meaning": "熊猫",
+    "example": ""
+  },
+  {
+    "word": "after",
+    "meaning": "在…...以后",
+    "example": ""
+  },
+  {
+    "word": "hot",
+    "meaning": "热的；炎热的",
+    "example": ""
+  },
+  {
+    "word": "want",
+    "meaning": "想要",
+    "example": ""
+  },
+  {
+    "word": "be",
+    "meaning": "是",
+    "example": ""
+  },
+  {
+    "word": "fish",
+    "meaning": "钓鱼；鱼; 鱼肉",
+    "example": ""
+  },
+  {
+    "word": "place",
+    "meaning": "地方；地点",
+    "example": ""
+  },
+  {
+    "word": "father",
+    "meaning": "父亲; 爸爸",
+    "example": ""
+  },
+  {
+    "word": "music",
+    "meaning": "音乐",
+    "example": ""
+  },
+  {
+    "word": "piano",
+    "meaning": "钢琴",
+    "example": ""
+  },
+  {
+    "word": "love",
+    "meaning": "喜爱；爱",
+    "example": ""
+  },
+  {
+    "word": "basketball",
+    "meaning": "篮球; 篮球运动",
+    "example": ""
+  },
+  {
+    "word": "write",
+    "meaning": "写",
+    "example": ""
+  },
+  {
+    "word": "做园艺工作;",
+    "meaning": "读; 阅读 read",
+    "example": ""
+  },
+  {
+    "word": "or",
+    "meaning": "或者; 也不(用于否定句)",
+    "example": ""
+  },
+  {
+    "word": "garden",
+    "meaning": "种植花木；园圃; 庭园",
+    "example": ""
+  },
+  {
+    "word": "mother",
+    "meaning": "母亲",
+    "example": ""
+  },
+  {
+    "word": "classroom",
+    "meaning": "教室",
+    "example": ""
+  },
+  {
+    "word": "child",
+    "meaning": "儿童; 小孩",
+    "example": ""
+  },
+  {
+    "word": "干净的；使……干净;",
+    "meaning": "他(她、它)们的 their",
+    "example": ""
+  },
+  {
+    "word": "sister",
+    "meaning": "姐; 妹",
+    "example": ""
+  },
+  {
+    "word": "clean",
+    "meaning": "打扫",
+    "example": ""
+  },
+  {
+    "word": "brother",
+    "meaning": "兄; 弟",
+    "example": ""
+  },
+  {
+    "word": "堂兄(弟、姊、妹);",
+    "meaning": "小的; 年幼的 little",
+    "example": ""
+  },
+  {
+    "word": "cousin",
+    "meaning": "表兄(弟、姊、妹)",
+    "example": ""
+  },
+  {
+    "word": "ball",
+    "meaning": "球",
+    "example": ""
+  },
+  {
+    "word": "aunt",
+    "meaning": "姑(姨、伯、婶、舅)母",
+    "example": ""
+  },
+  {
+    "word": "playground",
+    "meaning": "游乐场; 操场",
+    "example": ""
+  },
+  {
+    "word": "grandmother",
+    "meaning": "奶奶; 外婆",
+    "example": ""
+  },
+  {
+    "word": "wear",
+    "meaning": "穿; 戴",
+    "example": ""
+  },
+  {
+    "word": "come",
+    "meaning": "来; 来到",
+    "example": ""
+  },
+  {
+    "word": "talk",
+    "meaning": "说话；交谈",
+    "example": ""
+  },
+  {
+    "word": "ping-pong",
+    "meaning": "乒乓球运动",
+    "example": ""
+  },
+  {
+    "word": "tall",
+    "meaning": "高的",
+    "example": ""
+  },
+  {
+    "word": "whose",
+    "meaning": "谁的",
+    "example": ""
+  },
+  {
+    "word": "好吧；好;",
+    "meaning": "短的; 矮的 short 嗯;",
+    "example": ""
+  },
+  {
+    "word": "well",
+    "meaning": "令人满意地；健康的",
+    "example": ""
+  },
+  {
+    "word": "hair",
+    "meaning": "头发",
+    "example": ""
+  },
+  {
+    "word": "every",
+    "meaning": "每一; 每个",
+    "example": ""
+  },
+  {
+    "word": "long",
+    "meaning": "长的",
+    "example": ""
+  },
+  {
+    "word": "day",
+    "meaning": "一天; 白天",
+    "example": ""
+  },
+  {
+    "word": "quiet",
+    "meaning": "安静的",
+    "example": ""
+  },
+  {
+    "word": "week",
+    "meaning": "周",
+    "example": ""
+  },
+  {
+    "word": "girl",
+    "meaning": "女孩",
+    "example": ""
+  },
+  {
+    "word": "but",
+    "meaning": "但是",
+    "example": ""
+  },
+  {
+    "word": "between",
+    "meaning": "在......之间",
+    "example": ""
+  },
+  {
+    "word": "any",
+    "meaning": "任何(的); 任一(的)",
+    "example": ""
+  },
+  {
+    "word": "library",
+    "meaning": "图书馆",
+    "example": ""
+  },
+  {
+    "word": "photo",
+    "meaning": "照片",
+    "example": ""
+  },
+  {
+    "word": "blackboard",
+    "meaning": "黑板",
+    "example": ""
+  },
+  {
+    "word": "pink",
+    "meaning": "粉红色(的)",
+    "example": ""
+  },
+  {
+    "word": "后面；背部；后面的；",
+    "meaning": "向上 up",
+    "example": ""
+  },
+  {
+    "word": "left",
+    "meaning": "左边；向左边",
+    "example": ""
+  },
+  {
+    "word": "右边；向右边；正确的;",
+    "meaning": "背后的；回来；回原处 back",
+    "example": ""
+  },
+  {
+    "word": "right",
+    "meaning": "适当的",
+    "example": ""
+  },
+  {
+    "word": "clock",
+    "meaning": "时钟；钟",
+    "example": ""
+  },
+  {
+    "word": "always",
+    "meaning": "总是",
+    "example": ""
+  },
+  {
+    "word": "map",
+    "meaning": "地图",
+    "example": ""
+  },
+  {
+    "word": "story",
+    "meaning": "故事",
+    "example": ""
+  },
+  {
+    "word": "computer",
+    "meaning": "电脑",
+    "example": ""
+  },
+  {
+    "word": "night",
+    "meaning": "夜晚",
+    "example": ""
+  },
+  {
+    "word": "window",
+    "meaning": "窗户",
+    "example": ""
+  },
+  {
+    "word": "middle",
+    "meaning": "中间；中间的",
+    "example": ""
+  },
+  {
+    "word": "science",
+    "meaning": "科学",
+    "example": ""
+  },
+  {
+    "word": "think",
+    "meaning": "思考",
+    "example": ""
+  },
+  {
+    "word": "picture",
+    "meaning": "照片；图画",
+    "example": ""
+  },
+  {
+    "word": "football",
+    "meaning": "足球; 足球运动",
+    "example": ""
+  },
+  {
+    "word": "famous",
+    "meaning": "著名的",
+    "example": ""
+  },
+  {
+    "word": "happy",
+    "meaning": "快乐的",
+    "example": ""
+  },
+  {
+    "word": "table",
+    "meaning": "桌子",
+    "example": ""
+  },
+  {
+    "word": "eye",
+    "meaning": "眼睛",
+    "example": ""
+  },
+  {
+    "word": "电子邮件；（给某人）",
+    "meaning": "在今天；今天 today",
+    "example": ""
+  },
+  {
+    "word": "clever",
+    "meaning": "聪明的",
+    "example": ""
+  },
+  {
+    "word": "email",
+    "meaning": "发电子邮件",
+    "example": ""
+  },
+  {
+    "word": "next",
+    "meaning": "下一个(的)",
+    "example": ""
+  },
+  {
+    "word": "answer",
+    "meaning": "回答；答复；答案",
+    "example": ""
+  },
+  {
+    "word": "him",
+    "meaning": "(he的宾格)他",
+    "example": ""
+  },
+  {
+    "word": "question",
+    "meaning": "问题",
+    "example": ""
+  },
+  {
+    "word": "help",
+    "meaning": "帮助",
+    "example": ""
+  },
+  {
+    "word": "exercise",
+    "meaning": "运动；锻炼；练习",
+    "example": ""
+  },
+  {
+    "word": "front",
+    "meaning": "前面",
+    "example": ""
+  },
+  {
+    "word": "way",
+    "meaning": "方式；道路",
+    "example": ""
+  },
+  {
+    "word": "art",
+    "meaning": "艺术；美术",
+    "example": ""
+  },
+  {
+    "word": "best",
+    "meaning": "最好的；最",
+    "example": ""
+  },
+  {
+    "word": "because",
+    "meaning": "因为",
+    "example": ""
+  },
+  {
+    "word": "afternoon",
+    "meaning": "下午",
+    "example": ""
+  },
+  {
+    "word": "why",
+    "meaning": "为什么",
+    "example": ""
+  },
+  {
+    "word": "（对未婚女子的礼貌称",
+    "meaning": "那时；然后；那么 then",
+    "example": ""
+  },
+  {
+    "word": "dear",
+    "meaning": "亲爱的",
+    "example": ""
+  },
+  {
+    "word": "Miss",
+    "meaning": "呼）小姐；女士",
+    "example": ""
+  },
+  {
+    "word": "tell",
+    "meaning": "告诉",
+    "example": ""
+  },
+  {
+    "word": "work",
+    "meaning": "工作",
+    "example": ""
+  },
+  {
+    "word": "interesting",
+    "meaning": "有趣的",
+    "example": ""
+  },
+  {
+    "word": "sometimes",
+    "meaning": "有时",
+    "example": ""
+  },
+  {
+    "word": "subject",
+    "meaning": "学科；科目",
+    "example": ""
+  },
+  {
+    "word": "feel",
+    "meaning": "感觉；觉得",
+    "example": ""
+  },
+  {
+    "word": "learn",
+    "meaning": "学习；得知",
+    "example": ""
+  },
+  {
+    "word": "study",
+    "meaning": "学习；研究",
+    "example": ""
+  },
+  {
+    "word": "maths",
+    "meaning": "数学",
+    "example": ""
+  },
+  {
+    "word": "（从…...里）出来；出",
+    "meaning": "歌曲 song",
+    "example": ""
+  },
+  {
+    "word": "PE",
+    "meaning": "体育",
+    "example": ""
+  },
+  {
+    "word": "out",
+    "meaning": "去",
+    "example": ""
+  },
+  {
+    "word": "hard",
+    "meaning": "困难的；努力地",
+    "example": ""
+  },
+  {
+    "word": "sing",
+    "meaning": "唱歌",
+    "example": ""
+  },
+  {
+    "word": "difficult",
+    "meaning": "困难的",
+    "example": ""
+  },
+  {
+    "word": "swim",
+    "meaning": "游泳",
+    "example": ""
+  },
+  {
+    "word": "sure",
+    "meaning": "当然；一定",
+    "example": ""
+  },
+  {
+    "word": "run",
+    "meaning": "跑；跑步",
+    "example": ""
+  },
+  {
+    "word": "easy",
+    "meaning": "容易的",
+    "example": ""
+  },
+  {
+    "word": "使用；利用；使用；用",
+    "meaning": "快地；快的 fast",
+    "example": ""
+  },
+  {
+    "word": "use",
+    "meaning": "途",
+    "example": ""
+  },
+  {
+    "word": "dance",
+    "meaning": "跳舞",
+    "example": ""
+  },
+  {
+    "word": "give",
+    "meaning": "给；送给；供给",
+    "example": ""
+  },
+  {
+    "word": "fly",
+    "meaning": "飞",
+    "example": ""
+  },
+  {
+    "word": "idea",
+    "meaning": "想法；主意",
+    "example": ""
+  },
+  {
+    "word": "watch",
+    "meaning": "注视；观看；表；手表",
+    "example": ""
+  },
+  {
+    "word": "listen",
+    "meaning": "听",
+    "example": ""
+  },
+  {
+    "word": "cake",
+    "meaning": "蛋糕",
+    "example": ""
+  },
+  {
+    "word": "draw",
+    "meaning": "画画",
+    "example": ""
+  },
+  {
+    "word": "cook",
+    "meaning": "做饭；厨师",
+    "example": ""
+  },
+  {
+    "word": "travel",
+    "meaning": "旅行；游历",
+    "example": ""
+  },
+  {
+    "word": "noodle",
+    "meaning": "面条（通常用复数）",
+    "example": ""
+  },
+  {
+    "word": "walk",
+    "meaning": "行走；步行",
+    "example": ""
+  },
+  {
+    "word": "open",
+    "meaning": "打开；开放的；敞开的",
+    "example": ""
+  },
+  {
+    "word": "take",
+    "meaning": "拍照；拿；取；买下",
+    "example": ""
+  },
+  {
+    "word": "gift",
+    "meaning": "礼物",
+    "example": ""
+  },
+  {
+    "word": "visit",
+    "meaning": "参观；拜访",
+    "example": ""
+  },
+  {
+    "word": "party",
+    "meaning": "聚会",
+    "example": ""
+  },
+  {
+    "word": "park",
+    "meaning": "公园",
+    "example": ""
+  },
+  {
+    "word": "商店；逛商店；在商店",
+    "meaning": "买 buy",
+    "example": ""
+  },
+  {
+    "word": "when",
+    "meaning": "什么时候",
+    "example": ""
+  },
+  {
+    "word": "shop",
+    "meaning": "购物",
+    "example": ""
+  },
+  {
+    "word": "share",
+    "meaning": "分享；合用；分担",
+    "example": ""
+  },
+  {
+    "word": "woman",
+    "meaning": "女人",
+    "example": ""
+  },
+  {
+    "word": "o'clock",
+    "meaning": "（表示整点）......点钟",
+    "example": ""
+  },
+  {
+    "word": "women",
+    "meaning": "（复数）女人",
+    "example": ""
+  },
+  {
+    "word": "half",
+    "meaning": "一半，半；半数",
+    "example": ""
+  },
+  {
+    "word": "candle",
+    "meaning": "蜡烛",
+    "example": ""
+  },
+  {
+    "word": "dress",
+    "meaning": "穿衣服；连衣裙",
+    "example": ""
+  },
+  {
+    "word": "will",
+    "meaning": "将要；会",
+    "example": ""
+  },
+  {
+    "word": "breakfast",
+    "meaning": "早餐",
+    "example": ""
+  },
+  {
+    "word": "egg",
+    "meaning": "蛋",
+    "example": ""
+  },
+  {
+    "word": "before",
+    "meaning": "在......以前；以前",
+    "example": ""
+  },
+  {
+    "word": "juice",
+    "meaning": "果汁",
+    "example": ""
+  },
+  {
+    "word": "begin",
+    "meaning": "开始",
+    "example": ""
+  },
+  {
+    "word": "milk",
+    "meaning": "牛奶",
+    "example": ""
+  },
+  {
+    "word": "dinner",
+    "meaning": "正餐；主餐",
+    "example": ""
+  },
+  {
+    "word": "早的；早期的；提前；",
+    "meaning": "糖果 candy",
+    "example": ""
+  },
+  {
+    "word": "early",
+    "meaning": "在早期",
+    "example": ""
+  },
+  {
+    "word": "drink",
+    "meaning": "饮品；喝",
+    "example": ""
+  },
+  {
+    "word": "ask",
+    "meaning": "询问；请求",
+    "example": ""
+  },
+  {
+    "word": "card",
+    "meaning": "厚纸片；卡片",
+    "example": ""
+  },
+  {
+    "word": "lunch",
+    "meaning": "午餐",
+    "example": ""
+  },
+  {
+    "word": "（对已婚妇女的礼貌称",
+    "meaning": "玩偶；玩具娃娃 doll",
+    "example": ""
+  },
+  {
+    "word": "film",
+    "meaning": "电影",
+    "example": ""
+  },
+  {
+    "word": "Mrs",
+    "meaning": "呼）夫人；太太",
+    "example": ""
+  },
+  {
+    "word": "lesson",
+    "meaning": "课；一节课",
+    "example": ""
+  },
+  {
+    "word": "eat",
+    "meaning": "吃",
+    "example": ""
+  },
+  {
+    "word": "ice",
+    "meaning": "冰；冰块",
+    "example": ""
+  },
+  {
+    "word": "wish",
+    "meaning": "希望；祝愿；愿望",
+    "example": ""
+  },
+  {
+    "word": "birthday",
+    "meaning": "生日",
+    "example": ""
+  },
+  {
+    "word": "nurse",
+    "meaning": "护士",
+    "example": ""
+  },
+  {
+    "word": "month",
+    "meaning": "月份",
+    "example": ""
+  },
+  {
+    "word": "hear",
+    "meaning": "听到",
+    "example": ""
+  },
+  {
+    "word": "door",
+    "meaning": "门",
+    "example": ""
+  },
+  {
+    "word": "twenty",
+    "meaning": "二十",
+    "example": ""
+  },
+  {
+    "word": "one",
+    "meaning": "一",
+    "example": ""
+  },
+  {
+    "word": "thirty",
+    "meaning": "三十",
+    "example": ""
+  },
+  {
+    "word": "two",
+    "meaning": "二",
+    "example": ""
+  },
+  {
+    "word": "forty",
+    "meaning": "四十",
+    "example": ""
+  },
+  {
+    "word": "three",
+    "meaning": "三",
+    "example": ""
+  },
+  {
+    "word": "fifty",
+    "meaning": "五十",
+    "example": ""
+  },
+  {
+    "word": "four",
+    "meaning": "四",
+    "example": ""
+  },
+  {
+    "word": "sixty",
+    "meaning": "六十",
+    "example": ""
+  },
+  {
+    "word": "five",
+    "meaning": "五",
+    "example": ""
+  },
+  {
+    "word": "seventy",
+    "meaning": "七十",
+    "example": ""
+  },
+  {
+    "word": "six",
+    "meaning": "六",
+    "example": ""
+  },
+  {
+    "word": "eighty",
+    "meaning": "八十",
+    "example": ""
+  },
+  {
+    "word": "seven",
+    "meaning": "七",
+    "example": ""
+  },
+  {
+    "word": "ninety",
+    "meaning": "九十",
+    "example": ""
+  },
+  {
+    "word": "eight",
+    "meaning": "八",
+    "example": ""
+  },
+  {
+    "word": "hundred",
+    "meaning": "百",
+    "example": ""
+  },
+  {
+    "word": "nine",
+    "meaning": "九",
+    "example": ""
+  },
+  {
+    "word": "thousand",
+    "meaning": "千",
+    "example": ""
+  },
+  {
+    "word": "ten",
+    "meaning": "十",
+    "example": ""
+  },
+  {
+    "word": "million",
+    "meaning": "百万",
+    "example": ""
+  },
+  {
+    "word": "eleven",
+    "meaning": "十一",
+    "example": ""
+  },
+  {
+    "word": "first",
+    "meaning": "第一",
+    "example": ""
+  },
+  {
+    "word": "twelve",
+    "meaning": "十二",
+    "example": ""
+  },
+  {
+    "word": "second",
+    "meaning": "第二",
+    "example": ""
+  },
+  {
+    "word": "thirteen",
+    "meaning": "十三",
+    "example": ""
+  },
+  {
+    "word": "third",
+    "meaning": "第三",
+    "example": ""
+  },
+  {
+    "word": "fourteen",
+    "meaning": "十四",
+    "example": ""
+  },
+  {
+    "word": "fourth",
+    "meaning": "第四",
+    "example": ""
+  },
+  {
+    "word": "fifteen",
+    "meaning": "十五",
+    "example": ""
+  },
+  {
+    "word": "fifth",
+    "meaning": "第五",
+    "example": ""
+  },
+  {
+    "word": "sixteen",
+    "meaning": "十六",
+    "example": ""
+  },
+  {
+    "word": "sixth",
+    "meaning": "第六",
+    "example": ""
+  },
+  {
+    "word": "seventeen",
+    "meaning": "十七",
+    "example": ""
+  },
+  {
+    "word": "seventh",
+    "meaning": "第七",
+    "example": ""
+  },
+  {
+    "word": "eighteen",
+    "meaning": "十八",
+    "example": ""
+  },
+  {
+    "word": "eighth",
+    "meaning": "第八",
+    "example": ""
+  },
+  {
+    "word": "nineteen",
+    "meaning": "十九",
+    "example": ""
+  },
+  {
+    "word": "ninth",
+    "meaning": "第九",
+    "example": ""
+  },
+  {
+    "word": "tenth",
+    "meaning": "第十",
+    "example": ""
+  },
+  {
+    "word": "millionth",
+    "meaning": "第一百万",
+    "example": ""
+  },
+  {
+    "word": "eleventh",
+    "meaning": "第十一",
+    "example": ""
+  },
+  {
+    "word": "January",
+    "meaning": "一月",
+    "example": ""
+  },
+  {
+    "word": "twelfth",
+    "meaning": "第十二",
+    "example": ""
+  },
+  {
+    "word": "February",
+    "meaning": "二月",
+    "example": ""
+  },
+  {
+    "word": "thirteenth",
+    "meaning": "第十三",
+    "example": ""
+  },
+  {
+    "word": "March",
+    "meaning": "三月",
+    "example": ""
+  },
+  {
+    "word": "fourteenth",
+    "meaning": "第十四",
+    "example": ""
+  },
+  {
+    "word": "April",
+    "meaning": "四月",
+    "example": ""
+  },
+  {
+    "word": "fifteenth",
+    "meaning": "第十五",
+    "example": ""
+  },
+  {
+    "word": "May",
+    "meaning": "五月",
+    "example": ""
+  },
+  {
+    "word": "sixteenth",
+    "meaning": "第十六",
+    "example": ""
+  },
+  {
+    "word": "June",
+    "meaning": "六月",
+    "example": ""
+  },
+  {
+    "word": "seventeenth",
+    "meaning": "第十七",
+    "example": ""
+  },
+  {
+    "word": "July",
+    "meaning": "七月",
+    "example": ""
+  },
+  {
+    "word": "eighteenth",
+    "meaning": "第十八",
+    "example": ""
+  },
+  {
+    "word": "August",
+    "meaning": "八月",
+    "example": ""
+  },
+  {
+    "word": "nineteenth",
+    "meaning": "第十九",
+    "example": ""
+  },
+  {
+    "word": "September",
+    "meaning": "九月",
+    "example": ""
+  },
+  {
+    "word": "twentieth",
+    "meaning": "第二十",
+    "example": ""
+  },
+  {
+    "word": "October",
+    "meaning": "十月",
+    "example": ""
+  },
+  {
+    "word": "thirtieth",
+    "meaning": "第三十",
+    "example": ""
+  },
+  {
+    "word": "November",
+    "meaning": "十一月",
+    "example": ""
+  },
+  {
+    "word": "fortieth",
+    "meaning": "第四十",
+    "example": ""
+  },
+  {
+    "word": "December",
+    "meaning": "十二月",
+    "example": ""
+  },
+  {
+    "word": "fiftieth",
+    "meaning": "第五十",
+    "example": ""
+  },
+  {
+    "word": "Monday",
+    "meaning": "星期一",
+    "example": ""
+  },
+  {
+    "word": "sixtieth",
+    "meaning": "第六十",
+    "example": ""
+  },
+  {
+    "word": "Tuesday",
+    "meaning": "星期二",
+    "example": ""
+  },
+  {
+    "word": "seventieth",
+    "meaning": "第七十",
+    "example": ""
+  },
+  {
+    "word": "Wednesday",
+    "meaning": "星期三",
+    "example": ""
+  },
+  {
+    "word": "eightieth",
+    "meaning": "第八十",
+    "example": ""
+  },
+  {
+    "word": "Thursday",
+    "meaning": "星期四",
+    "example": ""
+  },
+  {
+    "word": "ninetieth",
+    "meaning": "第九十",
+    "example": ""
+  },
+  {
+    "word": "Friday",
+    "meaning": "星期五",
+    "example": ""
+  },
+  {
+    "word": "hundredth",
+    "meaning": "第一百",
+    "example": ""
+  },
+  {
+    "word": "Saturday",
+    "meaning": "星期六",
+    "example": ""
+  },
+  {
+    "word": "thousandth",
+    "meaning": "第一千",
+    "example": ""
+  },
+  {
+    "word": "Sunday",
+    "meaning": "星期天",
+    "example": ""
+  }
+]

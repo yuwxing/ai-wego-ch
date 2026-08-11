@@ -1,0 +1,120 @@
+LINE: 1 n.规则；规章 rule /ruːl/ 21 adj.可移动的 mobile /ˈmoʊbl/
+  NUMS: [0, 4]
+  #1: CN="规则；规章" EN="rule"
+  #21: CN="可移动的" EN="mobile"
+LINE: 2 n./v.秩序；点菜 order /ˈɔːrdər/ 22 n.手机 mobile phone /ˌmoʊbl ˈfoʊn/
+  NUMS: [0, 4]
+  #2: NO MATCH seg="n. ˈɔːrdər/"
+  #22: CN="手机" EN="mobile phone"
+LINE: 3 v.遵循；跟随 follow /ˈfɑːloʊ/ 23 关掉（水、电或煤气） turn off /ˈtɜːrn ɔːf/
+  NUMS: [0, 4]
+  #3: CN="遵循；跟随" EN="follow"
+  #23: CN="关掉（水、电或煤气）" EN="turn off"
+LINE: 4 迟到 be late (for) /bi leɪt/ 24 n.队 queue /kjuː/
+  NUMS: [0, 7]
+  #4: CN="迟到" EN="be late"
+  #24: CN="队" EN="queue"
+LINE: 5 v.到达 arrive /əˈraɪv/ 25 插队 jump the queue /dʒʌmp ðə kjuː/
+  NUMS: [0, 4]
+  #5: CN="到达" EN="arrive"
+  #25: CN="插队" EN="jump the queue"
+LINE: 6 准时 on time /ɑːn taɪm/ 26 等待 wait for /weɪt fɔːr/
+  NUMS: [0, 6]
+  #6: CN="准时" EN="on time"
+  #26: CN="等待" EN="wait for"
+LINE: 7 n.走廊 hallway /ˈhɔːlweɪ/ 27 adv.只是；正好 just /dʒʌst/
+  NUMS: [0, 4]
+  #7: CN="走廊" EN="hallway"
+  #27: CN="只是；正好" EN="just"
+LINE: 8 n.校服；制服 uniform /ˈjuːnɪfɔːrm/ 28 v.离开；留下 leave /liːv/
+  NUMS: [0, 4]
+  #8: CN="校服；制服" EN="uniform"
+  #28: CN="离开；留下" EN="leave"
+LINE: 9 v./n.乱扔；垃圾 litter /ˈlɪtər/ 29 adj.缺席的；不在的 absent /ˈæbsənt/
+  NUMS: [0, 4]
+  #9: NO MATCH seg="v. ˈlɪtər/"
+  #29: CN="缺席的；不在的" EN="absent"
+LINE: 10 adj.有礼貌的 polite /pəˈlaɪt/ 30 缺席；不在 be absent from /bi ˈæbsənt frəm/ v./n.对待，招待，资料 interj.嘘（用以让别人安
+  NUMS: [0, 4]
+  #10: CN="有礼貌的" EN="polite"
+  #30: CN="缺席；不在" EN="be absent from   v"
+LINE: 11 ；款待 treat /triːt/ 31 静下来） shh /ʃ/
+  NUMS: [0, 4]
+  #11: CN="；款待" EN="treat"
+  #31: CN="静下来）" EN="shh"
+LINE: 12 n./v.尊敬 respect /rɪˈspekt/ 32 adv.轻声地；安静地 quietly /ˈkwaɪətli/
+  NUMS: [0, 4]
+  #12: NO MATCH seg="n. rɪˈspekt/"
+  #32: CN="轻声地；安静地" EN="quietly"
+LINE: 13 conj.如果 if /ɪf/ 33 n.安全带；腰带；皮带 belt /belt/
+  NUMS: [0, 4]
+  #13: CN="如果" EN="if"
+  #33: CN="安全带；腰带；皮带" EN="belt"
+LINE: 14 n.夹克衫；短上衣 jacket /ˈdʒækɪt/ 34 v.喂养；饲养 feed /fiːd/
+  NUMS: [0, 4]
+  #14: CN="夹克衫；短上衣" EN="jacket"
+  #34: CN="喂养；饲养" EN="feed"
+LINE: 15 不得不 have to /ˈhæv tə/ 35 n.声音；噪声 noise /nɔɪz/
+  NUMS: [0, 6]
+  #15: CN="不得不" EN="have to"
+  #35: CN="声音；噪声" EN="noise"
+LINE: 16 pron.每件事；一切 everything /ˈevriθɪŋ/ 36 adj.不快乐的 unhappy /ʌnˈhæpi/
+  NUMS: [0, 4]
+  #16: CN="每件事；一切" EN="everything"
+  #36: CN="不快乐的" EN="unhappy"
+LINE: 17 v.借给；借出 lend /lend/ 37 n.博士；医生 Dr /draɪv/
+  NUMS: [0, 4]
+  #17: CN="借给；借出" EN="lend"
+  #37: CN="博士；医生" EN="Dr"
+LINE: 18 n./adj糖果；甜的 sweet /swiːt/ 38 整理床铺；铺床make sb's/the bed /meɪk ðə bed/ adv.也（用于否定词组
+  NUMS: [0, 4]
+  #18: NO MATCH seg="n. swiːt/"
+  #38: NO MATCH seg="整理床铺；铺床make sb's meɪk ðə bed/ adv.也（用于否定词组"
+LINE: 19 n.点心；小吃 snack /snæk/ 39 后） either /ˈiːðər/
+  NUMS: [0, 4]
+  #19: CN="点心；小吃" EN="snack"
+  #39: CN="后）" EN="either"
+LINE: 20 当然 of course /əv kɔːrs/ 40 v.训练；练习 practise /ˈpræktɪs/
+  NUMS: [0, 6]
+  #20: CN="当然" EN="of course"
+  #40: CN="训练；练习" EN="practise"
+LINE: 41 v.悬挂 hang /hæŋ/ 51 n.精神；情绪 spirit /ˈspɪrɪt/
+  NUMS: [0, 4]
+  #41: CN="悬挂" EN="hang"
+  #51: CN="精神；情绪" EN="spirit"
+LINE: 42 闲逛；常去某处 hang out /ˈhæŋ aʊt/ 52 思考；考虑 think about /θɪŋk əˈbaʊt/
+  NUMS: [0, 6]
+  #42: CN="闲逛；常去某处" EN="hang out"
+  #52: CN="思考；考虑" EN="think about"
+LINE: 43 n.工作日 weekday /ˈwiːkdeɪ/ 53 v.放松；休息 relax /rɪˈlæks/
+  NUMS: [0, 4]
+  #43: CN="工作日" EN="weekday"
+  #53: CN="放松；休息" EN="relax"
+LINE: 44 adj.糟糕的；讨厌的 awful /ˈɔːfl/ 54 n.建议；意见 advice /ədˈvaɪs/
+  NUMS: [0, 4]
+  #44: CN="糟糕的；讨厌的" EN="awful"
+  #54: CN="建议；意见" EN="advice"
+LINE: 45 v.变成；成为 become /bɪˈkʌm/ 55 v.理解；领会 understand /ˌʌndərˈstænd/
+  NUMS: [0, 4]
+  #45: CN="变成；成为" EN="become"
+  #55: CN="理解；领会" EN="understand"
+LINE: 46 adj./adv.较好；较好地 better /ˈbetər/ 56 adj.不整洁的 untidy /ʌnˈtaɪdi/
+  NUMS: [0, 4]
+  #46: NO MATCH seg="adj. ˈbetər/"
+  #56: CN="不整洁的" EN="untidy"
+LINE: 47 n.人 person /ˈpɜːrsn/ 57 n.玛丽 Mary /ˈmeri/ v.集中（注意力、精力
+  NUMS: [0, 4]
+  #47: CN="人" EN="person"
+  #57: CN="玛丽" EN="Mary   v"
+LINE: 48 等）；聚焦 focus /ˈfoʊkəs/ 58 n.托尼 Tony /ˈtoʊni/ 集中（注意力、精力等
+  NUMS: [0, 4]
+  #48: CN="等）；聚焦" EN="focus"
+  #58: CN="托尼" EN="Tony"
+LINE: 49 ）于 focus on /ˈfoʊkəs ɑːn/ 59 n.安妮 Anne /æn/
+  NUMS: [0, 6]
+  #49: CN="）于" EN="focus on"
+  #59: CN="安妮" EN="Anne"
+LINE: 50 v.创建；建造 build /bɪld/ 60 n.埃里克 Eric /ˈerɪk/
+  NUMS: [0, 4]
+  #50: CN="创建；建造" EN="build"
+  #60: CN="埃里克" EN="Eric"

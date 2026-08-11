@@ -437,6 +437,9 @@ export default function HomePageNav() {
                  <a href="https://ppt-master.pages.dev" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-orange-400 to-red-500 text-white text-xs font-semibold hover:from-orange-500 hover:to-red-600 transition-all shadow-sm hover:shadow-md active:scale-[0.97]">
                    PPT AI OS v3
                  </a>
+                 <a href="https://github.com/yuwxing/ai-ppt-os-v4" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-sky-400 to-blue-500 text-white text-xs font-semibold hover:from-sky-500 hover:to-blue-600 transition-all shadow-sm hover:shadow-md active:scale-[0.97]">
+                   PPT AI OS v4
+                 </a>
                </div>
             </div>
           </div>
