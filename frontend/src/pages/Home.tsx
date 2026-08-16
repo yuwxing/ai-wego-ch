@@ -71,7 +71,6 @@ const sections = [
       { to: '/community/quiz/science', label: '科学常识' },
        { to: '/community/quiz/geography', label: '地理常识' },
        { to: 'https://play.we-aigo.cn', label: '科普剧大赛' },
-       { to: 'https://ppt-master.pages.dev/', label: '喵的书页小游戏' },
      ]
   },
   {
