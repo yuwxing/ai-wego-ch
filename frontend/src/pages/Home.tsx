@@ -69,9 +69,10 @@ const sections = [
       { to: '/community/quiz/poetry', label: '古诗词挑战' },
       { to: '/community/quiz/history', label: '历史常识' },
       { to: '/community/quiz/science', label: '科学常识' },
-      { to: '/community/quiz/geography', label: '地理常识' },
-      { to: 'https://play.we-aigo.cn', label: '科普剧大赛' },
-    ]
+       { to: '/community/quiz/geography', label: '地理常识' },
+       { to: 'https://play.we-aigo.cn', label: '科普剧大赛' },
+       { to: 'https://ppt-master.pages.dev/', label: '喵的书页小游戏' },
+     ]
   },
   {
     title: '脑力训练', icon: Brain, desc: '专注力 · 记忆力 · 心理测试',
@@ -80,6 +81,13 @@ const sections = [
       { to: '/community/brain-train', label: '脑力训练', desc: '13种小游戏' },
       { to: '/community/math-visual', label: '数形结合', desc: '加减乘除可视化' },
       { to: '/community/psych-test', label: '心理测试', desc: '11种测评' },
+    ]
+  },
+  {
+    title: '休闲时光', icon: Sun, desc: 'AI金渐层 · 陪你放松片刻',
+    color: 'from-rose-400 to-pink-500',
+    links: [
+      { to: 'https://ai-wego.top/leisure/cat-life/', label: '金渐层的AI日常', desc: '养一只会转身、会撒娇、可大可小的桌面小猫' },
     ]
   },
   {
@@ -437,9 +445,9 @@ export default function HomePageNav() {
                  <a href="https://ppt-master.pages.dev" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-orange-400 to-red-500 text-white text-xs font-semibold hover:from-orange-500 hover:to-red-600 transition-all shadow-sm hover:shadow-md active:scale-[0.97]">
                    PPT AI OS v3
                  </a>
-                 <a href="https://github.com/yuwxing/ai-ppt-os-v4" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-sky-400 to-blue-500 text-white text-xs font-semibold hover:from-sky-500 hover:to-blue-600 transition-all shadow-sm hover:shadow-md active:scale-[0.97]">
-                   PPT AI OS v4
-                 </a>
+                 <a href="https://ai-ppt-os-v4.pages.dev" target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1.5 px-4 py-2 rounded-xl bg-gradient-to-r from-sky-400 to-blue-500 text-white text-xs font-semibold hover:from-sky-500 hover:to-blue-600 transition-all shadow-sm hover:shadow-md active:scale-[0.97]">
+                    PPT AI OS v4
+                  </a>
                </div>
             </div>
           </div>
