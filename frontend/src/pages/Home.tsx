@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
-import { BookOpen, Award, Trophy, Sparkles, GraduationCap, Shield, Briefcase, Sun, User, LogIn, UserPlus, Monitor, Wand2, Loader2, Share2, X, Download, Brain, Users, ExternalLink, Box } from 'lucide-react'
+import { BookOpen, Award, Trophy, Sparkles, GraduationCap, Shield, Briefcase, Sun, User, LogIn, UserPlus, Monitor, Wand2, Loader2, Share2, X, Download, Brain, Users, ExternalLink } from 'lucide-react'
 import { useUser } from '../contexts/UserContext'
 import VisitorCounter from '../components/VisitorCounter'
 import { digitalAvatarAPI } from '../utils/supabase'
@@ -87,14 +87,6 @@ const sections = [
     color: 'from-rose-400 to-pink-500',
     links: [
       { to: 'https://ai-wego.top/leisure/cat-life/', label: '金渐层的AI日常', desc: '养一只会转身、会撒娇、可大可小的桌面小猫' },
-    ]
-  },
-  {
-    title: '3D建模', icon: Box, desc: 'Blender · 从零开始做模型',
-    color: 'from-orange-400 to-amber-500',
-    links: [
-      { to: 'https://www.blender.org/', label: 'Blender 官网' },
-      { to: 'https://www.blender.org/download/', label: '下载 Blender' },
     ]
   },
   {
