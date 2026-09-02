@@ -1,2 +1,4 @@
-/api/*  /api/:splat  200
-/*      /index.html  200
+/api/*        /api/:splat          200
+/growth       /growth/index.html   200
+/growth/      /growth/index.html   200
+/*            /index.html          200

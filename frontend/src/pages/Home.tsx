@@ -57,6 +57,13 @@ const sections = [
     ]
   },
   {
+    title: 'AI 3D 世界资产', icon: Sparkles, desc: '文字 / 图片 → GLB · 实时 3D 预览',
+    color: 'from-emerald-400 to-cyan-500',
+    links: [
+      { to: 'https://ai-wego-3d-studio.pages.dev/3d-studio', label: 'AI-Wego 3D Studio', desc: '生成宠物、NPC、游戏资产，下载 GLB' },
+    ]
+  },
+  {
     title: 'WEGO社区', icon: Trophy, desc: '竞赛 · 文学社 · 创作工坊 · 推理测试',
     color: 'from-amber-400 to-orange-500',
     links: [
@@ -83,10 +90,11 @@ const sections = [
     ]
   },
   {
-    title: '休闲时光', icon: Sun, desc: 'AI金渐层 · 陪你放松片刻',
+    title: '休闲时光', icon: Sun, desc: 'AI金渐层 · 星座小魔女 · 陪你放松片刻',
     color: 'from-rose-400 to-pink-500',
     links: [
       { to: 'https://ai-wego.top/leisure/cat-life/', label: '金渐层的AI日常', desc: '养一只会转身、会撒娇、可大可小的桌面小猫' },
+      { to: 'https://ai-wego.top/leisure/zodiac-witch/', label: '星座小魔女·星铃', desc: '测测你的灵魂星座 · 和星铃聊聊天' },
     ]
   },
   {
@@ -603,6 +611,37 @@ export default function HomePageNav() {
             </button>
           </div>
         )}
+
+        {/* English Growth Hub · 八年级英语师生成长平台 */}
+        <a
+          href="/growth/"
+          className="group relative block mb-6 rounded-2xl bg-gradient-to-r from-emerald-500 via-teal-500 to-sky-500 p-[1.5px] transition-all duration-300 hover:shadow-2xl hover:-translate-y-0.5"
+        >
+          <div className="relative flex flex-col md:flex-row items-start md:items-center gap-4 rounded-2xl bg-white/95 backdrop-blur px-6 py-5">
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-400 to-sky-400 flex items-center justify-center text-white shadow-md shrink-0">
+              <GraduationCap className="w-7 h-7" />
+            </div>
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 flex-wrap mb-1">
+                <h2 className="text-slate-800 font-bold text-lg">English Growth Hub</h2>
+                <span className="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-600 text-[11px] font-semibold border border-emerald-100">NEW</span>
+              </div>
+              <p className="text-slate-600 text-sm font-medium">八年级英语师生成长平台 · 2024 人教版新教材</p>
+              <p className="text-slate-400 text-xs mt-1">
+                课堂 3 秒评价 · 学生自评 · 作业管理 · 成绩分析 · 成长档案 · 学习习惯 · AI 教学助手
+              </p>
+            </div>
+            <div className="flex items-center gap-2 shrink-0">
+              <span className="hidden sm:inline-flex px-3 py-1.5 rounded-full bg-slate-50 text-slate-500 text-xs border border-slate-200">
+                教师端 / 学生端
+              </span>
+              <span className="inline-flex items-center gap-1.5 px-5 py-2.5 rounded-xl bg-gradient-to-r from-emerald-500 to-sky-500 text-white text-sm font-bold group-hover:from-emerald-400 group-hover:to-sky-400 transition-all shadow-md">
+                进入平台
+                <ExternalLink className="w-4 h-4" />
+              </span>
+            </div>
+          </div>
+        </a>
 
         <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
           {sections.map(s => (

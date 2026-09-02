@@ -24,6 +24,6 @@ if (!fs.existsSync(DIST)) {
 console.log("✅ dist 已生成");
 
 // 3. 部署
-run("npx wrangler pages deploy dist");
+run("npx wrangler pages deploy dist --project-name ai-wego-v3");
 
 console.log("\n🚀 部署完成！");
