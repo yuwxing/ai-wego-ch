@@ -1,0 +1,6 @@
+name = "ai-wego-v3"
+pages_build_output_dir = "dist"
+
+[[kv_namespaces]]
+binding = "GROWTH_DB"
+id = "e9c3f2e9ffef4c9cb376878ad369dc9e"

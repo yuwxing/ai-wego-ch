@@ -1,0 +1,375 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>星座小魔女 · 星铃 — 测测你的灵魂星座</title>
+<meta name="description" content="星座小魔女星铃：12 道直击灵魂的情境题，测出你性格深处的灵魂星座原型。" />
+<meta property="og:title" content="星座小魔女 · 星铃" />
+<meta property="og:description" content="忘掉出生日期，测测你性格深处的灵魂星座 ✨" />
+<style>
+  :root{
+    --ink:#4a3b63; --sub:#8b7aa8; --line:#eadff5;
+    --card:#ffffff; --gold:#d99a2b; --pink:#e0709f; --violet:#8b5cf6;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html,body{height:100%}
+  body{
+    font-family:"Noto Serif SC","Source Han Serif SC","Songti SC","STSong","SimSun","KaiTi","STKaiti",serif;
+    color:var(--ink); line-height:1.75; overflow-x:hidden;
+    background:
+      radial-gradient(900px 620px at 85% -5%, #ffe9f2 0%, transparent 55%),
+      radial-gradient(820px 620px at -5% 22%, #f3e8ff 0%, transparent 55%),
+      radial-gradient(1000px 720px at 50% 115%, #e6f1ff 0%, transparent 60%),
+      linear-gradient(180deg,#fffaf3,#f8f2ff);
+    min-height:100vh;
+  }
+  .stars{position:fixed;inset:0;pointer-events:none;z-index:0}
+  .star{position:absolute;border-radius:50%;animation:twinkle 3.2s ease-in-out infinite}
+  @keyframes twinkle{0%,100%{opacity:.2}50%{opacity:.85}}
+  .wrap{position:relative;z-index:1;max-width:760px;margin:0 auto;padding:32px 18px 64px}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:24px;padding:26px;
+    box-shadow:0 14px 44px rgba(139,92,246,.09)}
+  .center{text-align:center}
+  .avatar{width:132px;height:132px;margin:0 auto 8px;filter:drop-shadow(0 10px 24px rgba(224,163,61,.28));
+    animation:float 4.5s ease-in-out infinite}
+  @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+  h1{font-size:30px;letter-spacing:2px;font-weight:800;
+    background:linear-gradient(90deg,#d99a2b,#e0709f,#8b5cf6);
+    -webkit-background-clip:text;background-clip:text;color:transparent}
+  .tag{color:var(--sub);font-size:14px;margin-top:4px}
+  .btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;border:0;
+    border-radius:999px;padding:13px 26px;font-size:15px;font-weight:700;color:#4a2a63;
+    background:linear-gradient(90deg,#f7cf74,#f3a3c3);box-shadow:0 8px 24px rgba(224,112,159,.22);
+    transition:transform .15s ease, box-shadow .15s ease}
+  .btn:hover{transform:translateY(-2px);box-shadow:0 12px 30px rgba(224,112,159,.32)}
+  .btn:active{transform:translateY(0)}
+  .btn.ghost{background:#fdf9ff;color:var(--ink);box-shadow:none;border:1px solid var(--line)}
+  .btn:disabled{opacity:.45;cursor:not-allowed}
+  .section{margin-top:26px}
+  .sec-title{display:flex;align-items:center;gap:10px;font-size:18px;font-weight:800;margin-bottom:14px}
+  .sec-title .bar{width:5px;height:22px;border-radius:3px;background:linear-gradient(180deg,#e0a33d,#e0709f)}
+  .q-num{font-size:12px;color:#c0863a;letter-spacing:2px;font-weight:700}
+  .q-text{font-size:20px;font-weight:700;margin:8px 0 20px}
+  .opts{display:flex;flex-direction:column;gap:10px}
+  .opt{display:flex;align-items:center;gap:12px;text-align:left;width:100%;cursor:pointer;
+    background:#fbf7ff;border:1px solid var(--line);border-radius:16px;padding:14px 16px;
+    color:var(--ink);font-size:15px;transition:all .15s ease}
+  .opt:hover{border-color:#c9a6ef;transform:translateX(4px)}
+  .opt .k{flex-shrink:0;width:30px;height:30px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+    font-size:15px;font-weight:800;background:#f1e6ff;color:#8b5cf6}
+  .progress{height:8px;border-radius:99px;background:#f0e7fa;overflow:hidden;margin-bottom:18px}
+  .progress>i{display:block;height:100%;width:0;background:linear-gradient(90deg,#e0a33d,#e0709f,#8b5cf6);transition:width .3s ease}
+  .bars{margin:18px 0 8px;display:flex;flex-direction:column;gap:12px}
+  .bar-row{display:grid;grid-template-columns:64px 1fr 46px;align-items:center;gap:12px;font-size:14px}
+  .bar-track{height:14px;border-radius:99px;background:#f0e7fa;overflow:hidden}
+  .bar-fill{height:100%;border-radius:99px;transition:width .8s cubic-bezier(.2,.8,.2,1)}
+  .result-sign{font-size:46px}
+  .result-name{font-size:26px;font-weight:800;margin:6px 0 2px}
+  .result-trait{color:var(--sub);font-size:14px;margin-bottom:14px}
+  .bless{background:#fff8e7;border:1px dashed #e7c275;border-radius:16px;padding:14px 16px;
+    font-size:14px;color:#7a5b1f;text-align:left}
+  .chips{display:flex;flex-wrap:wrap;gap:8px;margin:12px 0 16px}
+  .chip{cursor:pointer;border:1px solid var(--line);background:#fdf9ff;color:var(--ink);
+    border-radius:999px;padding:7px 13px;font-size:13px;transition:all .15s}
+  .chip:hover{border-color:var(--pink);color:#b04d7d}
+  .chatbox{display:flex;flex-direction:column;gap:10px;max-height:380px;overflow-y:auto;padding:4px 2px;margin-bottom:12px}
+  .msg{max-width:82%;padding:10px 14px;border-radius:16px;font-size:14px;white-space:pre-wrap;word-break:break-word}
+  .msg.luna{align-self:flex-start;background:#f4ecff;border:1px solid rgba(139,92,246,.22);border-bottom-left-radius:5px}
+  .msg.me{align-self:flex-end;background:#fdeef5;border:1px solid rgba(224,112,159,.28);border-bottom-right-radius:5px}
+  .chat-input{display:flex;gap:8px}
+  .chat-input input{flex:1;min-width:0;background:#fdf9ff;border:1px solid var(--line);border-radius:14px;
+    padding:12px 14px;color:var(--ink);font-size:14px;outline:none}
+  .chat-input input:focus{border-color:#c9a6ef}
+  .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:12px}
+  .sign-card{background:#fdf9ff;border:1px solid var(--line);border-radius:16px;padding:14px;text-align:center}
+  .sign-card .glyph{font-size:28px}
+  .sign-card .nm{font-weight:700;margin:4px 0 2px;font-size:15px}
+  .sign-card .tr{font-size:12px;color:var(--sub);line-height:1.5}
+  .element{display:flex;gap:14px;align-items:flex-start;background:#fdf9ff;border:1px solid var(--line);
+    border-radius:16px;padding:14px;margin-bottom:12px}
+  .element .ico{font-size:26px}
+  .element .hd{font-weight:700;font-size:15px}
+  .element .ds{font-size:13px;color:var(--sub)}
+  .foot{margin-top:34px;text-align:center;color:var(--sub);font-size:12px}
+  .hidden{display:none}
+  .typing{color:var(--sub);font-size:13px}
+  @media(max-width:520px){h1{font-size:26px}.q-text{font-size:18px}}
+</style>
+</head>
+<body>
+<div class="stars" id="stars"></div>
+<div class="wrap">
+
+  <!-- Hero -->
+  <div class="card center" id="hero">
+    <div class="avatar">
+      <svg viewBox="0 0 1024 1024" width="132" height="132" xmlns="http://www.w3.org/2000/svg" aria-label="星铃头像">
+        <defs>
+          <radialGradient id="bg" cx="50%" cy="40%" r="78%">
+            <stop offset="0%" stop-color="#fff8ff"/><stop offset="60%" stop-color="#f6ecff"/><stop offset="100%" stop-color="#eadcf8"/>
+          </radialGradient>
+          <linearGradient id="hat" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#8252de"/><stop offset="100%" stop-color="#3a1e78"/></linearGradient>
+          <linearGradient id="hair" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#c9a3ff"/><stop offset="100%" stop-color="#8658d8"/></linearGradient>
+          <radialGradient id="ball" cx="34%" cy="28%" r="85%"><stop offset="0%" stop-color="#d8f1ff"/><stop offset="45%" stop-color="#7cc3ff"/><stop offset="100%" stop-color="#2f5fd0"/></radialGradient>
+        </defs>
+        <rect width="1024" height="1024" fill="url(#bg)"/>
+        <g fill="#e0a33d"><circle cx="130" cy="170" r="5" opacity=".85"/><circle cx="880" cy="150" r="4" opacity=".75"/><circle cx="860" cy="820" r="5" opacity=".7"/><circle cx="150" cy="760" r="4" opacity=".65"/></g>
+        <g fill="none"><circle cx="512" cy="512" r="400" stroke="#d9a83c" stroke-opacity=".5" stroke-width="4"/><circle cx="512" cy="512" r="348" stroke="#d9a83c" stroke-opacity=".22" stroke-width="3"/></g>
+        <g fill="#d9a83c" font-family="Georgia,serif" font-size="46" text-anchor="middle" dominant-baseline="central">
+          <text x="512" y="116">♈</text><text x="706" y="164">♉</text><text x="844" y="306">♊</text><text x="896" y="512">♋</text>
+          <text x="844" y="718">♌</text><text x="706" y="860">♍</text><text x="512" y="908">♎</text><text x="318" y="860">♏</text>
+          <text x="180" y="718">♐</text><text x="128" y="512">♑</text><text x="180" y="306">♒</text><text x="318" y="164">♓</text>
+        </g>
+        <circle cx="512" cy="400" r="250" fill="#f3c46b" opacity=".18"/>
+        <path fill="url(#hair)" d="M512 226 C378 238 326 322 334 468 C340 566 384 634 438 656 L586 656 C640 634 684 566 690 468 C698 322 646 238 512 226 Z"/>
+        <path fill="url(#hair)" opacity=".8" d="M356 600 C390 670 440 716 486 730 L378 756 C330 706 310 648 308 580 Z"/>
+        <path fill="url(#hair)" opacity=".8" d="M668 600 C634 670 584 716 538 730 L646 756 C694 706 714 648 716 580 Z"/>
+        <path fill="#6f49d8" d="M512 582 C458 582 428 606 414 686 L402 824 Q512 858 622 824 L610 686 C596 606 566 582 512 582 Z"/>
+        <ellipse cx="512" cy="410" rx="136" ry="150" fill="#ffe7d6"/>
+        <ellipse cx="452" cy="420" rx="30" ry="38" fill="#2b1553"/><ellipse cx="572" cy="420" rx="30" ry="38" fill="#2b1553"/>
+        <circle cx="462" cy="406" r="9" fill="#fff"/><circle cx="582" cy="406" r="9" fill="#fff"/>
+        <ellipse cx="428" cy="478" rx="24" ry="12" fill="#ff9ecb" opacity=".55"/><ellipse cx="596" cy="478" rx="24" ry="12" fill="#ff9ecb" opacity=".55"/>
+        <path d="M498 498 Q512 516 526 498" fill="none" stroke="#b0526b" stroke-width="5" stroke-linecap="round"/>
+        <path fill="url(#hair)" d="M512 258 C420 258 376 306 378 376 C380 416 400 434 424 430 C440 410 448 380 452 364 C470 392 500 408 512 408 C524 408 554 392 572 364 C576 380 584 410 600 430 C624 434 644 416 646 376 C648 306 604 258 512 258 Z"/>
+        <ellipse cx="512" cy="338" rx="198" ry="40" fill="url(#hat)"/>
+        <path d="M390 320 L512 96 L634 320 C560 330 464 330 390 320 Z" fill="url(#hat)"/>
+        <path d="M476 250 L512 150 L548 250 L530 250 L512 196 L494 250 Z" fill="#f6c94f"/>
+        <circle cx="512" cy="756" r="86" fill="url(#ball)"/>
+        <path d="M456 704 q6 -22 20 -34" fill="none" stroke="#fff" stroke-opacity=".8" stroke-width="10" stroke-linecap="round"/>
+        <circle cx="478" cy="726" r="7" fill="#fff"/>
+        <ellipse cx="452" cy="732" rx="26" ry="16" fill="#ffe7d6" transform="rotate(-18 452 732)"/>
+        <ellipse cx="572" cy="732" rx="26" ry="16" fill="#ffe7d6" transform="rotate(18 572 732)"/>
+      </svg>
+    </div>
+    <h1>星座小魔女 · 星铃</h1>
+    <div class="tag">✨ 忘掉你的出生日期，测出你性格深处的「灵魂星座」</div>
+    <div style="margin-top:22px">
+      <button class="btn" id="startBtn">🔮 开始灵魂星座测试</button>
+    </div>
+    <div style="margin-top:12px">
+      <button class="btn ghost" id="chatBtn">💬 和星铃聊聊天</button>
+      <button class="btn ghost" id="wikiBtn">📖 星座百科</button>
+    </div>
+  </div>
+
+  <!-- Test -->
+  <div class="card section hidden" id="test">
+    <div class="progress"><i id="prog"></i></div>
+    <div class="q-num" id="qNum"></div>
+    <div class="q-text" id="qText"></div>
+    <div class="opts" id="qOpts"></div>
+  </div>
+
+  <!-- Result -->
+  <div class="card section hidden" id="result">
+    <div class="center">
+      <div class="result-sign" id="rGlyph"></div>
+      <div class="result-name" id="rName"></div>
+      <div class="result-trait" id="rElement"></div>
+      <div class="result-trait" id="rTrait"></div>
+    </div>
+    <div class="bars" id="bars"></div>
+    <div class="bless" id="rBless"></div>
+    <div class="center" style="margin-top:20px">
+      <button class="btn ghost" id="retryBtn">↺ 再测一次</button>
+    </div>
+  </div>
+
+  <!-- Wiki -->
+  <div class="card section hidden" id="wiki">
+    <div class="sec-title"><span class="bar"></span>四象星座</div>
+    <div id="elements"></div>
+    <div class="sec-title" style="margin-top:22px"><span class="bar"></span>十二星座原型</div>
+    <div class="grid" id="signs"></div>
+  </div>
+
+  <!-- Chat -->
+  <div class="card section hidden" id="chat">
+    <div class="sec-title"><span class="bar"></span>和星铃聊聊 ✨</div>
+    <div class="chips" id="chips"></div>
+    <div class="chatbox" id="chatbox"></div>
+    <div class="chat-input">
+      <input id="chatInput" placeholder="问问星铃吧，比如「我的灵魂星座是什么」" />
+      <button class="btn" id="sendBtn">发送</button>
+    </div>
+  </div>
+
+  <div class="foot">本测试仅供娱乐与自我探索参考，不构成心理学或占星学诊断 ✨ 星座是了解自己的镜子，不是决定命运的牢笼。</div>
+</div>
+
+<script>
+(function(){
+  // ---------- data ----------
+  var QUESTIONS = [
+    {q:'周末突然多出一天假期，你会？', o:['立刻约朋友出门探险','在家整理、做个小计划','找人聊天、分享见闻','窝着听歌、放空情绪'], e:['fire','earth','air','water']},
+    {q:'团队意见不合时，你更倾向于？', o:['直接拍板，带大家往前冲','拿出数据方案，稳妥推进','组织讨论，寻找共识','先安抚情绪，再慢慢谈'], e:['fire','earth','air','water']},
+    {q:'你最看重朋友身上的什么？', o:['热情和勇气','靠谱和稳定','有趣和见识','懂你和贴心'], e:['fire','earth','air','water']},
+    {q:'面对全新挑战，你的第一反应？', o:['兴奋，想立刻试试','先评估风险和成本','好奇，先查资料研究','有点紧张，跟着感觉走'], e:['fire','earth','air','water']},
+    {q:'你理想中的旅行是？', o:['说走就走的冒险','规划好的品质之旅','边走边聊的文化探索','海边发呆治愈之旅'], e:['fire','earth','air','water']},
+    {q:'遇到烦心事，你会？', o:['立刻行动去解决','一步步列出解决办法','找人聊聊、倾诉','自己消化、写下来'], e:['fire','earth','air','water']},
+    {q:'你觉得自己更像哪种人？', o:['天生的领导者','可靠的执行者','活跃的连接者','细腻的感受者'], e:['fire','earth','air','water']},
+    {q:'买礼物时你更看重？', o:['够惊喜、有冲击力','实用、有品质','有新意、有话题','有心思、能打动人'], e:['fire','earth','air','water']},
+    {q:'聚会中你通常会？', o:['活跃气氛的核心','帮忙张罗、照顾大家','到处聊天、认识新人','观察大家、安静陪伴'], e:['fire','earth','air','water']},
+    {q:'做决定时你更多依靠？', o:['直觉和冲动','经验和规则','信息和逻辑','感受和同理心'], e:['fire','earth','air','water']},
+    {q:'你最容易为什么而感动？', o:['热血和坚持','踏实和守护','思想和共鸣','温柔和陪伴'], e:['fire','earth','air','water']},
+    {q:'若被形容成一个自然元素，你希望是？', o:['燃烧的火焰','坚实的大地','流动的风','温柔的水'], e:['fire','earth','air','water']}
+  ];
+  var ELEMENTS = {
+    fire:{name:'火象', icon:'🔥', color:'#ff6b6b', signs:['白羊座','狮子座','射手座'], desc:'行动力强、热情奔放，天生的领导者和冒险家'},
+    earth:{name:'土象', icon:'🌍', color:'#6bc48a', signs:['金牛座','处女座','摩羯座'], desc:'务实稳重、追求安全与品质，可靠的执行者'},
+    air:{name:'风象', icon:'🌪️', color:'#6cc8ff', signs:['双子座','天秤座','水瓶座'], desc:'思维活跃、社交达人，重视交流与精神层面'},
+    water:{name:'水象', icon:'🌊', color:'#7b8cff', signs:['巨蟹座','天蝎座','双鱼座'], desc:'情感丰富、直觉敏锐，内心世界深邃而细腻'}
+  };
+  var SIGNS = {
+    '白羊座':{e:'fire', g:'♈', t:'直率热情、行动快、有点冲动'},
+    '狮子座':{e:'fire', g:'♌', t:'自信大方、要面子、有领导力'},
+    '射手座':{e:'fire', g:'♐', t:'乐观自由、爱冒险、不喜欢被束缚'},
+    '金牛座':{e:'earth', g:'♉', t:'稳重可靠、爱享受、慢热固执'},
+    '处女座':{e:'earth', g:'♍', t:'细心严谨、追求完美、爱分析'},
+    '摩羯座':{e:'earth', g:'♑', t:'踏实上进、有责任感、外冷内热'},
+    '双子座':{e:'air', g:'♊', t:'机灵健谈、好奇心强、点子多'},
+    '天秤座':{e:'air', g:'♎', t:'优雅随和、重视平衡、选择困难'},
+    '水瓶座':{e:'air', g:'♒', t:'独立创新、理性、想法独特'},
+    '巨蟹座':{e:'water', g:'♋', t:'温柔顾家、敏感、重感情'},
+    '天蝎座':{e:'water', g:'♏', t:'深情专注、直觉强、有神秘感'},
+    '双鱼座':{e:'water', g:'♓', t:'浪漫梦幻、共情力强、想象力丰富'}
+  };
+  var SYSTEM = '你现在扮演「星铃」，一位星座小魔女/星象占卜师。身份：星穹魔法学院毕业的小魔女，掌管黄道十二宫的性格星盘。使命：帮助用户发现自己的「灵魂星座」，读懂内心真实的星座原型。知识背景：十二星座按元素分为四象——火象（白羊/狮子/射手）行动力强、热情奔放、领导者和冒险家；土象（金牛/处女/摩羯）务实稳重、追求安全与品质、可靠执行者；风象（双子/天秤/水瓶）思维活跃、社交达人、重视交流与精神层面；水象（巨蟹/天蝎/双鱼）情感丰富、直觉敏锐、内心深邃细腻。「灵魂星座」由性格特质与行为偏好匹配而来，与出生日期的「太阳星座」可能不同。说话风格：自称「星铃」或「本魔女」，称呼用户为「你」或「小可爱」；语气俏皮、温柔、治愈，多用 ✨🌟🔮💫🌙 等 emoji，句尾常用「~」；先共情、再分析、最后给温暖的行动建议；坚持「星座是了解自己的镜子，不是决定命运的牢笼」，不做绝对化或宿命论论断。行为规范：不做医学、心理、法律等专业诊断；测试仅供娱乐参考；不泄露隐私；不制造焦虑；回复要简短（一般 2-4 句）。';
+
+  var $ = function(s){ return document.querySelector(s); };
+  var sections = {hero:$('#hero'), test:$('#test'), result:$('#result'), wiki:$('#wiki'), chat:$('#chat')};
+  function show(name){ Object.keys(sections).forEach(function(k){ sections[k].classList.toggle('hidden', k!==name); }); window.scrollTo({top:0,behavior:'smooth'}); }
+
+  // ---------- starfield ----------
+  var starsEl = $('#stars');
+  for(var i=0;i<70;i++){
+    var s=document.createElement('span'); s.className='star';
+    var sz=Math.random()*2.2+1;
+    s.style.width=sz+'px'; s.style.height=sz+'px';
+    s.style.left=(Math.random()*100)+'%'; s.style.top=(Math.random()*100)+'%';
+    s.style.background=['#e6b45c','#e49ac0','#b39de0','#d9c8f5'][Math.floor(Math.random()*4)];
+    s.style.animationDelay=(Math.random()*3)+'s'; s.style.animationDuration=(2+Math.random()*3)+'s';
+    starsEl.appendChild(s);
+  }
+
+  // ---------- nav buttons ----------
+  $('#startBtn').onclick=function(){ startTest(); };
+  $('#chatBtn').onclick=function(){ openChat(); };
+  $('#wikiBtn').onclick=function(){ renderWiki(); show('wiki'); };
+
+  // ---------- test ----------
+  var idx=0, scores={fire:0,earth:0,air:0,water:0}, order=['fire','earth','air','water'];
+  function startTest(){ idx=0; scores={fire:0,earth:0,air:0,water:0}; show('test'); renderQ(); }
+  function renderQ(){
+    var q=QUESTIONS[idx];
+    $('#prog').style.width=((idx)/QUESTIONS.length*100)+'%';
+    $('#qNum').textContent='第 '+(idx+1)+' / '+QUESTIONS.length+' 题';
+    $('#qText').textContent=q.q;
+    var box=$('#qOpts'); box.innerHTML='';
+    q.o.forEach(function(txt,i){
+      var b=document.createElement('button'); b.className='opt';
+      var k=document.createElement('span'); k.className='k'; k.textContent=['A','B','C','D'][i];
+      var t=document.createElement('span'); t.textContent=txt;
+      b.appendChild(k); b.appendChild(t);
+      b.onclick=function(){ scores[q.e[i]]++; idx++; if(idx<QUESTIONS.length){ renderQ(); } else { $('#prog').style.width='100%'; showResult(); } };
+      box.appendChild(b);
+    });
+  }
+  function showResult(){
+    var top=order.slice().sort(function(a,b){ return scores[b]-scores[a]; })[0];
+    var el=ELEMENTS[top];
+    var max=Math.max.apply(null, order.map(function(k){return scores[k];}), 1);
+    var seed=order.reduce(function(a,k,i){return a+scores[k]*(i+1);}, idx);
+    var sign=el.signs[seed%el.signs.length];
+    var s=SIGNS[sign];
+    $('#rGlyph').textContent=s.g;
+    $('#rName').textContent='灵魂星座 · '+sign;
+    $('#rElement').textContent=el.icon+' '+el.name+' · '+el.desc;
+    $('#rTrait').textContent='你的星座原型：'+s.t;
+    $('#rBless').innerHTML='<b>✨ 星铃对你说：</b><br>原来你身体里住着「'+sign+'」的灵魂呀~ 星座是你的一面镜子，照见你的闪光，也提醒你温柔地拥抱自己。无论太阳星座是什么，此刻开始，请骄傲地做独一无二的你 🌟';
+    var bars=$('#bars'); bars.innerHTML='';
+    order.forEach(function(k){
+      var pct=Math.round(scores[k]/max*100);
+      var row=document.createElement('div'); row.className='bar-row';
+      row.innerHTML='<span>'+ELEMENTS[k].icon+' '+ELEMENTS[k].name+'</span><span class="bar-track"><span class="bar-fill" style="width:'+pct+'%;background:'+ELEMENTS[k].color+'"></span></span><span>'+scores[k]+'</span>';
+      bars.appendChild(row);
+    });
+    show('result');
+  }
+  $('#retryBtn').onclick=function(){ startTest(); };
+
+  // ---------- wiki ----------
+  function renderWiki(){
+    var elBox=$('#elements'); elBox.innerHTML='';
+    order.forEach(function(k){
+      var e=ELEMENTS[k];
+      var d=document.createElement('div'); d.className='element';
+      d.innerHTML='<span class="ico">'+e.icon+'</span><div><div class="hd">'+e.name+'（'+e.signs.join(' / ')+'）</div><div class="ds">'+e.desc+'</div></div>';
+      elBox.appendChild(d);
+    });
+    var sBox=$('#signs'); sBox.innerHTML='';
+    Object.keys(SIGNS).forEach(function(nm){
+      var s=SIGNS[nm];
+      var c=document.createElement('div'); c.className='sign-card';
+      c.innerHTML='<div class="glyph">'+s.g+'</div><div class="nm">'+nm+'</div><div class="tr">'+ELEMENTS[s.e].icon+' '+ELEMENTS[s.e].name+' · '+s.t+'</div>';
+      sBox.appendChild(c);
+    });
+  }
+
+  // ---------- chat ----------
+  var QUICK=['我的灵魂星座是什么？','火象的人什么样？','水象的朋友有什么特点？','最近有点焦虑，怎么办','星座配对靠谱吗？'];
+  function openChat(){
+    renderChips(); show('chat');
+    if(!$('#chatbox').children.length){ pushMsg('luna','你好呀小可爱~ 我是星铃，掌管黄道十二宫的小魔女 🌟 想聊聊星座，还是测测灵魂星座呀？'); }
+    $('#chatInput').focus();
+  }
+  function renderChips(){
+    var box=$('#chips'); box.innerHTML='';
+    QUICK.forEach(function(q){ var c=document.createElement('span'); c.className='chip'; c.textContent=q; c.onclick=function(){ send(q); }; box.appendChild(c); });
+  }
+  function pushMsg(role,text){
+    var box=$('#chatbox'); var d=document.createElement('div'); d.className='msg '+role; d.textContent=text;
+    box.appendChild(d); box.scrollTop=box.scrollHeight; return d;
+  }
+  function getKey(){ return localStorage.getItem('deepseek_api_key')||localStorage.getItem('shared_deepseek_api_key'); }
+  function localReply(t){
+    t=t.toLowerCase();
+    if(/灵魂星座|我的星座|什么星座|测测/.test(t)) return '想知道你的灵魂星座，光问可不够哦~ 🔮 点上面的「开始灵魂星座测试」，用 12 道情境题让我感应你的性格原型吧 ✨';
+    if(/白羊|狮子|射手|火象/.test(t)) return '火象的你，像燃烧的小太阳 🔥 行动力超强、热情奔放！不过也要记得偶尔停下来，抱抱辛苦的自己呀~';
+    if(/金牛|处女|摩羯|土象/.test(t)) return '土象的朋友最靠谱啦，像大地一样稳稳的 🌍 务实又长情，不过有时候也要允许自己任性一次哦~';
+    if(/双子|天秤|水瓶|风象/.test(t)) return '风象的你，是行走的灵感与话题 🌪️ 思维活跃、天生社交达人，记得也给自己留一点安静思考的时间~';
+    if(/巨蟹|天蝎|双鱼|水象/.test(t)) return '水象的你，内心像深海一样温柔深邃 🌊 共情力超强，总是先照顾别人，也别忘了好好爱自己呀~';
+    if(/焦虑|难过|累|压力|emo|不开心|烦/.test(t)) return '先抱抱你呀~ ✨ 焦虑的时候，试试像土象一样先落地：把最想做的一件小事完成，稳稳地找回掌控感 🌍 你愿意试试吗？';
+    if(/爱情|喜欢|恋爱|配对|合适/.test(t)) return '星座配对是很有趣的关系参考，但从来不是标准答案哦 💞 两个人是否合拍，靠的是理解与经营，而不是星盘~';
+    if(/谢谢|你好|嗨|hello|hi/.test(t)) return '不客气呀小可爱~ 🌟 能帮到你，星铃最开心啦！还有什么想聊的？';
+    if(/你是谁|介绍|名字/.test(t)) return '我是星铃，星穹魔法学院毕业的星座小魔女 🔮 掌管黄道十二宫的性格星盘，专治各种「我到底像哪个星座」的困惑 ✨';
+    return '嗯……这个问题有点意思，让星铃转一下水晶球 🔮 不如我们先从「灵魂星座测试」开始？或者问我火象/土象/风象/水象的差别也行哦~';
+  }
+  async function aiReply(text){
+    var key=getKey();
+    if(!key) return null;
+    try{
+      var res=await fetch('https://api.deepseek.com/v1/chat/completions',{method:'POST',headers:{'Content-Type':'application/json','Authorization':'Bearer '+key},body:JSON.stringify({model:'deepseek-v4-flash',messages:[{role:'system',content:SYSTEM},{role:'user',content:text}],stream:false,temperature:0.8,max_tokens:600})});
+      if(!res.ok) return null;
+      var data=await res.json();
+      return (data.choices&&data.choices[0]&&data.choices[0].message&&data.choices[0].message.content)||null;
+    }catch(e){ return null; }
+  }
+  async function send(text){
+    text=(text||$('#chatInput').value||'').trim();
+    if(!text) return;
+    $('#chatInput').value='';
+    pushMsg('me',text);
+    var typing=pushMsg('luna','✨ 星铃感应中…');
+    var reply=await aiReply(text);
+    if(!reply){ await new Promise(function(r){setTimeout(r,500);}); reply=localReply(text); }
+    typing.textContent=reply;
+    var box=$('#chatbox'); box.scrollTop=box.scrollHeight;
+  }
+  $('#sendBtn').onclick=function(){ send(); };
+  $('#chatInput').addEventListener('keydown',function(e){ if(e.key==='Enter') send(); });
+})();
+</script>
+</body>
+</html>
